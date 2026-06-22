@@ -1,37 +1,36 @@
 import { motion } from "framer-motion";
 import { Users, Monitor } from "lucide-react";
+import { AnimatedText } from "./AnimatedText";
+import { MagneticButton } from "./MagneticButton";
 
 export function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden" id="hero" style={{ zIndex: 1 }}>
+    <section className="relative min-h-screen flex items-center overflow-hidden" id="hero" style={{ zIndex: 2 }}>
       <div className="relative max-w-7xl mx-auto px-6 pt-28 pb-24 w-full">
         <div className="max-w-2xl">
 
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
             className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full mb-10 pill-badge"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-green-400 glow-pulse" />
             <span className="text-xs text-white/70 font-medium tracking-wide">Open for commissions</span>
           </motion.div>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 28 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.75, delay: 0.1 }}
-            className="text-6xl md:text-7xl lg:text-8xl font-bold leading-[1.02] tracking-tight text-white mb-6"
-          >
-            Roblox UI<br />
-            <span className="gradient-text">That Players</span><br />
-            Remember.
-          </motion.h1>
+          <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold leading-[1.02] tracking-tight text-white mb-6">
+            <AnimatedText text="Roblox UI" delay={0.15} />
+            <br />
+            <AnimatedText text="That Players" className="gradient-text" delay={0.35} />
+            <br />
+            <AnimatedText text="Remember." delay={0.55} />
+          </h1>
 
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
+            initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{ duration: 0.8, delay: 0.75, ease: [0.23, 1, 0.32, 1] }}
             className="text-lg text-white/55 leading-relaxed mb-12 max-w-lg"
           >
             I'm MYSTICFUSION7X, a Roblox UI designer with 1+ year of experience building polished, production-ready interfaces. High-quality work, affordable pricing, every project unique.
@@ -40,31 +39,31 @@ export function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
+            transition={{ duration: 0.7, delay: 0.95 }}
             className="flex flex-wrap items-center gap-4 mb-16"
           >
-            <button
+            <MagneticButton
               onClick={() => document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' })}
               className="flex items-center gap-2 px-7 py-3.5 text-white text-sm font-semibold rounded-full border border-white/15 hover:border-white/30 hover:bg-white/5 transition-all"
-              data-testid="hero-view-work"
+              dataTestid="hero-view-work"
             >
               <Monitor className="w-4 h-4" />
               View Work
-            </button>
-            <button
+            </MagneticButton>
+            <MagneticButton
               onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
               className="btn-primary flex items-center gap-2 px-7 py-3.5 text-white text-sm font-semibold rounded-full"
-              data-testid="hero-contact"
+              dataTestid="hero-contact"
             >
               <Users className="w-4 h-4" />
               Commission Me
-            </button>
+            </MagneticButton>
           </motion.div>
 
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.45 }}
+            transition={{ duration: 0.7, delay: 1.1 }}
             className="flex items-center gap-10"
           >
             {[

@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { SiRoblox, SiDiscord } from "react-icons/si";
 
 export function Footer() {
@@ -6,11 +7,25 @@ export function Footer() {
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
+  const links = [
+    { label: 'About', id: 'about' },
+    { label: 'Work', id: 'portfolio' },
+    { label: 'Services', id: 'services' },
+    { label: 'Pricing', id: 'pricing' },
+    { label: 'Policies', id: 'policies' },
+    { label: 'Contact', id: 'contact' },
+  ];
+
   return (
-    <footer className="border-t border-white/5 py-10">
+    <footer className="border-t border-white/5 py-10" style={{ zIndex: 2 }}>
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex flex-col md:flex-row items-start justify-between gap-10 mb-10">
-          <div>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
             <div className="flex items-center gap-2.5 mb-3">
               <div
                 className="w-7 h-7 rounded-lg flex items-center justify-center"
@@ -31,34 +46,34 @@ export function Footer() {
             <p className="text-sm text-white/25 max-w-xs leading-relaxed">
               Roblox UI designer. Polished interfaces, affordable pricing, every project unique.
             </p>
-          </div>
+          </motion.div>
 
           <div className="grid grid-cols-2 gap-x-16 gap-y-2">
-            {[
-              { label: 'About', id: 'about' },
-              { label: 'Work', id: 'portfolio' },
-              { label: 'Services', id: 'services' },
-              { label: 'Pricing', id: 'pricing' },
-              { label: 'Policies', id: 'policies' },
-              { label: 'Contact', id: 'contact' },
-            ].map(item => (
-              <button
+            {links.map((item, i) => (
+              <motion.button
                 key={item.id}
                 onClick={() => scrollTo(item.id)}
                 className="text-sm text-white/25 hover:text-white/60 transition-colors text-left"
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05, duration: 0.4 }}
+                whileHover={{ x: 3, transition: { duration: 0.2 } }}
               >
                 {item.label}
-              </button>
+              </motion.button>
             ))}
           </div>
 
           <div className="flex items-center gap-2">
-            <a
+            <motion.a
               href="https://www.roblox.com/users/search?keyword=ZYZU25"
               target="_blank"
               rel="noopener noreferrer"
               className="w-9 h-9 rounded-full glass flex items-center justify-center text-white/35 hover:text-white transition-all"
-              style={{ transition: 'box-shadow 0.25s ease, border-color 0.25s ease' }}
+              data-testid="footer-link-roblox"
+              whileHover={{ scale: 1.15, y: -2 }}
+              whileTap={{ scale: 0.9 }}
               onMouseEnter={e => {
                 (e.currentTarget as HTMLElement).style.boxShadow = '0 0 14px rgba(26,71,255,0.5)';
                 (e.currentTarget as HTMLElement).style.borderColor = 'rgba(26,71,255,0.5)';
@@ -67,14 +82,15 @@ export function Footer() {
                 (e.currentTarget as HTMLElement).style.boxShadow = '';
                 (e.currentTarget as HTMLElement).style.borderColor = '';
               }}
-              data-testid="footer-link-roblox"
             >
               <SiRoblox className="w-4 h-4" />
-            </a>
-            <a
+            </motion.a>
+            <motion.a
               href="#"
               className="w-9 h-9 rounded-full glass flex items-center justify-center text-white/35 hover:text-white transition-all"
-              style={{ transition: 'box-shadow 0.25s ease, border-color 0.25s ease' }}
+              data-testid="footer-link-discord"
+              whileHover={{ scale: 1.15, y: -2 }}
+              whileTap={{ scale: 0.9 }}
               onMouseEnter={e => {
                 (e.currentTarget as HTMLElement).style.boxShadow = '0 0 14px rgba(26,71,255,0.5)';
                 (e.currentTarget as HTMLElement).style.borderColor = 'rgba(26,71,255,0.5)';
@@ -83,10 +99,9 @@ export function Footer() {
                 (e.currentTarget as HTMLElement).style.boxShadow = '';
                 (e.currentTarget as HTMLElement).style.borderColor = '';
               }}
-              data-testid="footer-link-discord"
             >
               <SiDiscord className="w-4 h-4" />
-            </a>
+            </motion.a>
           </div>
         </div>
 

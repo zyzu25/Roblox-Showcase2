@@ -9,21 +9,29 @@ import { Testimonials } from "@/components/Testimonials";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { GlobalBackground } from "@/components/GlobalBackground";
+import { CustomCursor } from "@/components/CustomCursor";
+import { ScrollProgress } from "@/components/ScrollProgress";
+import { FloatingParticles } from "@/components/FloatingParticles";
 
 export default function Home() {
   return (
-    <main className="relative min-h-screen text-foreground overflow-x-hidden" style={{ background: '#000008' }}>
+    <>
       <GlobalBackground />
-      <Navbar />
-      <Hero />
-      <About />
-      <Portfolio />
-      <Services />
-      <Pricing />
-      <Testimonials />
-      <Policies />
-      <Contact />
-      <Footer />
-    </main>
+      <FloatingParticles />
+      <CustomCursor />
+      <ScrollProgress />
+      <main className="relative min-h-screen text-foreground overflow-x-hidden" style={{ background: 'transparent', cursor: 'none' }}>
+        <Navbar />
+        <Hero />
+        <About />
+        <Portfolio />
+        <Services />
+        <Pricing />
+        <Testimonials />
+        <Policies />
+        <Contact />
+        <Footer />
+      </main>
+    </>
   );
 }
