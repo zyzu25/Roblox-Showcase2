@@ -3,19 +3,17 @@ import { motion } from "framer-motion";
 const skills = [
   "ScreenGuis", "Frames & Layouts", "UI Animations",
   "Tweening", "Responsive Design", "Roblox Studio",
-  "Figma", "Iconography", "Luau Scripting"
-];
-
-const stats = [
-  { value: "3+", label: "Years of experience" },
-  { value: "50+", label: "Projects completed" },
-  { value: "20+", label: "Happy clients" },
+  "Figma", "Iconography", "Military RP UIs", "Luau Scripting",
 ];
 
 export function About() {
   return (
-    <section className="py-28 relative" id="about">
-      <div className="max-w-7xl mx-auto px-6">
+    <section className="py-28 relative border-t border-white/5" id="about">
+      {/* Subtle orb */}
+      <div className="absolute right-0 top-0 w-[400px] h-[400px] opacity-10 pointer-events-none"
+        style={{ background: 'radial-gradient(circle, #4800ff 0%, transparent 70%)', filter: 'blur(80px)' }} />
+
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid md:grid-cols-2 gap-16 items-center">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -23,16 +21,24 @@ export function About() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-4">About Me</p>
+            <p className="text-xs font-semibold uppercase tracking-widest mb-4 gradient-text-accent">About Me</p>
             <h2 className="text-4xl md:text-5xl font-bold leading-tight text-white mb-6">
-              Engineering the feel<br />of great games.
+              Hello, I'm<br />
+              <span className="gradient-text">MYSTICFUSION7X.</span>
             </h2>
-            <p className="text-white/55 text-lg leading-relaxed mb-8">
-              I specialize in bridging the gap between aesthetics and functionality. Every interface I design is built to feel intuitive, look stunning, and run flawlessly within the Roblox engine. From high-fantasy RPG HUDs to sleek sci-fi menus, I adapt to your game's soul.
+            <p className="text-white/55 text-base leading-relaxed mb-4">
+              I'm a Roblox UI designer who focuses on polished interfaces that help games stand out. With over a year of hands-on experience, I've built UI systems for military roleplay games, SCP environments, and general Roblox titles.
             </p>
-            <p className="text-white/55 text-lg leading-relaxed">
-              Whether you need a single screen or a full UI system — I handle design, scripting, and delivery. No template reuse. Everything is purpose-built.
+            <p className="text-white/55 text-base leading-relaxed mb-8">
+              I offer high-quality work and affordable pricing while keeping every project unique and visually strong. No templates — everything is purpose-built for your game.
             </p>
+            <div className="flex items-center gap-3 text-sm text-white/40">
+              <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/8 flex items-center justify-center text-xs font-mono font-bold text-white/30">rb</div>
+              <span>ZYZU25 on Roblox</span>
+              <span className="text-white/20">·</span>
+              <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/8 flex items-center justify-center text-xs font-mono font-bold text-white/30">ds</div>
+              <span>mysticfusion7x on Discord</span>
+            </div>
           </motion.div>
 
           <motion.div
@@ -40,26 +46,30 @@ export function About() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="space-y-8"
+            className="space-y-6"
           >
-            <div className="grid grid-cols-3 gap-4">
-              {stats.map((stat, i) => (
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { value: "1+", label: "Year of experience" },
+                { value: "50+", label: "UI frames shipped" },
+                { value: "3", label: "Notable games" },
+              ].map((stat, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  className="bg-card border border-border rounded-2xl p-5 text-center"
+                  className="glass rounded-2xl p-4 text-center"
                 >
-                  <p className="text-3xl font-bold text-white font-display mb-1">{stat.value}</p>
-                  <p className="text-xs text-white/45 leading-tight">{stat.label}</p>
+                  <p className="text-2xl font-bold text-white font-display mb-1">{stat.value}</p>
+                  <p className="text-[11px] text-white/40 leading-tight">{stat.label}</p>
                 </motion.div>
               ))}
             </div>
 
             <div>
-              <p className="text-xs font-semibold uppercase tracking-widest text-white/40 mb-4">Skills & Tools</p>
+              <p className="text-xs font-semibold uppercase tracking-widest text-white/30 mb-3">Skills & Tools</p>
               <div className="flex flex-wrap gap-2">
                 {skills.map((skill, i) => (
                   <motion.span
@@ -68,11 +78,24 @@ export function About() {
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.04 }}
-                    className="px-3 py-1.5 bg-white/5 border border-white/8 rounded-full text-sm text-white/70 font-medium"
+                    className="px-3 py-1.5 rounded-full text-xs text-white/60 font-medium pill-badge"
                   >
                     {skill}
                   </motion.span>
                 ))}
+              </div>
+            </div>
+
+            {/* Notable game */}
+            <div className="glass rounded-2xl p-5">
+              <p className="text-xs font-semibold uppercase tracking-widest text-white/30 mb-3">Notable Work</p>
+              <div className="flex items-start gap-3">
+                <div className="w-9 h-9 rounded-lg flex-shrink-0 flex items-center justify-center text-xs font-bold text-white"
+                  style={{ background: 'linear-gradient(135deg, #4800ff, #7b5fff)' }}>SCP</div>
+                <div>
+                  <p className="text-sm font-semibold text-white">SCP Site Aether</p>
+                  <p className="text-xs text-white/45 leading-relaxed mt-0.5">Dark, immersive interfaces for a military/SCP roleplay environment — loading screen, settings, locker UI, HUD, and proximity prompt designs.</p>
+                </div>
               </div>
             </div>
           </motion.div>
