@@ -1,59 +1,93 @@
 import { motion } from "framer-motion";
 import { Send } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 
 export function Contact() {
   return (
-    <section className="py-24" id="contact">
-      <div className="container px-6 mx-auto max-w-4xl">
-        <div className="text-center mb-16">
-          <h2 className="text-sm font-bold text-primary tracking-[0.3em] uppercase mb-4">Start a Project</h2>
-          <h3 className="text-4xl md:text-5xl font-black mb-6">READY TO UPGRADE?</h3>
-          <p className="text-muted-foreground text-lg">
-            Currently accepting new commissions. Fill out the form below or reach out directly on Discord.
-          </p>
+    <section className="py-28 border-t border-white/5" id="contact">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid md:grid-cols-2 gap-16 items-start">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-4">Contact</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              Ready to upgrade<br />your game's UI?
+            </h2>
+            <p className="text-white/50 text-lg leading-relaxed mb-8">
+              Currently accepting new commissions. Fill out the form and I'll get back to you within 24 hours.
+            </p>
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-white/40 text-xs font-mono">ds</div>
+                <span className="text-white/50 text-sm">Available on Discord</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-white/40 text-xs font-mono">rb</div>
+                <span className="text-white/50 text-sm">Roblox messages accepted</span>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <form
+              className="space-y-4"
+              onSubmit={(e) => e.preventDefault()}
+              data-testid="contact-form"
+            >
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs text-white/40 mb-2 font-medium">Name</label>
+                  <input
+                    placeholder="Your name"
+                    className="w-full h-12 px-4 bg-card border border-border rounded-xl text-white placeholder:text-white/25 text-sm focus:outline-none focus:border-primary/50 transition-colors"
+                    data-testid="input-name"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-white/40 mb-2 font-medium">Roblox Username</label>
+                  <input
+                    placeholder="Player123"
+                    className="w-full h-12 px-4 bg-card border border-border rounded-xl text-white placeholder:text-white/25 text-sm focus:outline-none focus:border-primary/50 transition-colors"
+                    data-testid="input-roblox"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs text-white/40 mb-2 font-medium">Discord</label>
+                <input
+                  placeholder="username#0000"
+                  className="w-full h-12 px-4 bg-card border border-border rounded-xl text-white placeholder:text-white/25 text-sm focus:outline-none focus:border-primary/50 transition-colors"
+                  data-testid="input-discord"
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-white/40 mb-2 font-medium">Project Details</label>
+                <textarea
+                  placeholder="Tell me about your game and the UI you need..."
+                  rows={5}
+                  className="w-full px-4 py-3 bg-card border border-border rounded-xl text-white placeholder:text-white/25 text-sm focus:outline-none focus:border-primary/50 transition-colors resize-none"
+                  data-testid="input-message"
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full h-12 bg-primary text-white font-semibold rounded-xl hover:bg-primary/90 transition-colors flex items-center justify-center gap-2 text-sm"
+                data-testid="button-submit"
+              >
+                Send Request
+                <Send className="w-4 h-4" />
+              </button>
+            </form>
+          </motion.div>
         </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="bg-card p-8 md:p-10 rounded-xl border border-white/10 relative overflow-hidden"
-        >
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary via-secondary to-primary" />
-          
-          <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Name</label>
-                <Input placeholder="John Doe" className="bg-background border-white/10 h-12" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Roblox Username</label>
-                <Input placeholder="Player123" className="bg-background border-white/10 h-12" />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Discord Tag</label>
-              <Input placeholder="username#0000" className="bg-background border-white/10 h-12" />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Project Details</label>
-              <Textarea 
-                placeholder="Tell me about your game and what UI you need..." 
-                className="bg-background border-white/10 min-h-[150px] resize-none"
-              />
-            </div>
-
-            <Button className="w-full h-14 bg-primary text-primary-foreground font-bold uppercase tracking-widest text-lg hover:bg-primary/90">
-              Send Request <Send className="ml-2 w-5 h-5" />
-            </Button>
-          </form>
-        </motion.div>
       </div>
     </section>
   );

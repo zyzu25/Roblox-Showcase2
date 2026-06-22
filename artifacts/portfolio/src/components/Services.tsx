@@ -3,61 +3,68 @@ import { LayoutTemplate, Code2, Sparkles, MonitorSmartphone } from "lucide-react
 
 const services = [
   {
-    icon: <LayoutTemplate className="w-8 h-8 text-primary" />,
+    icon: LayoutTemplate,
     title: "UI/UX Design",
-    description: "Creating wireframes, mockups, and fully realized UI assets in Figma, tailored perfectly to your game's aesthetic."
+    description: "Wireframes, mockups, and fully realized UI assets in Figma — tailored to your game's aesthetic and brand.",
+    color: "text-violet-400",
+    bg: "bg-violet-500/10",
   },
   {
-    icon: <Code2 className="w-8 h-8 text-secondary" />,
+    icon: Code2,
     title: "UI Scripting",
-    description: "Bringing static designs to life with optimized Luau code. Handling state, client-server communication, and dynamic scaling."
+    description: "Static designs brought to life with optimized Luau code, handling state, client-server communication, and dynamic scaling.",
+    color: "text-blue-400",
+    bg: "bg-blue-500/10",
   },
   {
-    icon: <Sparkles className="w-8 h-8 text-primary" />,
+    icon: Sparkles,
     title: "Custom Animations",
-    description: "Adding polish with smooth tweening, hover effects, transition screens, and satisfying click feedback."
+    description: "Smooth tweening, hover effects, transition screens, and satisfying interaction feedback that makes players stop and notice.",
+    color: "text-amber-400",
+    bg: "bg-amber-500/10",
   },
   {
-    icon: <MonitorSmartphone className="w-8 h-8 text-secondary" />,
+    icon: MonitorSmartphone,
     title: "Responsive Scaling",
-    description: "Ensuring your UI looks flawless on PC, mobile, and console by mastering anchor points, scale constraints, and aspect ratios."
-  }
+    description: "UI that looks perfect on PC, mobile, and console — mastering anchor points, scale constraints, and aspect ratios.",
+    color: "text-emerald-400",
+    bg: "bg-emerald-500/10",
+  },
 ];
 
 export function Services() {
   return (
-    <section className="py-24" id="services">
-      <div className="container px-6 mx-auto">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <h2 className="text-sm font-bold text-secondary tracking-[0.3em] uppercase mb-4">Services</h2>
-          <h3 className="text-4xl md:text-5xl font-black mb-6">WHAT I DELIVER</h3>
-          <p className="text-muted-foreground text-lg">
-            I don't just draw pretty pictures. I deliver production-ready interface systems that plug directly into your workflow.
+    <section className="py-28 border-t border-white/5" id="services">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="max-w-xl mb-16">
+          <p className="text-xs font-semibold uppercase tracking-widest text-primary mb-4">Services</p>
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-5">What I deliver.</h2>
+          <p className="text-white/50 text-lg leading-relaxed">
+            Production-ready interface systems that plug directly into your workflow. No hand-holding required.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-          {services.map((service, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
-              className="p-8 rounded-xl bg-card border border-white/5 hover:border-white/20 transition-colors group relative overflow-hidden"
-            >
-              <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity transform translate-x-4 -translate-y-4 scale-150">
-                {service.icon}
-              </div>
-              <div className="w-16 h-16 rounded-lg bg-background flex items-center justify-center mb-6 border border-white/5 group-hover:border-primary/50 transition-colors">
-                {service.icon}
-              </div>
-              <h4 className="text-2xl font-bold font-display mb-3">{service.title}</h4>
-              <p className="text-muted-foreground leading-relaxed">
-                {service.description}
-              </p>
-            </motion.div>
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {services.map((service, i) => {
+            const Icon = service.icon;
+            return (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.5 }}
+                className="bg-card border border-border rounded-2xl p-7 hover:border-white/15 transition-colors group"
+                data-testid={`service-card-${i}`}
+              >
+                <div className={`w-12 h-12 ${service.bg} rounded-xl flex items-center justify-center mb-5`}>
+                  <Icon className={`w-5 h-5 ${service.color}`} />
+                </div>
+                <h3 className="text-xl font-semibold text-white mb-3">{service.title}</h3>
+                <p className="text-white/50 leading-relaxed text-sm">{service.description}</p>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
