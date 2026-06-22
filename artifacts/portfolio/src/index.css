@@ -50,41 +50,40 @@
   --app-font-display: 'Space Grotesk', sans-serif;
   --radius: 0.75rem;
 
-  /* Electric blue palette */
   --background: 0 0% 0%;
   --foreground: 0 0% 98%;
-  --border: 228 80% 14%;
-  --input: 228 80% 11%;
-  --ring: 228 100% 60%;
-  --card: 228 40% 5%;
+  --border: 228 70% 12%;
+  --input: 228 70% 10%;
+  --ring: 228 100% 58%;
+  --card: 228 50% 4%;
   --card-foreground: 0 0% 98%;
-  --card-border: 228 60% 12%;
-  --popover: 228 40% 5%;
+  --card-border: 228 60% 10%;
+  --popover: 228 50% 4%;
   --popover-foreground: 0 0% 98%;
-  --popover-border: 228 60% 12%;
-  --primary: 228 100% 60%;
+  --popover-border: 228 60% 10%;
+  --primary: 228 100% 58%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 228 30% 12%;
+  --secondary: 228 30% 10%;
   --secondary-foreground: 0 0% 98%;
-  --muted: 228 20% 9%;
-  --muted-foreground: 228 10% 52%;
-  --accent: 228 100% 60%;
+  --muted: 228 20% 8%;
+  --muted-foreground: 228 10% 50%;
+  --accent: 228 100% 58%;
   --accent-foreground: 0 0% 100%;
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 98%;
-  --button-outline: rgba(26,71,255,0.15);
-  --badge-outline: rgba(26,71,255,0.08);
-  --elevate-1: rgba(26,71,255,0.05);
-  --elevate-2: rgba(26,71,255,0.1);
-  --sidebar: 228 40% 5%;
+  --button-outline: rgba(20,60,255,0.15);
+  --badge-outline: rgba(20,60,255,0.08);
+  --elevate-1: rgba(20,60,255,0.05);
+  --elevate-2: rgba(20,60,255,0.1);
+  --sidebar: 228 50% 4%;
   --sidebar-foreground: 0 0% 98%;
-  --sidebar-border: 228 60% 12%;
-  --sidebar-primary: 228 100% 60%;
+  --sidebar-border: 228 60% 10%;
+  --sidebar-primary: 228 100% 58%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 228 20% 9%;
+  --sidebar-accent: 228 20% 8%;
   --sidebar-accent-foreground: 0 0% 98%;
-  --sidebar-ring: 228 100% 60%;
-  --chart-1: 228 100% 60%;
+  --sidebar-ring: 228 100% 58%;
+  --chart-1: 228 100% 58%;
   --chart-2: 245 90% 65%;
   --chart-3: 210 100% 60%;
   --chart-4: 260 80% 65%;
@@ -94,34 +93,34 @@
 .dark {
   --background: 0 0% 0%;
   --foreground: 0 0% 98%;
-  --border: 228 80% 12%;
-  --input: 228 80% 10%;
-  --ring: 228 100% 60%;
-  --card: 228 40% 4%;
+  --border: 228 70% 11%;
+  --input: 228 70% 9%;
+  --ring: 228 100% 58%;
+  --card: 228 50% 3%;
   --card-foreground: 0 0% 98%;
-  --card-border: 228 60% 11%;
-  --popover: 228 40% 4%;
+  --card-border: 228 60% 9%;
+  --popover: 228 50% 3%;
   --popover-foreground: 0 0% 98%;
-  --popover-border: 228 60% 11%;
-  --primary: 228 100% 60%;
+  --popover-border: 228 60% 9%;
+  --primary: 228 100% 58%;
   --primary-foreground: 0 0% 100%;
-  --secondary: 228 30% 10%;
+  --secondary: 228 30% 9%;
   --secondary-foreground: 0 0% 98%;
-  --muted: 228 20% 8%;
-  --muted-foreground: 228 10% 50%;
-  --accent: 228 100% 60%;
+  --muted: 228 20% 7%;
+  --muted-foreground: 228 10% 48%;
+  --accent: 228 100% 58%;
   --accent-foreground: 0 0% 100%;
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 98%;
-  --sidebar: 228 40% 4%;
+  --sidebar: 228 50% 3%;
   --sidebar-foreground: 0 0% 98%;
-  --sidebar-border: 228 60% 11%;
-  --sidebar-primary: 228 100% 60%;
+  --sidebar-border: 228 60% 9%;
+  --sidebar-primary: 228 100% 58%;
   --sidebar-primary-foreground: 0 0% 100%;
-  --sidebar-accent: 228 20% 8%;
+  --sidebar-accent: 228 20% 7%;
   --sidebar-accent-foreground: 0 0% 98%;
-  --sidebar-ring: 228 100% 60%;
-  --chart-1: 228 100% 60%;
+  --sidebar-ring: 228 100% 58%;
+  --chart-1: 228 100% 58%;
   --chart-2: 245 90% 65%;
   --chart-3: 210 100% 60%;
   --chart-4: 260 80% 65%;
@@ -130,44 +129,19 @@
 
 @layer base {
   * { @apply border-border; }
-  body { @apply font-sans antialiased bg-background text-foreground; }
+  body {
+    @apply font-sans antialiased text-foreground;
+    background: #00000a;
+  }
   h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
 }
 
-/* ── Animated glow orbs (water motion) ── */
-@keyframes orb-drift-1 {
-  0%   { transform: translate(0px, 0px) scale(1);    opacity: 0.55; }
-  25%  { transform: translate(80px, -60px) scale(1.15); opacity: 0.7; }
-  50%  { transform: translate(40px, 80px) scale(0.9);  opacity: 0.5; }
-  75%  { transform: translate(-60px, 30px) scale(1.1); opacity: 0.65; }
-  100% { transform: translate(0px, 0px) scale(1);    opacity: 0.55; }
-}
-@keyframes orb-drift-2 {
-  0%   { transform: translate(0px, 0px) scale(1);    opacity: 0.45; }
-  33%  { transform: translate(-90px, 70px) scale(0.85); opacity: 0.6; }
-  66%  { transform: translate(50px, -80px) scale(1.2);  opacity: 0.4; }
-  100% { transform: translate(0px, 0px) scale(1);    opacity: 0.45; }
-}
-@keyframes orb-drift-3 {
-  0%   { transform: translate(0px, 0px) scale(1);    opacity: 0.35; }
-  50%  { transform: translate(60px, 50px) scale(1.1);  opacity: 0.5; }
-  100% { transform: translate(0px, 0px) scale(1);    opacity: 0.35; }
-}
+/* ── Glow pulse for status dot ── */
 @keyframes glow-pulse {
-  0%, 100% { opacity: 0.6; transform: scale(1); }
-  50%       { opacity: 0.9; transform: scale(1.05); }
+  0%, 100% { box-shadow: 0 0 4px rgba(74,222,128,0.6); }
+  50%       { box-shadow: 0 0 10px rgba(74,222,128,1); }
 }
-
-.orb-1 { animation: orb-drift-1 14s ease-in-out infinite; }
-.orb-2 { animation: orb-drift-2 18s ease-in-out infinite; }
-.orb-3 { animation: orb-drift-3 11s ease-in-out infinite; }
-.glow-pulse { animation: glow-pulse 3s ease-in-out infinite; }
-
-/* ── Section heading glow ── */
-@keyframes text-shimmer {
-  0%   { background-position: -200% center; }
-  100% { background-position: 200% center; }
-}
+.glow-pulse { animation: glow-pulse 2s ease-in-out infinite; }
 
 /* ── Card hover ── */
 .card-hover {
@@ -175,31 +149,31 @@
 }
 .card-hover:hover {
   transform: translateY(-5px);
-  border-color: rgba(26,71,255,0.45);
-  box-shadow: 0 0 40px rgba(26,71,255,0.18), 0 8px 32px rgba(0,0,0,0.4);
+  border-color: rgba(20,70,255,0.4);
+  box-shadow: 0 0 40px rgba(10,50,255,0.2), 0 8px 32px rgba(0,0,0,0.5);
 }
 
-/* ── Glass card ── */
+/* ── Glass cards — dark enough to read on vivid blue bg ── */
 .glass {
-  background: rgba(26, 71, 255, 0.04);
-  border: 1px solid rgba(26, 71, 255, 0.14);
-  backdrop-filter: blur(16px);
+  background: rgba(0, 5, 30, 0.55);
+  border: 1px solid rgba(30,80,255,0.18);
+  backdrop-filter: blur(20px);
 }
 .glass-bright {
-  background: rgba(26, 71, 255, 0.07);
-  border: 1px solid rgba(26, 71, 255, 0.25);
-  backdrop-filter: blur(20px);
+  background: rgba(5, 15, 60, 0.65);
+  border: 1px solid rgba(30,80,255,0.3);
+  backdrop-filter: blur(24px);
 }
 
 /* ── Gradient text ── */
 .gradient-text {
-  background: linear-gradient(135deg, #ffffff 0%, #7aa4ff 40%, #1a47ff 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #88aaff 40%, #2255ff 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 .gradient-text-blue {
-  background: linear-gradient(90deg, #6699ff 0%, #1a47ff 100%);
+  background: linear-gradient(90deg, #7799ff 0%, #2255ff 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -207,18 +181,18 @@
 
 /* ── Pill badge ── */
 .pill-badge {
-  background: linear-gradient(90deg, rgba(26,71,255,0.14), rgba(26,71,255,0.07));
-  border: 1px solid rgba(26,71,255,0.28);
+  background: rgba(10, 40, 200, 0.25);
+  border: 1px solid rgba(30,80,255,0.35);
 }
 
-/* ── Button glow ── */
+/* ── Primary button with glow ── */
 .btn-primary {
-  background: linear-gradient(135deg, #3366ff, #1a47ff);
-  box-shadow: 0 0 20px rgba(26,71,255,0.4), 0 0 60px rgba(26,71,255,0.15);
+  background: linear-gradient(135deg, #3366ff, #1a44ff);
+  box-shadow: 0 0 18px rgba(20,60,255,0.45), 0 0 50px rgba(20,60,255,0.18);
   transition: box-shadow 0.25s ease, transform 0.2s ease;
 }
 .btn-primary:hover {
-  box-shadow: 0 0 30px rgba(26,71,255,0.6), 0 0 80px rgba(26,71,255,0.25);
+  box-shadow: 0 0 28px rgba(20,60,255,0.7), 0 0 70px rgba(20,60,255,0.3);
   transform: translateY(-1px);
 }
 
@@ -232,18 +206,19 @@
   top: -1px;
   left: 50%;
   transform: translateX(-50%);
-  width: 200px;
+  width: 220px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(26,71,255,0.6), transparent);
+  background: linear-gradient(90deg, transparent, rgba(30,80,255,0.7), transparent);
 }
 
 /* ── Placeholder image slot ── */
 .placeholder-img {
-  background: linear-gradient(135deg, rgba(26,71,255,0.08) 0%, rgba(0,0,0,0.4) 100%);
-  border: 1.5px dashed rgba(26,71,255,0.25);
-  transition: border-color 0.25s ease, background 0.25s ease;
+  background: rgba(0, 5, 40, 0.6);
+  border: 1.5px dashed rgba(30,80,255,0.28);
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
 }
 .placeholder-img:hover {
-  border-color: rgba(26,71,255,0.5);
-  background: linear-gradient(135deg, rgba(26,71,255,0.12) 0%, rgba(0,0,0,0.4) 100%);
+  border-color: rgba(30,80,255,0.55);
+  background: rgba(5, 15, 70, 0.65);
+  box-shadow: 0 0 16px rgba(10,50,255,0.15);
 }

@@ -8,10 +8,12 @@ import { Policies } from "@/components/Policies";
 import { Testimonials } from "@/components/Testimonials";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
+import { GlobalBackground } from "@/components/GlobalBackground";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-background text-foreground overflow-x-hidden">
+    <main className="relative min-h-screen text-foreground overflow-x-hidden" style={{ background: '#000008' }}>
+      <GlobalBackground />
       <Navbar />
       <Hero />
       <About />
