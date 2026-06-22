@@ -12,17 +12,22 @@ export function Navbar() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
       className="fixed top-0 left-0 right-0 z-50 border-b border-white/5"
-      style={{ background: 'rgba(0,0,0,0.75)', backdropFilter: 'blur(20px)' }}
+      style={{ background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(24px)' }}
       data-testid="navbar"
     >
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="flex items-center gap-2.5 cursor-pointer group"
+          className="flex items-center gap-2.5 cursor-pointer"
           data-testid="nav-logo"
         >
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
-            style={{ background: 'linear-gradient(135deg, #7b5fff, #4800ff)' }}>
+          <div
+            className="w-8 h-8 rounded-lg flex items-center justify-center"
+            style={{
+              background: 'linear-gradient(135deg, #3366ff, #1a47ff)',
+              boxShadow: '0 0 14px rgba(26,71,255,0.5)',
+            }}
+          >
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
               <rect x="2" y="2" width="5" height="5" rx="1.2" fill="white" />
               <rect x="9" y="2" width="5" height="5" rx="1.2" fill="white" opacity="0.65" />
@@ -44,7 +49,7 @@ export function Navbar() {
             <button
               key={item.id}
               onClick={() => scrollTo(item.id)}
-              className="px-4 py-2 text-sm text-white/50 hover:text-white transition-colors rounded-lg hover:bg-white/5"
+              className="px-4 py-2 text-sm text-white/45 hover:text-white transition-colors rounded-lg hover:bg-white/5"
               data-testid={`nav-link-${item.id}`}
             >
               {item.label}
@@ -52,8 +57,7 @@ export function Navbar() {
           ))}
           <button
             onClick={() => scrollTo('contact')}
-            className="ml-2 px-5 py-2 text-sm font-semibold text-white rounded-full transition-all hover:opacity-90"
-            style={{ background: 'linear-gradient(90deg, #7b5fff, #4800ff)' }}
+            className="btn-primary ml-2 px-5 py-2 text-sm font-semibold text-white rounded-full"
             data-testid="nav-contact"
           >
             Commission Me

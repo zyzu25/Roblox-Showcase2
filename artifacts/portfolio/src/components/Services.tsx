@@ -5,61 +5,91 @@ const services = [
   {
     icon: Gamepad2,
     title: "Full Game UI Design",
-    description: "Complete UI systems built from the ground up — every screen, every frame, consistent theme across your whole game.",
-    color: "text-violet-400",
-    bg: "bg-violet-500/10",
+    description: "Complete UI systems built from the ground up. Every screen, every frame, consistent theme across your whole game.",
+    color: "text-blue-400",
+    bg: "bg-blue-500/10",
+    glow: "rgba(59,130,246,0.3)",
   },
   {
     icon: LayoutTemplate,
-    title: "HUDs & Shop Interfaces",
+    title: "HUDs and Shop Interfaces",
     description: "Combat HUDs, health bars, cooldown rings, and shop grids that feel native to your game's world.",
-    color: "text-blue-400",
-    bg: "bg-blue-500/10",
+    color: "text-indigo-400",
+    bg: "bg-indigo-500/10",
+    glow: "rgba(99,102,241,0.3)",
   },
   {
     icon: Code2,
     title: "Inventory / Pets / Rebirth UIs",
-    description: "Complex system UIs — drag-and-drop inventories, pet displays, rebirth screens — built to handle real gameplay logic.",
-    color: "text-indigo-400",
-    bg: "bg-indigo-500/10",
+    description: "Complex system UIs including drag-and-drop inventories, pet displays, and rebirth screens built to handle real gameplay logic.",
+    color: "text-violet-400",
+    bg: "bg-violet-500/10",
+    glow: "rgba(139,92,246,0.3)",
   },
   {
     icon: Image,
     title: "Military RP Logos",
     description: "Custom insignia and logo design for military roleplay groups, with a sharp, professional finish.",
-    color: "text-slate-400",
-    bg: "bg-slate-500/10",
+    color: "text-sky-400",
+    bg: "bg-sky-500/10",
+    glow: "rgba(56,189,248,0.3)",
   },
   {
     icon: RefreshCw,
-    title: "UI Revamps & Redesigns",
+    title: "UI Revamps and Redesigns",
     description: "Already have a UI that feels outdated? I'll modernize and elevate it while keeping your game's identity intact.",
-    color: "text-purple-400",
-    bg: "bg-purple-500/10",
+    color: "text-blue-300",
+    bg: "bg-blue-400/10",
+    glow: "rgba(147,197,253,0.3)",
   },
   {
     icon: Sparkles,
-    title: "Loading Screens & Menus",
+    title: "Loading Screens and Menus",
     description: "Atmospheric loading screens and main menus that set the tone before a player even enters your game.",
-    color: "text-fuchsia-400",
-    bg: "bg-fuchsia-500/10",
+    color: "text-indigo-300",
+    bg: "bg-indigo-400/10",
+    glow: "rgba(165,180,252,0.3)",
   },
 ];
 
 export function Services() {
   return (
-    <section className="py-28 border-t border-white/5" id="services">
-      {/* Orb */}
-      <div className="absolute left-0 w-[350px] h-[350px] opacity-8 pointer-events-none"
-        style={{ background: 'radial-gradient(circle, #4800ff 0%, transparent 70%)', filter: 'blur(80px)' }} />
+    <section className="py-28 border-t border-white/5 section-glow relative" id="services">
+      <div
+        className="absolute left-0 top-1/2 -translate-y-1/2 w-[400px] h-[400px] opacity-10 pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle, rgba(26,71,255,0.6) 0%, transparent 70%)',
+          filter: 'blur(80px)',
+        }}
+      />
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="max-w-xl mb-14">
-          <p className="text-xs font-semibold uppercase tracking-widest gradient-text-accent mb-4">Services</p>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">What I offer.</h2>
-          <p className="text-white/45 text-base leading-relaxed">
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-xs font-semibold uppercase tracking-widest gradient-text-blue mb-4"
+          >
+            Services
+          </motion.p>
+          <motion.h2
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-4xl md:text-5xl font-bold text-white mb-4"
+          >
+            What I offer.
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="text-white/40 text-base leading-relaxed"
+          >
             Production-ready interfaces that plug directly into your game. No hand-holding required.
-          </p>
+          </motion.p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -68,18 +98,28 @@ export function Services() {
             return (
               <motion.div
                 key={i}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 22 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.07, duration: 0.5 }}
-                className="glass rounded-2xl p-6 hover:border-[rgba(72,0,255,0.3)] transition-colors group card-hover"
+                whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                className="glass rounded-2xl p-6 group cursor-default"
+                style={{ transition: 'border-color 0.25s ease, box-shadow 0.25s ease' }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = `rgba(26,71,255,0.35)`;
+                  (e.currentTarget as HTMLElement).style.boxShadow = `0 0 30px ${service.glow}, 0 8px 32px rgba(0,0,0,0.4)`;
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.borderColor = '';
+                  (e.currentTarget as HTMLElement).style.boxShadow = '';
+                }}
                 data-testid={`service-card-${i}`}
               >
                 <div className={`w-11 h-11 ${service.bg} rounded-xl flex items-center justify-center mb-5`}>
                   <Icon className={`w-5 h-5 ${service.color}`} />
                 </div>
                 <h3 className="text-base font-semibold text-white mb-2">{service.title}</h3>
-                <p className="text-white/45 leading-relaxed text-sm">{service.description}</p>
+                <p className="text-white/40 leading-relaxed text-sm">{service.description}</p>
               </motion.div>
             );
           })}

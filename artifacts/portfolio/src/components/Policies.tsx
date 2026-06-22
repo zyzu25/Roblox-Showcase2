@@ -58,14 +58,33 @@ const policies = [
 
 export function Policies() {
   return (
-    <section className="py-28 border-t border-white/5" id="policies">
+    <section className="py-28 border-t border-white/5 section-glow" id="policies">
       <div className="max-w-7xl mx-auto px-6">
         <div className="max-w-xl mb-14">
-          <p className="text-xs font-semibold uppercase tracking-widest gradient-text-accent mb-4">Policies & Terms</p>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">Clear expectations.</h2>
-          <p className="text-white/45 text-base leading-relaxed">
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-xs font-semibold uppercase tracking-widest gradient-text-blue mb-4"
+          >
+            Policies and Terms
+          </motion.p>
+          <motion.h2
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-4xl md:text-5xl font-bold text-white mb-4"
+          >
+            Clear expectations.
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-white/40 text-base leading-relaxed"
+          >
             These policies exist to keep all commissions fair and transparent. By ordering, you agree to the terms below.
-          </p>
+          </motion.p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -76,6 +95,7 @@ export function Policies() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.07, duration: 0.5 }}
+              whileHover={{ y: -4, transition: { duration: 0.2 } }}
               className="glass rounded-2xl p-6"
               data-testid={`policy-card-${i}`}
             >
@@ -85,9 +105,11 @@ export function Policies() {
               </div>
               <ul className="space-y-2.5">
                 {policy.items.map((item, ii) => (
-                  <li key={ii} className="flex items-start gap-2.5 text-sm text-white/50 leading-relaxed">
-                    <div className="w-1 h-1 rounded-full mt-2 flex-shrink-0"
-                      style={{ background: 'linear-gradient(90deg, #7b5fff, #4800ff)' }} />
+                  <li key={ii} className="flex items-start gap-2.5 text-sm text-white/45 leading-relaxed">
+                    <div
+                      className="w-1 h-1 rounded-full mt-2 flex-shrink-0"
+                      style={{ background: 'linear-gradient(90deg, #3366ff, #1a47ff)', boxShadow: '0 0 4px rgba(26,71,255,0.6)' }}
+                    />
                     {item}
                   </li>
                 ))}
