@@ -7,6 +7,7 @@ import { MagneticButton } from "./MagneticButton";
 const plans = [
   {
     name: "Starter UI",
+    value: "starter",
     robux: "1,000 to 4,000",
     usd: "$5 to $15",
     note: "after discount",
@@ -18,6 +19,7 @@ const plans = [
   },
   {
     name: "Game UI Package",
+    value: "game",
     robux: "4,000 to 12,000",
     usd: "$15 to $50",
     note: "after discount",
@@ -29,6 +31,7 @@ const plans = [
   },
   {
     name: "Full Game UI Package",
+    value: "full",
     robux: "12,000 to 30,000",
     usd: "$50 to $100",
     note: "after discount",
@@ -40,6 +43,7 @@ const plans = [
   },
   {
     name: "Premium UI Package",
+    value: "premium",
     robux: "30,000+",
     usd: "$100+",
     note: "after discount",
@@ -50,6 +54,18 @@ const plans = [
     highlight: false,
   },
 ];
+
+function handleGetStarted(packageValue: string) {
+  sessionStorage.setItem('selectedPackage', packageValue);
+  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+  setTimeout(() => {
+    const select = document.getElementById('select-package') as HTMLSelectElement | null;
+    if (select) {
+      select.value = packageValue;
+      select.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  }, 750);
+}
 
 export function Pricing() {
   return (
@@ -152,7 +168,7 @@ export function Pricing() {
                 </p>
 
                 <MagneticButton
-                  onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+                  onClick={() => handleGetStarted(plan.value)}
                   className={`w-full py-2.5 rounded-xl text-sm font-semibold transition-all ${
                     plan.highlight ? 'btn-primary text-white' : 'glass text-white/60 hover:text-white hover:border-[rgba(26,71,255,0.3)]'
                   }`}

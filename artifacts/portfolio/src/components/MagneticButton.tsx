@@ -5,11 +5,13 @@ export function MagneticButton({
   className = "",
   onClick,
   dataTestid,
+  type = "button",
 }: {
   children: ReactNode;
   className?: string;
   onClick?: () => void;
   dataTestid?: string;
+  type?: "button" | "submit" | "reset";
 }) {
   const ref = useRef<HTMLButtonElement>(null);
   const [pos, setPos] = useState({ x: 0, y: 0 });
@@ -29,6 +31,7 @@ export function MagneticButton({
   return (
     <button
       ref={ref}
+      type={type}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
       onClick={onClick}

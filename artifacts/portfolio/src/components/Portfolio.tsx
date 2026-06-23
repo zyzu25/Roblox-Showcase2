@@ -1,16 +1,49 @@
 import { motion } from "framer-motion";
-import { ImagePlus } from "lucide-react";
 import { TiltCard } from "./TiltCard";
 import { AnimatedText } from "./AnimatedText";
+
+// ── Replace each "" with the path to your screenshot ─────────────────────────
+// Example: "/images/fort-benning-loading.jpg"
+// Place your images in artifacts/portfolio/public/images/ and reference as "/images/filename.jpg"
+const SCREENSHOTS: Record<string, string[]> = {
+  "Fort Benning": [
+    "", // Loading Screen
+    "", // Main Menu
+    "", // BCT Hosting UI
+    "", // Events UI
+    "", // Emote Wheel
+    "", // ID Card UI
+    "", // Settings UI
+    "", // Cover Selection UI
+  ],
+  "Central Intelligence Agency": [
+    "", // Main Menu
+    "", // Case Dashboard
+    "", // Loading Screen
+  ],
+  "SCP Site Aether": [
+    "", // Loading Screen
+    "", // Locker UI
+    "", // Health & Stamina HUD
+    "", // Settings UI
+    "", // Notifications
+    "", // Proximity Prompt
+  ],
+  "Troll Tower X": [
+    "", // Gloves Shop
+  ],
+  "Various Clients": [
+    "", // Anime UI
+    "", // Car Shop UI
+    "", // Daily Rewards
+  ],
+};
 
 const projects = [
   {
     game: "Fort Benning",
     category: "Military RP",
-    screens: [
-      "Loading Screen", "Main Menu", "BCT Hosting UI", "Events UI",
-      "Emote Wheel", "ID Card UI", "Settings UI", "Cover Selection UI",
-    ],
+    screens: ["Loading Screen", "Main Menu", "BCT Hosting UI", "Events UI", "Emote Wheel", "ID Card UI", "Settings UI", "Cover Selection UI"],
     desc: "Full UI suite for a military roleplay experience. Loading screen, main menu, settings, events, BCT hosting, emote selection wheel, cover selection, and identification card.",
     tag: "8 Screens",
   },
@@ -24,10 +57,7 @@ const projects = [
   {
     game: "SCP Site Aether",
     category: "SCP / Military RP",
-    screens: [
-      "Loading Screen", "Locker UI", "Health & Stamina HUD",
-      "Settings UI", "Notifications", "Proximity Prompt",
-    ],
+    screens: ["Loading Screen", "Locker UI", "Health & Stamina HUD", "Settings UI", "Notifications", "Proximity Prompt"],
     desc: "Dark, immersive UI system for an SCP roleplay site. Loading screen, locker, notifications, custom proximity prompt, settings, and a health/stamina HUD.",
     tag: "6 Screens",
   },
@@ -47,20 +77,29 @@ const projects = [
   },
 ];
 
-function PlaceholderSlot({ label, index }: { label: string; index: number }) {
+function ScreenSlot({ src, alt, index }: { src: string; alt: string; index: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
+      initial={{ opacity: 0, scale: 0.92 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.05, duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-      className="placeholder-img rounded-xl flex flex-col items-center justify-center gap-2 select-none cursor-pointer group"
+      className="relative rounded-xl overflow-hidden"
       style={{ aspectRatio: '4/3' }}
-      title={`Replace with screenshot: ${label}`}
-      whileHover={{ scale: 1.03, transition: { duration: 0.2 } }}
     >
-      <ImagePlus className="w-5 h-5 text-white/20 group-hover:text-white/40 transition-colors duration-300" />
-      <span className="text-[10px] text-white/20 group-hover:text-white/40 font-medium text-center leading-tight px-2 transition-colors duration-300">{label}</span>
+      {src ? (
+        <img src={src} alt={alt} className="w-full h-full object-cover" />
+      ) : (
+        <div
+          className="w-full h-full flex items-end p-2"
+          style={{
+            background: 'linear-gradient(160deg, rgba(10,14,50,0.95) 0%, rgba(5,8,35,0.98) 100%)',
+            border: '1px solid rgba(30,80,255,0.12)',
+          }}
+        >
+          <span className="text-[9px] text-white/20 leading-tight font-medium">{alt}</span>
+        </div>
+      )}
     </motion.div>
   );
 }
@@ -116,12 +155,14 @@ export function Portfolio() {
                   style={{ gridTemplateColumns: `repeat(${Math.min(project.screens.length, 6)}, 1fr)` }}
                 >
                   {project.screens.map((screen, i) => (
-                    <PlaceholderSlot key={i} label={screen} index={i} />
+                    <ScreenSlot
+                      key={i}
+                      src={SCREENSHOTS[project.game]?.[i] ?? ""}
+                      alt={screen}
+                      index={i}
+                    />
                   ))}
                 </div>
-                <p className="text-[11px] text-white/18 mt-3 text-center">
-                  Hover a slot and replace with your screenshot
-                </p>
               </div>
             </TiltCard>
           ))}

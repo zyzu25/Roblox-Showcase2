@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import { SiRoblox, SiDiscord } from "react-icons/si";
 
 export function Footer() {
   const scrollTo = (id: string) => {
@@ -70,7 +69,7 @@ export function Footer() {
               href="https://www.roblox.com/users/search?keyword=ZYZU25"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-9 h-9 rounded-full glass flex items-center justify-center text-white/35 hover:text-white transition-all"
+              className="w-9 h-9 rounded-full glass flex items-center justify-center overflow-hidden transition-all"
               data-testid="footer-link-roblox"
               whileHover={{ scale: 1.15, y: -2 }}
               whileTap={{ scale: 0.9 }}
@@ -83,11 +82,11 @@ export function Footer() {
                 (e.currentTarget as HTMLElement).style.borderColor = '';
               }}
             >
-              <SiRoblox className="w-4 h-4" />
+              <img src="/images/roblox.png" alt="Roblox" className="w-5 h-5 object-contain" />
             </motion.a>
             <motion.a
               href="#"
-              className="w-9 h-9 rounded-full glass flex items-center justify-center text-white/35 hover:text-white transition-all"
+              className="w-9 h-9 rounded-full glass flex items-center justify-center overflow-hidden transition-all"
               data-testid="footer-link-discord"
               whileHover={{ scale: 1.15, y: -2 }}
               whileTap={{ scale: 0.9 }}
@@ -100,7 +99,7 @@ export function Footer() {
                 (e.currentTarget as HTMLElement).style.borderColor = '';
               }}
             >
-              <SiDiscord className="w-4 h-4" />
+              <img src="/images/discord.png" alt="Discord" className="w-5 h-5 object-contain" />
             </motion.a>
           </div>
         </div>

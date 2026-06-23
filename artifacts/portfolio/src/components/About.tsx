@@ -22,13 +22,28 @@ export function About() {
             transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
           >
             <p className="text-xs font-semibold uppercase tracking-widest gradient-text-blue mb-4">About Me</p>
-            <h2 className="text-4xl md:text-5xl font-bold leading-tight text-white mb-6">
-              <AnimatedLine text="Hello, I'm" delay={0} />
-              <br />
-              <span className="gradient-text">
-                <AnimatedLine text="MYSTICFUSION7X." delay={0.15} />
-              </span>
-            </h2>
+
+            <div className="text-4xl md:text-5xl font-bold leading-tight mb-6">
+              <motion.div
+                initial={{ opacity: 0, y: 24, filter: "blur(10px)" }}
+                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
+                className="text-white"
+              >
+                Hello, I'm
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, y: 24, filter: "blur(10px)" }}
+                whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: 0.15, ease: [0.23, 1, 0.32, 1] }}
+                className="gradient-text"
+              >
+                MYSTICFUSION7X.
+              </motion.div>
+            </div>
+
             <AnimatedLine
               text="I'm a Roblox UI designer who focuses on polished interfaces that help games stand out. With over a year of hands-on experience, I've built UI systems for military roleplay games, SCP environments, and general Roblox titles."
               className="text-white/50 text-base leading-relaxed mb-4"
@@ -46,10 +61,10 @@ export function About() {
               transition={{ delay: 0.6, duration: 0.5 }}
               className="flex items-center gap-3 text-sm text-white/35"
             >
-              <div className="w-8 h-8 rounded-lg glass flex items-center justify-center text-xs font-mono font-bold text-white/40">rb</div>
+              <img src="/images/roblox.png" alt="Roblox" className="w-8 h-8 rounded-lg object-cover" />
               <span>ZYZU25 on Roblox</span>
               <span className="text-white/15 mx-1">·</span>
-              <div className="w-8 h-8 rounded-lg glass flex items-center justify-center text-xs font-mono font-bold text-white/40">ds</div>
+              <img src="/images/discord.png" alt="Discord" className="w-8 h-8 rounded-lg object-cover" />
               <span>mysticfusion7x on Discord</span>
             </motion.div>
           </motion.div>
@@ -101,15 +116,11 @@ export function About() {
             <TiltCard className="glass-bright rounded-2xl p-5" intensity={8}>
               <p className="text-xs font-semibold uppercase tracking-widest text-white/25 mb-3">Notable Work</p>
               <div className="flex items-start gap-3">
-                <div
-                  className="w-10 h-10 rounded-xl flex-shrink-0 flex items-center justify-center text-xs font-bold text-white"
-                  style={{
-                    background: 'linear-gradient(135deg, #1a47ff, #3366ff)',
-                    boxShadow: '0 0 16px rgba(26,71,255,0.5)',
-                  }}
-                >
-                  SCP
-                </div>
+                <img
+                  src="/images/scp-icon.png"
+                  alt="SCP Site Aether"
+                  className="w-10 h-10 rounded-xl object-cover flex-shrink-0"
+                />
                 <div>
                   <p className="text-sm font-semibold text-white">SCP Site Aether</p>
                   <p className="text-xs text-white/40 leading-relaxed mt-0.5">
