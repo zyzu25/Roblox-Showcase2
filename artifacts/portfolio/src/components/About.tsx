@@ -4,9 +4,8 @@ import { TiltCard } from "./TiltCard";
 import { CountUp } from "./CountUp";
 
 const skills = [
-  "ScreenGuis", "Frames & Layouts", "UI Animations",
-  "Tweening", "Responsive Design", "Roblox Studio",
-  "Figma", "Iconography", "Military RP UIs", "Luau Scripting",
+  "ScreenGuis", "Frames & Layouts", "Roblox Studio",
+  "Figma", "Iconography", "Military RP UIs",
 ];
 
 export function About() {

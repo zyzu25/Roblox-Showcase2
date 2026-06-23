@@ -27,18 +27,10 @@ export function Footer() {
           >
             <div className="flex items-center gap-2.5 mb-3">
               <div
-                className="w-7 h-7 rounded-lg flex items-center justify-center"
-                style={{
-                  background: 'linear-gradient(135deg, #3366ff, #1a47ff)',
-                  boxShadow: '0 0 10px rgba(26,71,255,0.5)',
-                }}
+                className="w-9 h-9 rounded-xl overflow-hidden flex-shrink-0"
+                style={{ boxShadow: '0 0 14px rgba(26,71,255,0.5)' }}
               >
-                <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-                  <rect x="2" y="2" width="5" height="5" rx="1.2" fill="white" />
-                  <rect x="9" y="2" width="5" height="5" rx="1.2" fill="white" opacity="0.65" />
-                  <rect x="2" y="9" width="5" height="5" rx="1.2" fill="white" opacity="0.65" />
-                  <rect x="9" y="9" width="5" height="5" rx="1.2" fill="white" />
-                </svg>
+                <img src="/images/profile.jpg" alt="MYSTICFUSION7X" className="w-full h-full object-cover" />
               </div>
               <span className="font-display font-bold text-base text-white">MYSTICFUSION7X</span>
             </div>
