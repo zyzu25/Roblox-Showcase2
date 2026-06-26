@@ -1,237 +1,144 @@
 import { useEffect, useRef, useState } from "react";
 
-/* Liquid blob background — organic, mouse-reactive, smooth morphing */
+/* Liquid gooey background — SVG metaball effect with CSS animation + mouse reactivity */
+
 interface Blob {
-  x: number; y: number;
-  vx: number; vy: number;
-  size: number;
-  targetSize: number;
-  phase: number;
-  phaseSpeed: number;
-  r: number; g: number; b: number;
+  id: number;
+  cx: number;
+  cy: number;
+  r: number;
+  hue: number;
+  sat: number;
+  lit: number;
   alpha: number;
-  morph: number;
-  morphSpeed: number;
-  corner: number;
+  xOffset: number;
+  yOffset: number;
+  duration: number;
+  delay: number;
 }
 
-function createBlob(
-  cx: number, cy: number, size: number,
-  r: number, g: number, b: number, alpha: number,
-  phase: number
-): Blob {
-  return {
-    x: cx, y: cy,
-    vx: 0, vy: 0,
-    size,
-    targetSize: size,
-    phase,
-    phaseSpeed: 0.3 + Math.random() * 0.4,
-    r, g, b,
-    alpha,
-    morph: 0,
-    morphSpeed: 0.2 + Math.random() * 0.3,
-    corner: Math.random() * 6,
-  };
-}
+function buildBlobs(theme: string): Blob[] {
+  const h1 = theme === "blue" ? 230 : theme === "white" ? 0 : 270;
+  const h2 = theme === "blue" ? 220 : theme === "white" ? 0 : 285;
+  const h3 = theme === "blue" ? 240 : theme === "white" ? 0 : 255;
+  const h4 = theme === "blue" ? 210 : theme === "white" ? 0 : 300;
 
-function blobPath(cx: number, cy: number, size: number, t: number, morph: number): string {
-  // 8-point metaball-like blob shape
-  const points = 8;
-  const pts: [number, number, number, number][] = [];
-  for (let i = 0; i < points; i++) {
-    const angle = (i / points) * Math.PI * 2;
-    const dist = size * (
-      0.85 +
-      0.15 * Math.sin(t + i * 1.7 + morph) +
-      0.08 * Math.sin(t * 0.6 + i * 2.3)
-    );
-    const x = cx + Math.cos(angle) * dist;
-    const y = cy + Math.sin(angle) * dist;
-    const cpDist = size * 0.35;
-    const cpx = cx + Math.cos(angle + 0.15) * cpDist;
-    const cpy = cy + Math.sin(angle + 0.15) * cpDist;
-    pts.push([x, y, cpx, cpy]);
+  if (theme === "white") {
+    return [
+      { id: 1, cx: 78, cy: 32, r: 18, hue: h1, sat: 8,  lit: 55, alpha: 0.14, xOffset: 6,  yOffset: 4,  duration: 18, delay: 0 },
+      { id: 2, cx: 28, cy: 62, r: 16, hue: h2, sat: 12, lit: 50, alpha: 0.11, xOffset: 5,  yOffset: 6,  duration: 22, delay: 3 },
+      { id: 3, cx: 52, cy: 48, r: 12, hue: h3, sat: 6,  lit: 58, alpha: 0.08, xOffset: 4,  yOffset: 3,  duration: 14, delay: 1 },
+      { id: 4, cx: 15, cy: 78, r: 10, hue: h4, sat: 10, lit: 48, alpha: 0.06, xOffset: 3,  yOffset: 5,  duration: 20, delay: 5 },
+      { id: 5, cx: 88, cy: 58, r: 9,  hue: h1, sat: 8,  lit: 52, alpha: 0.05, xOffset: 3,  yOffset: 4,  duration: 16, delay: 2 },
+    ];
   }
-  let d = `M ${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
-  for (let i = 0; i < points; i++) {
-    const next = (i + 1) % points;
-    d += ` C ${pts[i][2].toFixed(1)} ${pts[i][3].toFixed(1)}, ${pts[next][2].toFixed(1)} ${pts[next][3].toFixed(1)}, ${pts[next][0].toFixed(1)} ${pts[next][1].toFixed(1)}`;
-  }
-  d += " Z";
-  return d;
+
+  return [
+    { id: 1, cx: 78, cy: 32, r: 20, hue: h1, sat: 85, lit: 52, alpha: 0.22, xOffset: 7,  yOffset: 5,  duration: 18, delay: 0 },
+    { id: 2, cx: 28, cy: 62, r: 17, hue: h2, sat: 80, lit: 48, alpha: 0.18, xOffset: 5,  yOffset: 7,  duration: 22, delay: 3 },
+    { id: 3, cx: 52, cy: 48, r: 13, hue: h3, sat: 75, lit: 55, alpha: 0.1,  xOffset: 4,  yOffset: 4,  duration: 14, delay: 1 },
+    { id: 4, cx: 15, cy: 78, r: 10, hue: h4, sat: 82, lit: 45, alpha: 0.07, xOffset: 3,  yOffset: 5,  duration: 20, delay: 5 },
+    { id: 5, cx: 88, cy: 58, r: 9,  hue: h1, sat: 78, lit: 50, alpha: 0.05, xOffset: 3,  yOffset: 4,  duration: 16, delay: 2 },
+  ];
 }
 
-function lerp(a: number, b: number, t: number) {
-  return a + (b - a) * t;
+function hsla(h: number, s: number, l: number, a: number) {
+  return `hsla(${h}, ${s}%, ${l}%, ${a})`;
 }
 
 export function GlobalBackground() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mouseRef = useRef({ x: -9999, y: -9999, vx: 0, vy: 0 });
-  const prevMouseRef = useRef({ x: -9999, y: -9999 });
-  const rafRef = useRef<number>(0);
+  const [theme, setTheme] = useState("purple");
+  const svgRef = useRef<SVGSVGElement>(null);
+  const mouseRef = useRef({ x: 0, y: 0 });
   const blobsRef = useRef<Blob[]>([]);
-  const [isReady, setIsReady] = useState(false);
+  const frameRef = useRef<number>(0);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    const resize = () => {
-      const dpr = window.devicePixelRatio || 1;
-      canvas.width = window.innerWidth * dpr;
-      canvas.height = window.innerHeight * dpr;
-      canvas.style.width = `${window.innerWidth}px`;
-      canvas.style.height = `${window.innerHeight}px`;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const checkTheme = () => {
+      const t = document.documentElement.getAttribute("data-theme") || "purple";
+      if (t !== theme) {
+        setTheme(t);
+      }
     };
-    resize();
-    window.addEventListener("resize", resize);
+    checkTheme();
+    const interval = setInterval(checkTheme, 300);
+    return () => clearInterval(interval);
+  }, [theme]);
 
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    const style = getComputedStyle(document.documentElement);
-    const getVar = (n: string) => Number.parseInt(style.getPropertyValue(n)) || 0;
-
-    const blobs = [
-      createBlob(w * 0.75, h * 0.3, Math.max(w, h) * 0.55, getVar("--c-orb-r"), getVar("--c-orb-g"), getVar("--c-orb-b"), 0.65, 0),
-      createBlob(w * 0.3,  h * 0.7, Math.max(w, h) * 0.45, getVar("--c-orb2-r"), getVar("--c-orb2-g"), getVar("--c-orb2-b"), 0.55, 2.5),
-      createBlob(w * 0.5,  h * 0.5, Math.max(w, h) * 0.3,  getVar("--c-orb3-r"), getVar("--c-orb3-g"), getVar("--c-orb3-b"), 0.3, 1.8),
-      createBlob(w * 0.15, h * 0.8, Math.max(w, h) * 0.2,  getVar("--c-orb4-r"), getVar("--c-orb4-g"), getVar("--c-orb4-b"), 0.2, 4.2),
-    ];
-    blobsRef.current = blobs;
-
+  useEffect(() => {
     const handleMouse = (e: MouseEvent) => {
-      mouseRef.current = {
-        x: e.clientX,
-        y: e.clientY,
-        vx: e.clientX - prevMouseRef.current.x,
-        vy: e.clientY - prevMouseRef.current.y,
-      };
-      prevMouseRef.current = { x: e.clientX, y: e.clientY };
+      mouseRef.current = { x: e.clientX, y: e.clientY };
     };
     window.addEventListener("mousemove", handleMouse);
+    return () => window.removeEventListener("mousemove", handleMouse);
+  }, []);
 
-    let t = 0;
+  useEffect(() => {
+    blobsRef.current = buildBlobs(theme);
+  }, [theme]);
+
+  useEffect(() => {
+    const svg = svgRef.current;
+    if (!svg) return;
+
     const animate = () => {
-      t += 0.012;
       const w = window.innerWidth;
       const h = window.innerHeight;
       const mx = mouseRef.current.x;
       const my = mouseRef.current.y;
-      const mvx = mouseRef.current.vx;
-      const mvy = mouseRef.current.vy;
 
-      ctx.clearRect(0, 0, w, h);
+      const blobs = blobsRef.current;
+      const circles = svg.querySelectorAll<SVGCircleElement>(".blob");
+      const time = Date.now() / 1000;
 
-      // Base bg
-      const baseColor = getComputedStyle(document.documentElement).getPropertyValue("--c-bg").trim();
-      ctx.fillStyle = baseColor || "#00000a";
-      ctx.fillRect(0, 0, w, h);
+      circles.forEach((circle, i) => {
+        const b = blobs[i];
+        if (!b) return;
 
-      // Glow off-screen canvas for smoother rendering
-      const glowCanvas = document.createElement("canvas");
-      glowCanvas.width = w;
-      glowCanvas.height = h;
-      const gCtx = glowCanvas.getContext("2d")!;
-      gCtx.fillStyle = baseColor || "#00000a";
-      gCtx.fillRect(0, 0, w, h);
+        const baseX = (b.cx / 100) * w;
+        const baseY = (b.cy / 100) * h;
+        const t = time + b.delay;
 
-      for (let i = 0; i < blobsRef.current.length; i++) {
-        const b = blobsRef.current[i];
-        const time = t + b.phase;
+        // Drift
+        const dx = Math.sin(t * (2 * Math.PI / b.duration)) * b.xOffset * (w / 100);
+        const dy = Math.cos(t * (2 * Math.PI / b.duration) * 0.7) * b.yOffset * (h / 100);
 
-        // Morph
-        b.morph += b.morphSpeed;
-
-        // Mouse interaction (follow with gentle spring + slight velocity)
-        const homeX = b.corner === 0 ? w * 0.75 : b.corner === 1 ? w * 0.3 : b.corner === 2 ? w * 0.5 : w * 0.15;
-        const homeY = b.corner === 0 ? h * 0.3 : b.corner === 1 ? h * 0.7 : b.corner === 2 ? h * 0.5 : h * 0.8;
-
-        if (mx > 0 && i < 2) {
-          const dx = mx - b.x;
-          const dy = my - b.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          const maxDist = 500;
+        // Mouse repulsion (gentle)
+        let mdx = 0, mdy = 0;
+        if (mx > 0 && i < 3) {
+          const distX = mx - (baseX + dx);
+          const distY = my - (baseY + dy);
+          const dist = Math.sqrt(distX * distX + distY * distY);
+          const maxDist = 350;
           if (dist < maxDist && dist > 0) {
-            const force = (1 - dist / maxDist) * 0.6;
-            b.vx += (dx / dist) * force * 0.4;
-            b.vy += (dy / dist) * force * 0.4;
+            const push = (1 - dist / maxDist) * 25;
+            mdx = -(distX / dist) * push;
+            mdy = -(distY / dist) * push;
           }
-          // Mouse velocity influence
-          b.vx += mvx * 0.02;
-          b.vy += mvy * 0.02;
         }
 
-        // Spring back to home
-        b.vx += (homeX - b.x) * 0.002;
-        b.vy += (homeY - b.y) * 0.002;
+        // Breathing
+        const breathe = 1 + Math.sin(t * 0.8 + b.delay) * 0.05;
+        const radius = b.r * (Math.min(w, h) / 100) * breathe;
 
-        // Soft ambient drift
-        b.vx += Math.sin(time * 0.4) * 0.15;
-        b.vy += Math.cos(time * 0.35) * 0.12;
+        circle.setAttribute("cx", `${baseX + dx + mdx}`);
+        circle.setAttribute("cy", `${baseY + dy + mdy}`);
+        circle.setAttribute("r", `${radius}`);
+        circle.setAttribute("fill", hsla(b.hue, b.sat, b.lit, b.alpha));
+      });
 
-        // Friction
-        b.vx *= 0.94;
-        b.vy *= 0.94;
-        b.x += b.vx;
-        b.y += b.vy;
-
-        // Breathing size
-        b.targetSize = b.size * (1 + Math.sin(time * b.phaseSpeed) * 0.08);
-        const currentSize = b.targetSize;
-
-        // Draw liquid blob
-        const path = new Path2D(blobPath(b.x, b.y, currentSize, time, b.morph));
-        const g = gCtx.createRadialGradient(b.x, b.y, 0, b.x, b.y, currentSize);
-        g.addColorStop(0, `rgba(${b.r}, ${b.g}, ${b.b}, ${b.alpha})`);
-        g.addColorStop(0.3, `rgba(${b.r}, ${b.g}, ${b.b}, ${b.alpha * 0.6})`);
-        g.addColorStop(0.6, `rgba(${b.r}, ${b.g}, ${b.b}, ${b.alpha * 0.2})`);
-        g.addColorStop(1, `rgba(${b.r}, ${b.g}, ${b.b}, 0)`);
-        gCtx.fillStyle = g;
-        gCtx.fill(path, "evenodd");
-
-        // Inner bright spot
-        const g2 = gCtx.createRadialGradient(b.x, b.y, 0, b.x, b.y, currentSize * 0.4);
-        g2.addColorStop(0, `rgba(${b.r}, ${b.g}, ${b.b}, ${b.alpha * 0.3})`);
-        g2.addColorStop(1, `rgba(${b.r}, ${b.g}, ${b.b}, 0)`);
-        gCtx.fillStyle = g2;
-        gCtx.fill(path, "evenodd");
-      }
-
-      // Blur the glow layer
-      ctx.filter = "blur(60px)";
-      ctx.drawImage(glowCanvas, 0, 0);
-      ctx.filter = "none";
-
-      // Subtle vignette
-      const v = ctx.createRadialGradient(w / 2, h / 2, w * 0.25, w / 2, h / 2, w * 0.8);
-      v.addColorStop(0, "rgba(0,0,0,0)");
-      v.addColorStop(0.5, "rgba(0,0,0,0.25)");
-      v.addColorStop(0.85, "rgba(0,0,0,0.8)");
-      v.addColorStop(1, "rgba(0,0,0,0.95)");
-      ctx.fillStyle = v;
-      ctx.fillRect(0, 0, w, h);
-
-      rafRef.current = requestAnimationFrame(animate);
+      frameRef.current = requestAnimationFrame(animate);
     };
 
-    rafRef.current = requestAnimationFrame(animate);
-    setIsReady(true);
-
-    return () => {
-      cancelAnimationFrame(rafRef.current);
-      window.removeEventListener("resize", resize);
-      window.removeEventListener("mousemove", handleMouse);
-    };
+    frameRef.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frameRef.current);
   }, []);
 
+  const bg = theme === "purple" ? "#05010c" : theme === "blue" ? "#000815" : "#0d0d12";
+  const blobs = buildBlobs(theme);
+
   return (
-    <canvas
-      ref={canvasRef}
+    <div
       style={{
         position: "fixed",
         top: 0,
@@ -240,9 +147,84 @@ export function GlobalBackground() {
         height: "100%",
         zIndex: 0,
         pointerEvents: "none",
-        opacity: isReady ? 1 : 0,
-        transition: "opacity 1.2s ease",
+        overflow: "hidden",
+        background: bg,
       }}
-    />
+    >
+      <svg
+        ref={svgRef}
+        width="100%"
+        height="100%"
+        style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <filter id="goo">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="30" result="blur" />
+            <feColorMatrix
+              in="blur"
+              mode="matrix"
+              values="
+                1 0 0 0 0
+                0 1 0 0 0
+                0 0 1 0 0
+                0 0 0 25 -10
+              "
+              result="goo"
+            />
+            <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+          </filter>
+        </defs>
+        <g filter="url(#goo)">
+          {blobs.map((b) => (
+            <circle
+              key={b.id}
+              className="blob"
+              cx="0"
+              cy="0"
+              r="0"
+              fill={hsla(b.hue, b.sat, b.lit, b.alpha)}
+            />
+          ))}
+        </g>
+      </svg>
+
+      {/* Vignette overlay */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background: `radial-gradient(ellipse at center, transparent 25%, rgba(0,0,0,0.4) 60%, rgba(0,0,0,0.85) 100%)`,
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Theme tint overlay */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            theme === "purple"
+              ? "radial-gradient(ellipse at 50% 50%, rgba(60,10,140,0.08) 0%, transparent 60%)"
+              : theme === "blue"
+              ? "radial-gradient(ellipse at 50% 50%, rgba(5,30,120,0.08) 0%, transparent 60%)"
+              : "radial-gradient(ellipse at 50% 50%, rgba(15,15,25,0.06) 0%, transparent 60%)",
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Subtle grain */}
+      <svg
+        width="100%"
+        height="100%"
+        style={{ position: "absolute", inset: 0, opacity: 0.02, pointerEvents: "none" }}
+      >
+        <filter id="grain">
+          <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+        </filter>
+        <rect width="100%" height="100%" filter="url(#grain)" />
+      </svg>
+    </div>
   );
 }

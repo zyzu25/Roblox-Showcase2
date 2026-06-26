@@ -93,7 +93,7 @@ function ScreenSlot({ src, alt, index }: { src: string; alt: string; index: numb
         <div
           className="w-full h-full flex items-end p-2"
           style={{
-            background: 'linear-gradient(160deg, rgba(10,14,50,0.95) 0%, rgba(5,8,35,0.98) 100%)',
+            background: 'linear-gradient(160deg, rgba(8,5,25,0.95) 0%, rgba(3,2,18,0.98) 100%)',
             border: '1px solid var(--c-border-soft)',
           }}
         >
