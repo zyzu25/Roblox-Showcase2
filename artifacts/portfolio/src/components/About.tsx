@@ -84,7 +84,7 @@ export function About() {
                 <TiltCard key={i} className="glass rounded-2xl p-4 text-center card-hover" intensity={10}>
                   <p
                     className="text-2xl font-bold text-white font-display mb-1"
-                    style={{ textShadow: '0 0 16px rgba(26,71,255,0.6)' }}
+                    style={{ textShadow: '0 0 16px var(--c-glow)' }}
                   >
                     <CountUp end={stat.value} suffix={stat.suffix} />
                   </p>

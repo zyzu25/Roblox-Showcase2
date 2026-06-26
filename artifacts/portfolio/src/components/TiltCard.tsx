@@ -49,7 +49,7 @@ export function TiltCard({
       <div
         className="absolute inset-0 rounded-2xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300"
         style={{
-          background: `radial-gradient(circle at ${glow.x}% ${glow.y}%, rgba(26,71,255,0.15), transparent 50%)`,
+          background: `radial-gradient(circle at ${glow.x}% ${glow.y}%, var(--c-glow), transparent 50%)`,
         }}
       />
       {children}

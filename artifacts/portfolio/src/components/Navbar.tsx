@@ -1,12 +1,14 @@
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { useState } from "react";
 import { useLocation } from "wouter";
+import { useTheme } from "./ThemeContext";
 import { MagneticButton } from "./MagneticButton";
 
 export function Navbar() {
   const [hidden, setHidden] = useState(false);
   const { scrollY } = useScroll();
   const [, navigate] = useLocation();
+  const { theme, setTheme } = useTheme();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const prev = scrollY.getPrevious() ?? 0;
@@ -21,6 +23,13 @@ export function Navbar() {
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
+
+  const themeColors = {
+    purple: { bg: "#8b3dff", active: true },
+    blue:   { bg: "#3366ff", active: false },
+    white:  { bg: "#ffffff", active: false },
+  };
+  themeColors[theme].active = true;
 
   return (
     <motion.header
@@ -41,7 +50,7 @@ export function Navbar() {
         >
           <div
             className="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0"
-            style={{ boxShadow: "0 0 14px rgba(26,71,255,0.5)" }}
+            style={{ boxShadow: "0 0 14px var(--c-glow)" }}
           >
             <img src="/images/profile.jpg" alt="MYSTICFUSION7X" className="w-full h-full object-cover" />
           </div>
@@ -71,13 +80,31 @@ export function Navbar() {
           <motion.button
             onClick={() => navigate("/logos")}
             className="px-4 py-2 text-sm font-semibold transition-colors rounded-lg hover:bg-white/5"
-            style={{ color: "#3366ff" }}
+            style={{ color: "var(--c-primary)" }}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             data-testid="nav-link-logos"
           >
             Logos
           </motion.button>
+
+          {/* Theme switcher */}
+          <div className="flex items-center gap-1 ml-2 mr-2 pl-2 border-l border-white/10">
+            {(["purple", "blue", "white"] as const).map((t) => (
+              <button
+                key={t}
+                onClick={() => setTheme(t)}
+                className="w-4 h-4 rounded-full transition-all duration-300"
+                style={{
+                  background: themeColors[t].bg,
+                  boxShadow: theme === t ? `0 0 8px ${themeColors[t].bg}` : "none",
+                  transform: theme === t ? "scale(1.2)" : "scale(1)",
+                  opacity: theme === t ? 1 : 0.5,
+                }}
+                title={`${t.charAt(0).toUpperCase() + t.slice(1)} theme`}
+              />
+            ))}
+          </div>
 
           <MagneticButton
             onClick={() => scrollTo("contact")}

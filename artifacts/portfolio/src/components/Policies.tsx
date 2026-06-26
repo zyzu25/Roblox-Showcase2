@@ -101,7 +101,7 @@ export function Policies() {
                     <li key={ii} className="flex items-start gap-2.5 text-sm text-white/45 leading-relaxed">
                       <div
                         className="w-1 h-1 rounded-full mt-2 flex-shrink-0"
-                        style={{ background: 'linear-gradient(90deg, #3366ff, #1a47ff)', boxShadow: '0 0 4px rgba(26,71,255,0.6)' }}
+                        style={{ background: 'linear-gradient(90deg, var(--c-primary), var(--c-primary-dark))', boxShadow: '0 0 4px var(--c-glow)' }}
                       />
                       {item}
                     </li>

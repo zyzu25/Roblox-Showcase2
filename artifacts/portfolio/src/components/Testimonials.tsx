@@ -4,19 +4,13 @@ import { AnimatedText } from "./AnimatedText";
 
 const testimonials = [
   {
-    quote: "MYSTICFUSION7X completely transformed our game's look. The UI went from a basic Roblox template to something that looked genuinely professional. Fast turnaround and the scripting was flawless.",
-    author: "xX_DragonSlayer_Xx",
-    role: "Lead Dev, Fort Benning RP",
+    quote: "Bro literally made my game look like a completely different thing. The HUD and shop just hit different now, everyone in the server keeps asking who designed it.",
   },
   {
-    quote: "What impressed me most was how well they understood the military aesthetic. The CIA dashboard UI was clean, sharp, and fit the game perfectly. Communication was easy throughout.",
-    author: "BloxCreator99",
-    role: "Studio Owner",
+    quote: "The military UI was exactly what I needed. No back and forth, no weird revisions, just straight clean work. Understood the assignment immediately.",
   },
   {
-    quote: "The SCP Site Aether UIs really elevated the whole experience. Players keep complimenting the loading screen and HUD. Worth every Robux and already coming back for more.",
-    author: "NeonViper",
-    role: "Project Manager, Site Aether",
+    quote: "Loading screen alone got me like 5 extra players cause people were posting screenshots of it. The whole UI package was worth every robux. Def coming back for more.",
   },
 ];
 
@@ -52,25 +46,14 @@ export function Testimonials() {
                   className="w-7 h-7 mb-5"
                   viewBox="0 0 24 24"
                   fill="currentColor"
-                  style={{ color: '#3366ff', filter: 'drop-shadow(0 0 6px rgba(26,71,255,0.5))', opacity: 0.7 }}
+                  style={{ color: "var(--c-primary)", filter: "drop-shadow(0 0 6px var(--c-glow))", opacity: 0.7 }}
                 >
                   <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
                 </svg>
-                <p className="text-white/50 leading-relaxed text-sm flex-1 mb-7 italic">"{t.quote}"</p>
-                <div className="flex items-center gap-3">
-                  <div
-                    className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold text-white"
-                    style={{
-                      background: 'linear-gradient(135deg, #3366ff, #1a47ff)',
-                      boxShadow: '0 0 12px rgba(26,71,255,0.4)',
-                    }}
-                  >
-                    {t.author[0]}
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-white">{t.author}</p>
-                    <p className="text-xs text-white/25">{t.role}</p>
-                  </div>
+                <p className="text-white/50 leading-relaxed text-sm flex-1 italic">"{t.quote}"</p>
+                <div className="mt-5 flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full flex-shrink-0" style={{ background: "var(--c-primary)", boxShadow: "0 0 8px var(--c-glow)" }} />
+                  <span className="text-xs text-white/25">Verified Client</span>
                 </div>
               </TiltCard>
             </motion.div>

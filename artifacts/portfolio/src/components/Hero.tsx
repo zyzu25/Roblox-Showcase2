@@ -91,7 +91,7 @@ export function Hero() {
                 <div>
                   <p
                     className="text-3xl font-bold text-white font-display"
-                    style={{ textShadow: '0 0 24px rgba(60,120,255,0.7)' }}
+                    style={{ textShadow: '0 0 24px var(--c-glow)' }}
                   >
                     {stat.value}
                   </p>

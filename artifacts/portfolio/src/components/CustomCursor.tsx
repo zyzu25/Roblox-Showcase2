@@ -37,14 +37,14 @@ export function CustomCursor() {
         t.closest("[data-cursor='pointer']");
       if (isClickable) {
         dot.style.transform = "translate(-50%, -50%) scale(2.5)";
-        dot.style.background = "rgba(26, 71, 255, 0.4)";
+        dot.style.background = "var(--c-glow)";
         ring.style.transform = "translate(-50%, -50%) scale(1.8)";
-        ring.style.borderColor = "rgba(26, 71, 255, 0.5)";
+        ring.style.borderColor = "var(--c-border)";
       } else {
         dot.style.transform = "translate(-50%, -50%) scale(1)";
-        dot.style.background = "rgba(26, 71, 255, 0.8)";
+        dot.style.background = "var(--c-primary)";
         ring.style.transform = "translate(-50%, -50%) scale(1)";
-        ring.style.borderColor = "rgba(26, 71, 255, 0.3)";
+        ring.style.borderColor = "var(--c-border-soft)";
       }
     };
 
@@ -84,13 +84,13 @@ export function CustomCursor() {
           width: 8,
           height: 8,
           borderRadius: "50%",
-          background: "rgba(26, 71, 255, 0.8)",
+          background: "var(--c-primary)",
           transform: "translate(-50%, -50%) scale(1)",
           pointerEvents: "none",
           zIndex: 99999,
           opacity: 0,
           transition: "opacity 0.3s, transform 0.25s, background 0.25s",
-          boxShadow: "0 0 10px rgba(26,71,255,0.6), 0 0 20px rgba(26,71,255,0.3)",
+          boxShadow: "0 0 10px var(--c-glow), 0 0 20px var(--c-glow-soft)",
           mixBlendMode: "screen",
         }}
       />
@@ -103,7 +103,7 @@ export function CustomCursor() {
           width: 32,
           height: 32,
           borderRadius: "50%",
-          border: "1px solid rgba(26, 71, 255, 0.3)",
+          border: "1px solid var(--c-border-soft)",
           transform: "translate(-50%, -50%) scale(1)",
           pointerEvents: "none",
           zIndex: 99998,

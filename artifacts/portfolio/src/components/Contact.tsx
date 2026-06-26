@@ -6,6 +6,8 @@ import { MagneticButton } from "./MagneticButton";
 
 export function Contact() {
   const [selectedPackage, setSelectedPackage] = useState("");
+  const [extraRevisions, setExtraRevisions] = useState(false);
+  const [rushDelivery, setRushDelivery] = useState(false);
 
   useEffect(() => {
     const stored = sessionStorage.getItem('selectedPackage');
@@ -99,6 +101,8 @@ export function Contact() {
               <input type="hidden" name="_captcha" value="false" />
               <input type="hidden" name="_template" value="table" />
               <input type="hidden" name="Package" value={selectedPackage} />
+              <input type="hidden" name="Extra Revisions" value={extraRevisions ? "Yes (+$2 each)" : "No"} />
+              <input type="hidden" name="Rush Delivery" value={rushDelivery ? "Yes (+$5)" : "No"} />
 
               <div className="grid grid-cols-2 gap-3">
                 <motion.div
@@ -112,8 +116,9 @@ export function Contact() {
                     name="Name"
                     placeholder="Your name"
                     required
-                    className="w-full h-11 px-4 rounded-xl text-white placeholder:text-white/18 text-sm focus:outline-none transition-all glass hover:border-white/20 focus:border-[rgba(26,71,255,0.4)]"
+                    className="w-full h-11 px-4 rounded-xl text-white placeholder:text-white/18 text-sm focus:outline-none transition-all glass hover:border-white/20 focus:border-[var(--c-border)]"
                     data-testid="input-name"
+                    style={{ borderColor: "var(--c-border-soft)" }}
                   />
                 </motion.div>
                 <motion.div
@@ -126,8 +131,9 @@ export function Contact() {
                   <input
                     name="Roblox Username"
                     placeholder="Player123"
-                    className="w-full h-11 px-4 rounded-xl text-white placeholder:text-white/18 text-sm focus:outline-none transition-all glass hover:border-white/20 focus:border-[rgba(26,71,255,0.4)]"
+                    className="w-full h-11 px-4 rounded-xl text-white placeholder:text-white/18 text-sm focus:outline-none transition-all glass hover:border-white/20 focus:border-[var(--c-border)]"
                     data-testid="input-roblox"
+                    style={{ borderColor: "var(--c-border-soft)" }}
                   />
                 </motion.div>
               </div>
@@ -141,8 +147,9 @@ export function Contact() {
                 <input
                   name="Discord"
                   placeholder="yourusername"
-                  className="w-full h-11 px-4 rounded-xl text-white placeholder:text-white/18 text-sm focus:outline-none transition-all glass hover:border-white/20 focus:border-[rgba(26,71,255,0.4)]"
+                  className="w-full h-11 px-4 rounded-xl text-white placeholder:text-white/18 text-sm focus:outline-none transition-all glass hover:border-white/20 focus:border-[var(--c-border)]"
                   data-testid="input-discord"
+                  style={{ borderColor: "var(--c-border-soft)" }}
                 />
               </motion.div>
               <motion.div
@@ -157,17 +164,47 @@ export function Contact() {
                   name="Package Selected"
                   value={selectedPackage}
                   onChange={(e) => setSelectedPackage(e.target.value)}
-                  className="w-full h-11 px-4 rounded-xl text-white/60 text-sm focus:outline-none transition-all glass appearance-none hover:border-white/20 focus:border-[rgba(26,71,255,0.4)]"
+                  className="w-full h-11 px-4 rounded-xl text-white/60 text-sm focus:outline-none transition-all glass appearance-none hover:border-white/20 focus:border-[var(--c-border)]"
                   data-testid="select-package"
-                  style={{ background: 'rgba(255,255,255,0.04)', color: selectedPackage ? 'rgba(255,255,255,0.85)' : '' }}
+                  style={{ background: "rgba(255,255,255,0.04)", color: selectedPackage ? "rgba(255,255,255,0.85)" : "", borderColor: "var(--c-border-soft)" }}
                 >
                   <option value="" className="bg-[#060816]">Select a package...</option>
                   <option value="starter" className="bg-[#060816]">Starter UI (R$1k to 4k / $5 to $15)</option>
                   <option value="game" className="bg-[#060816]">Game UI Package (R$4k to 12k / $15 to $50)</option>
                   <option value="full" className="bg-[#060816]">Full Game UI Package (R$12k to 30k / $50 to $100)</option>
                   <option value="premium" className="bg-[#060816]">Premium UI Package (R$30k+ / $100+)</option>
+                  <option value="logos" className="bg-[#060816]">Logo Design (R$229 to 779 / $2 to $7)</option>
                 </select>
               </motion.div>
+
+              {/* Extras */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.65, duration: 0.4 }}
+                className="flex gap-4"
+              >
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={extraRevisions}
+                    onChange={(e) => setExtraRevisions(e.target.checked)}
+                    className="w-4 h-4 rounded accent-[var(--c-primary)]"
+                  />
+                  <span className="text-sm text-white/50">Extra Revisions <span className="text-white/70 font-semibold">+$2</span></span>
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={rushDelivery}
+                    onChange={(e) => setRushDelivery(e.target.checked)}
+                    className="w-4 h-4 rounded accent-[var(--c-primary)]"
+                  />
+                  <span className="text-sm text-white/50">Rush Delivery <span className="text-white/70 font-semibold">+$5</span></span>
+                </label>
+              </motion.div>
+
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -179,8 +216,9 @@ export function Contact() {
                   name="Project Details"
                   placeholder="Tell me about your game, the UIs you need, and any references..."
                   rows={5}
-                  className="w-full px-4 py-3 rounded-xl text-white placeholder:text-white/18 text-sm focus:outline-none transition-all resize-none glass hover:border-white/20 focus:border-[rgba(26,71,255,0.4)]"
+                  className="w-full px-4 py-3 rounded-xl text-white placeholder:text-white/18 text-sm focus:outline-none transition-all resize-none glass hover:border-white/20 focus:border-[var(--c-border)]"
                   data-testid="input-message"
+                  style={{ borderColor: "var(--c-border-soft)" }}
                 />
               </motion.div>
               <motion.div

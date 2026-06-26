@@ -94,7 +94,7 @@ function ScreenSlot({ src, alt, index }: { src: string; alt: string; index: numb
           className="w-full h-full flex items-end p-2"
           style={{
             background: 'linear-gradient(160deg, rgba(10,14,50,0.95) 0%, rgba(5,8,35,0.98) 100%)',
-            border: '1px solid rgba(30,80,255,0.12)',
+            border: '1px solid var(--c-border-soft)',
           }}
         >
           <span className="text-[9px] text-white/20 leading-tight font-medium">{alt}</span>

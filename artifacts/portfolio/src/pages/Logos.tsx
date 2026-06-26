@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { Check, ArrowLeft } from "lucide-react";
 import { useLocation } from "wouter";
 import { GlobalBackground } from "@/components/GlobalBackground";
-import { FloatingParticles } from "@/components/FloatingParticles";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { TiltCard } from "@/components/TiltCard";
 import { MagneticButton } from "@/components/MagneticButton";
@@ -66,9 +65,9 @@ const logos = [
 ];
 
 const TIER = {
-  HIGH: { bg: "rgba(26,71,255,0.12)",   border: "rgba(26,71,255,0.35)",   color: "#3366ff", label: "HIGH QUALITY" },
-  MID:  { bg: "rgba(139,92,246,0.12)",  border: "rgba(139,92,246,0.35)",  color: "#8b5cf6", label: "MID QUALITY"  },
-  LOW:  { bg: "rgba(20,184,166,0.12)",  border: "rgba(20,184,166,0.35)",  color: "#14b8a6", label: "LOW QUALITY"  },
+  HIGH: { bg: "rgba(139,61,255,0.12)",  border: "rgba(139,61,255,0.35)",  color: "#a855f7", label: "HIGH QUALITY" },
+  MID:  { bg: "rgba(168,85,247,0.12)",  border: "rgba(168,85,247,0.35)",  color: "#c084fc", label: "MID QUALITY"  },
+  LOW:  { bg: "rgba(192,132,252,0.12)",  border: "rgba(192,132,252,0.35)",  color: "#d8b4fe", label: "LOW QUALITY"  },
 };
 
 const plans = [
@@ -143,7 +142,6 @@ export default function Logos() {
   return (
     <>
       <GlobalBackground />
-      <FloatingParticles />
       <ScrollProgress />
       <main className="relative min-h-screen overflow-x-hidden" style={{ background: "transparent" }}>
 
@@ -168,7 +166,7 @@ export default function Logos() {
               <div className="flex items-center gap-2.5">
                 <div
                   className="w-7 h-7 rounded-lg overflow-hidden flex-shrink-0"
-                  style={{ boxShadow: "0 0 10px rgba(26,71,255,0.5)" }}
+                  style={{ boxShadow: "0 0 10px var(--c-glow)" }}
                 >
                   <img src="/images/profile.jpg" alt="MYSTICFUSION7X" className="w-full h-full object-cover" />
                 </div>
@@ -364,7 +362,7 @@ export default function Logos() {
                 <div key={i} className="flex items-center gap-2">
                   <div
                     className="w-2 h-2 rounded-full flex-shrink-0"
-                    style={{ background: "#3366ff", boxShadow: "0 0 6px #3366ff" }}
+                    style={{ background: "var(--c-primary)", boxShadow: "0 0 6px var(--c-glow)" }}
                   />
                   <span className="text-sm text-white/40">
                     {item.label}{" "}

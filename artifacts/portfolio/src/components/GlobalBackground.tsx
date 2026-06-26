@@ -1,31 +1,65 @@
 import { useEffect, useRef, useState } from "react";
 
-interface Orb {
-  x: number;
-  y: number;
-  tx: number;
-  ty: number;
-  vx: number;
-  vy: number;
+/* Liquid blob background — organic, mouse-reactive, smooth morphing */
+interface Blob {
+  x: number; y: number;
+  vx: number; vy: number;
   size: number;
-  color: string;
-  drift: number;
+  targetSize: number;
   phase: number;
+  phaseSpeed: number;
+  r: number; g: number; b: number;
+  alpha: number;
+  morph: number;
+  morphSpeed: number;
+  corner: number;
 }
 
-function createOrb(w: number, h: number, size: number, color: string, phase: number): Orb {
+function createBlob(
+  cx: number, cy: number, size: number,
+  r: number, g: number, b: number, alpha: number,
+  phase: number
+): Blob {
   return {
-    x: Math.random() * w,
-    y: Math.random() * h,
-    tx: Math.random() * w,
-    ty: Math.random() * h,
-    vx: 0,
-    vy: 0,
+    x: cx, y: cy,
+    vx: 0, vy: 0,
     size,
-    color,
-    drift: 0.5 + Math.random() * 0.8,
+    targetSize: size,
     phase,
+    phaseSpeed: 0.3 + Math.random() * 0.4,
+    r, g, b,
+    alpha,
+    morph: 0,
+    morphSpeed: 0.2 + Math.random() * 0.3,
+    corner: Math.random() * 6,
   };
+}
+
+function blobPath(cx: number, cy: number, size: number, t: number, morph: number): string {
+  // 8-point metaball-like blob shape
+  const points = 8;
+  const pts: [number, number, number, number][] = [];
+  for (let i = 0; i < points; i++) {
+    const angle = (i / points) * Math.PI * 2;
+    const dist = size * (
+      0.85 +
+      0.15 * Math.sin(t + i * 1.7 + morph) +
+      0.08 * Math.sin(t * 0.6 + i * 2.3)
+    );
+    const x = cx + Math.cos(angle) * dist;
+    const y = cy + Math.sin(angle) * dist;
+    const cpDist = size * 0.35;
+    const cpx = cx + Math.cos(angle + 0.15) * cpDist;
+    const cpy = cy + Math.sin(angle + 0.15) * cpDist;
+    pts.push([x, y, cpx, cpy]);
+  }
+  let d = `M ${pts[0][0].toFixed(1)} ${pts[0][1].toFixed(1)}`;
+  for (let i = 0; i < points; i++) {
+    const next = (i + 1) % points;
+    d += ` C ${pts[i][2].toFixed(1)} ${pts[i][3].toFixed(1)}, ${pts[next][2].toFixed(1)} ${pts[next][3].toFixed(1)}, ${pts[next][0].toFixed(1)} ${pts[next][1].toFixed(1)}`;
+  }
+  d += " Z";
+  return d;
 }
 
 function lerp(a: number, b: number, t: number) {
@@ -34,9 +68,10 @@ function lerp(a: number, b: number, t: number) {
 
 export function GlobalBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mouseRef = useRef({ x: -9999, y: -9999 });
+  const mouseRef = useRef({ x: -9999, y: -9999, vx: 0, vy: 0 });
+  const prevMouseRef = useRef({ x: -9999, y: -9999 });
   const rafRef = useRef<number>(0);
-  const orbsRef = useRef<Orb[]>([]);
+  const blobsRef = useRef<Blob[]>([]);
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
@@ -51,113 +86,135 @@ export function GlobalBackground() {
       canvas.height = window.innerHeight * dpr;
       canvas.style.width = `${window.innerWidth}px`;
       canvas.style.height = `${window.innerHeight}px`;
-      ctx.scale(dpr, dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
-
     resize();
     window.addEventListener("resize", resize);
 
     const w = window.innerWidth;
     const h = window.innerHeight;
+    const style = getComputedStyle(document.documentElement);
+    const getVar = (n: string) => Number.parseInt(style.getPropertyValue(n)) || 0;
 
-    // 2 main blobs + 3 smaller ambient dots
-    orbsRef.current = [
-      createOrb(w * 0.75, h * 0.3, Math.max(w, h) * 0.6, "rgba(8,50,240,", 0),
-      createOrb(w * 0.3, h * 0.7, Math.max(w, h) * 0.45, "rgba(4,30,200,", 2.5),
-      createOrb(w * 0.15, h * 0.2, Math.max(w, h) * 0.25, "rgba(6,35,210,", 1.8),
-      createOrb(w * 0.85, h * 0.8, Math.max(w, h) * 0.2, "rgba(5,28,190,", 4.2),
-      createOrb(w * 0.5, h * 0.5, Math.max(w, h) * 0.15, "rgba(8,40,230,", 6.0),
+    const blobs = [
+      createBlob(w * 0.75, h * 0.3, Math.max(w, h) * 0.55, getVar("--c-orb-r"), getVar("--c-orb-g"), getVar("--c-orb-b"), 0.65, 0),
+      createBlob(w * 0.3,  h * 0.7, Math.max(w, h) * 0.45, getVar("--c-orb2-r"), getVar("--c-orb2-g"), getVar("--c-orb2-b"), 0.55, 2.5),
+      createBlob(w * 0.5,  h * 0.5, Math.max(w, h) * 0.3,  getVar("--c-orb3-r"), getVar("--c-orb3-g"), getVar("--c-orb3-b"), 0.3, 1.8),
+      createBlob(w * 0.15, h * 0.8, Math.max(w, h) * 0.2,  getVar("--c-orb4-r"), getVar("--c-orb4-g"), getVar("--c-orb4-b"), 0.2, 4.2),
     ];
+    blobsRef.current = blobs;
 
     const handleMouse = (e: MouseEvent) => {
-      mouseRef.current = { x: e.clientX, y: e.clientY };
+      mouseRef.current = {
+        x: e.clientX,
+        y: e.clientY,
+        vx: e.clientX - prevMouseRef.current.x,
+        vy: e.clientY - prevMouseRef.current.y,
+      };
+      prevMouseRef.current = { x: e.clientX, y: e.clientY };
     };
     window.addEventListener("mousemove", handleMouse);
 
     let t = 0;
     const animate = () => {
-      t += 0.008;
+      t += 0.012;
       const w = window.innerWidth;
       const h = window.innerHeight;
       const mx = mouseRef.current.x;
       const my = mouseRef.current.y;
+      const mvx = mouseRef.current.vx;
+      const mvy = mouseRef.current.vy;
 
       ctx.clearRect(0, 0, w, h);
 
-      // Base: very dark navy
-      ctx.fillStyle = "#00000a";
+      // Base bg
+      const baseColor = getComputedStyle(document.documentElement).getPropertyValue("--c-bg").trim();
+      ctx.fillStyle = baseColor || "#00000a";
       ctx.fillRect(0, 0, w, h);
 
-      for (let i = 0; i < orbsRef.current.length; i++) {
-        const orb = orbsRef.current[i];
-        const time = t + orb.phase;
+      // Glow off-screen canvas for smoother rendering
+      const glowCanvas = document.createElement("canvas");
+      glowCanvas.width = w;
+      glowCanvas.height = h;
+      const gCtx = glowCanvas.getContext("2d")!;
+      gCtx.fillStyle = baseColor || "#00000a";
+      gCtx.fillRect(0, 0, w, h);
 
-        // Ambient drift
-        const driftX = Math.sin(time * 0.4) * 40 * orb.drift;
-        const driftY = Math.cos(time * 0.3) * 30 * orb.drift;
+      for (let i = 0; i < blobsRef.current.length; i++) {
+        const b = blobsRef.current[i];
+        const time = t + b.phase;
 
-        // Mouse interaction (only for first 2 main blobs)
-        if (i < 2 && mx > 0) {
-          const dx = mx - orb.x;
-          const dy = my - orb.y;
+        // Morph
+        b.morph += b.morphSpeed;
+
+        // Mouse interaction (follow with gentle spring + slight velocity)
+        const homeX = b.corner === 0 ? w * 0.75 : b.corner === 1 ? w * 0.3 : b.corner === 2 ? w * 0.5 : w * 0.15;
+        const homeY = b.corner === 0 ? h * 0.3 : b.corner === 1 ? h * 0.7 : b.corner === 2 ? h * 0.5 : h * 0.8;
+
+        if (mx > 0 && i < 2) {
+          const dx = mx - b.x;
+          const dy = my - b.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          const maxDist = 600;
-          if (dist < maxDist) {
-            const force = 1 - dist / maxDist;
-            orb.vx += (dx / dist) * force * 0.8;
-            orb.vy += (dy / dist) * force * 0.8;
+          const maxDist = 500;
+          if (dist < maxDist && dist > 0) {
+            const force = (1 - dist / maxDist) * 0.6;
+            b.vx += (dx / dist) * force * 0.4;
+            b.vy += (dy / dist) * force * 0.4;
           }
-          // Spring back toward target
-          const homeX = (i === 0 ? w * 0.75 : w * 0.3) + driftX;
-          const homeY = (i === 0 ? h * 0.3 : h * 0.7) + driftY;
-          orb.vx += (homeX - orb.x) * 0.003;
-          orb.vy += (homeY - orb.y) * 0.003;
-        } else {
-          // Smaller orbs just drift
-          orb.vx += (orb.tx - orb.x) * 0.001;
-          orb.vy += (orb.ty - orb.y) * 0.001;
-          if (Math.random() < 0.01) {
-            orb.tx = Math.random() * w;
-            orb.ty = Math.random() * h;
-          }
+          // Mouse velocity influence
+          b.vx += mvx * 0.02;
+          b.vy += mvy * 0.02;
         }
 
+        // Spring back to home
+        b.vx += (homeX - b.x) * 0.002;
+        b.vy += (homeY - b.y) * 0.002;
+
+        // Soft ambient drift
+        b.vx += Math.sin(time * 0.4) * 0.15;
+        b.vy += Math.cos(time * 0.35) * 0.12;
+
         // Friction
-        orb.vx *= 0.94;
-        orb.vy *= 0.94;
+        b.vx *= 0.94;
+        b.vy *= 0.94;
+        b.x += b.vx;
+        b.y += b.vy;
 
-        orb.x += orb.vx;
-        orb.y += orb.vy;
+        // Breathing size
+        b.targetSize = b.size * (1 + Math.sin(time * b.phaseSpeed) * 0.08);
+        const currentSize = b.targetSize;
 
-        // Draw gradient
-        const g = ctx.createRadialGradient(orb.x, orb.y, 0, orb.x, orb.y, orb.size);
-        const alpha = i < 2 ? 0.85 - i * 0.15 : 0.35 - i * 0.03;
-        g.addColorStop(0, `${orb.color}${alpha.toFixed(2)})`);
-        g.addColorStop(0.25, `${orb.color}${(alpha * 0.6).toFixed(2)})`);
-        g.addColorStop(0.55, `${orb.color}${(alpha * 0.2).toFixed(2)})`);
-        g.addColorStop(1, `${orb.color}0.00)`);
+        // Draw liquid blob
+        const path = new Path2D(blobPath(b.x, b.y, currentSize, time, b.morph));
+        const g = gCtx.createRadialGradient(b.x, b.y, 0, b.x, b.y, currentSize);
+        g.addColorStop(0, `rgba(${b.r}, ${b.g}, ${b.b}, ${b.alpha})`);
+        g.addColorStop(0.3, `rgba(${b.r}, ${b.g}, ${b.b}, ${b.alpha * 0.6})`);
+        g.addColorStop(0.6, `rgba(${b.r}, ${b.g}, ${b.b}, ${b.alpha * 0.2})`);
+        g.addColorStop(1, `rgba(${b.r}, ${b.g}, ${b.b}, 0)`);
+        gCtx.fillStyle = g;
+        gCtx.fill(path, "evenodd");
 
-        ctx.fillStyle = g;
-        ctx.fillRect(0, 0, w, h);
+        // Inner bright spot
+        const g2 = gCtx.createRadialGradient(b.x, b.y, 0, b.x, b.y, currentSize * 0.4);
+        g2.addColorStop(0, `rgba(${b.r}, ${b.g}, ${b.b}, ${b.alpha * 0.3})`);
+        g2.addColorStop(1, `rgba(${b.r}, ${b.g}, ${b.b}, 0)`);
+        gCtx.fillStyle = g2;
+        gCtx.fill(path, "evenodd");
       }
 
-      // Vignette
-      const vignette = ctx.createRadialGradient(w / 2, h / 2, w * 0.2, w / 2, h / 2, w * 0.75);
-      vignette.addColorStop(0, "rgba(0,0,0,0)");
-      vignette.addColorStop(0.5, "rgba(0,0,0,0.3)");
-      vignette.addColorStop(0.85, "rgba(0,0,0,0.85)");
-      vignette.addColorStop(1, "rgba(0,0,0,0.98)");
-      ctx.fillStyle = vignette;
+      // Blur the glow layer
+      ctx.filter = "blur(60px)";
+      ctx.drawImage(glowCanvas, 0, 0);
+      ctx.filter = "none";
+
+      // Subtle vignette
+      const v = ctx.createRadialGradient(w / 2, h / 2, w * 0.25, w / 2, h / 2, w * 0.8);
+      v.addColorStop(0, "rgba(0,0,0,0)");
+      v.addColorStop(0.5, "rgba(0,0,0,0.25)");
+      v.addColorStop(0.85, "rgba(0,0,0,0.8)");
+      v.addColorStop(1, "rgba(0,0,0,0.95)");
+      ctx.fillStyle = v;
       ctx.fillRect(0, 0, w, h);
-
-      // Noise grain overlay
-      ctx.fillStyle = `rgba(255,255,255,0.015)`;
-      for (let n = 0; n < 80; n++) {
-        const nx = Math.random() * w;
-        const ny = Math.random() * h;
-        const ns = Math.random() * 1.5;
-        ctx.fillRect(nx, ny, ns, ns);
-      }
 
       rafRef.current = requestAnimationFrame(animate);
     };
@@ -184,7 +241,7 @@ export function GlobalBackground() {
         zIndex: 0,
         pointerEvents: "none",
         opacity: isReady ? 1 : 0,
-        transition: "opacity 1s ease",
+        transition: "opacity 1.2s ease",
       }}
     />
   );
