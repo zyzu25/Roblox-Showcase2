@@ -6,14 +6,14 @@ import { X, ZoomIn } from "lucide-react";
 
 const SCREENSHOTS: Record<string, string[]> = {
   "Fort Benning": [
-    "", // Loading Screen
-    "", // Main Menu
-    "", // BCT Hosting UI
-    "", // Events UI
-    "", // Emote Wheel
-    "", // ID Card UI
-    "", // Settings UI
-    "", // Cover Selection UI
+    "/images/ui/image_1782699714758.png", // Loading Screen
+    "/images/ui/image_1782699695211.png", // Main Menu
+    "/images/ui/image_1782699772466.png", // BCT Hosting UI
+    "/images/ui/image_1782699794486.png", // Events UI
+    "/images/ui/image_1782699805450.png", // Emote Wheel
+    "/images/ui/image_1782699769173.png", // ID Card UI
+    "", // Settings UI (no image)
+    "", // Cover Selection UI (no image)
   ],
   "Central Intelligence Agency": [
     "/images/ui/Group_1_(1)_1782698895070.png", // Main Menu
@@ -28,11 +28,6 @@ const SCREENSHOTS: Record<string, string[]> = {
     "/images/ui/Group_2_(2)_1782698943341.png", // Notifications
     "/images/ui/image-Photoroom_(3)_1782698943342.png", // Proximity Prompt
   ],
-  "Troll Tower X": [
-    "/images/ui/Slide_16_9_-_1_(1)_1782698895072.png", // Gloves Shop
-    "/images/ui/image_1782699117451.png", // Inventory
-    "/images/ui/image_1782699122523.png", // Settings
-  ],
   "Various Clients": [
     "/images/ui/Slide_16_9_-_2_(2)_1782698895073.png", // Anime UI
     "/images/ui/Group_23_1782698895072.png", // Car Shop UI
@@ -41,6 +36,10 @@ const SCREENSHOTS: Record<string, string[]> = {
     "/images/ui/Frame_1_1782698895069.png", // Leaderboard
     "/images/ui/Group_5_1782698943341.png", // Quests
     "/images/ui/Group_1_(2)_1782698943338.png", // Kill Feed
+    "/images/ui/Slide_16_9_-_1_(1)_1782698895072.png", // Gloves Shop (TTX)
+    "/images/ui/image_1782699117451.png", // Inventory (TTX)
+    "/images/ui/image_1782699122523.png", // Settings (TTX)
+    "/images/ui/TeamSelection_1782699662023.png", // Team Selection (Vanguard)
   ],
 };
 
@@ -67,19 +66,11 @@ const projects = [
     tag: "6 Screens",
   },
   {
-    game: "Troll Tower X",
-    category: "Shop UI",
-    screens: ["Gloves Shop", "Inventory", "Settings"],
-    desc: "Clean, branded shop UI with item grid, inventory management, and settings panel.",
-    tag: "3 Screens",
-    compact: true,
-  },
-  {
     game: "Various Clients",
     category: "Mixed",
-    screens: ["Anime UI", "Car Shop UI", "Daily Rewards", "Redeem Codes", "Leaderboard", "Quests", "Kill Feed"],
-    desc: "Standalone commissions including anime-style interfaces, car shop, daily rewards, redeem codes, leaderboards, quests, and kill feed systems.",
-    tag: "7 Screens",
+    screens: ["Anime UI", "Car Shop UI", "Daily Rewards", "Redeem Codes", "Leaderboard", "Quests", "Kill Feed", "Gloves Shop", "Inventory", "Settings", "Team Selection"],
+    desc: "Standalone commissions including anime interfaces, car shop, daily rewards, redeem codes, leaderboards, quests, kill feed, shop UIs, and team selection systems.",
+    tag: "11 Screens",
   },
 ];
 
@@ -231,12 +222,8 @@ export function Portfolio() {
 
         <div className="space-y-5">
           {projects.map((project, index) => (
-            <TiltCard
-              key={index}
-              className={`glass rounded-2xl overflow-hidden card-hover ${(project as any).compact ? 'max-w-3xl mx-auto' : ''}`}
-              intensity={6}
-            >
-              <div className={`${(project as any).compact ? 'p-5 md:p-6' : 'p-6 md:p-8'}`}>
+            <TiltCard key={index} className="glass rounded-2xl overflow-hidden card-hover" intensity={6}>
+              <div className="p-6 md:p-8">
                 <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
                   <div>
                     <div className="flex items-center gap-3 mb-1">
@@ -253,9 +240,7 @@ export function Portfolio() {
                 <div
                   className="grid gap-2"
                   style={{
-                    gridTemplateColumns: (project as any).compact
-                      ? `repeat(${Math.min(project.screens.length, 3)}, 1fr)`
-                      : `repeat(${Math.min(project.screens.length, 6)}, 1fr)`,
+                    gridTemplateColumns: `repeat(${Math.min(project.screens.length, 6)}, 1fr)`,
                   }}
                 >
                   {project.screens.map((screen, i) => {
@@ -266,7 +251,7 @@ export function Portfolio() {
                         src={src}
                         alt={screen}
                         index={i}
-                        onClick={src ? () => openLightbox(src, `${project.game} — ${screen}`) : undefined}
+                        onClick={src ? () => openLightbox(src, `${project.game} \u2014 ${screen}`) : undefined}
                       />
                     );
                   })}

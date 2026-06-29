@@ -8,6 +8,7 @@ interface AudioState {
   mid: number;
   high: number;
   overall: number;
+  tempo: number;
 }
 
 interface Blob {
@@ -20,6 +21,7 @@ interface Blob {
   colorIdx: number;
   vx: number;
   vy: number;
+  phase: number;
 }
 
 const THEMES: Record<string, { r: number; g: number; b: number }[]> = {
@@ -60,6 +62,48 @@ const THEMES: Record<string, { r: number; g: number; b: number }[]> = {
   ],
 };
 
+// Spicy Lyrics-inspired: slowly rotating background gradient
+function drawRotatingGradient(
+  ctx: CanvasRenderingContext2D,
+  w: number,
+  h: number,
+  time: number,
+  colors: { r: number; g: number; b: number }[],
+  audioOverall: number
+) {
+  const cx = w * 0.5;
+  const cy = h * 0.5;
+  const rotation = time * 0.02; // Slow rotation like --bg-rotation-degree: 258deg
+  const scale = 1.25 + audioOverall * 0.15; // scale: 1.25 + audio reactivity
+
+  const diag = Math.sqrt(w * w + h * h) * scale;
+
+  // Create a large conic-like effect using multiple radial gradients
+  for (let i = 0; i < colors.length; i++) {
+    const c = colors[i];
+    const angle = rotation + (i / colors.length) * Math.PI * 2;
+    const gx = cx + Math.cos(angle) * diag * 0.3;
+    const gy = cy + Math.sin(angle) * diag * 0.3;
+
+    const grad = ctx.createRadialGradient(gx, gy, 0, gx, gy, diag * 0.6);
+    grad.addColorStop(0, `rgba(${c.r}, ${c.g}, ${c.b}, 0.18)`);
+    grad.addColorStop(0.5, `rgba(${c.r}, ${c.g}, ${c.b}, 0.06)`);
+    grad.addColorStop(1, `rgba(${c.r}, ${c.g}, ${c.b}, 0)`);
+
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, w, h);
+  }
+}
+
+// Smooth 3-octave noise for organic distortion
+function smoothNoise(x: number, y: number, t: number) {
+  return (
+    Math.sin(x * 1.7 + t * 0.8) * Math.cos(y * 2.3 + t * 0.6) * 0.5 +
+    Math.sin(x * 3.1 + t * 1.2) * Math.cos(y * 4.7 + t * 0.9) * 0.25 +
+    Math.sin(x * 6.3 + t * 1.8) * Math.cos(y * 5.1 + t * 1.4) * 0.125
+  );
+}
+
 export function LiquidBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
@@ -71,13 +115,13 @@ export function LiquidBackground() {
     mid: 0,
     high: 0,
     overall: 0,
+    tempo: 120,
   });
   const startTimeRef = useRef(Date.now());
   const audioCtxRef = useRef<AudioContext | null>(null);
   const blobsRef = useRef<Blob[]>([]);
   const settingsRef = useRef(useSettings().settings);
 
-  // Keep settings ref in sync
   const { settings } = useSettings();
   useEffect(() => {
     settingsRef.current = settings;
@@ -100,6 +144,7 @@ export function LiquidBackground() {
         mid: 0,
         high: 0,
         overall: 0,
+        tempo: 120,
       };
     } catch {
       // Audio not available
@@ -109,9 +154,9 @@ export function LiquidBackground() {
   const getAudioValues = useCallback(() => {
     const audio = audioRef.current;
     if (!audio.analyser || !audio.dataArray) {
-      return { bass: 0, mid: 0, high: 0, overall: 0 };
+      return { bass: 0, mid: 0, high: 0, overall: 0, tempo: 120 };
     }
-    audio.analyser.getByteFrequencyData(audio.dataArray);
+    audio.analyser.getByteFrequencyData(audio.dataArray as any);
     const len = audio.dataArray.length;
     const bassEnd = Math.floor(len * 0.1);
     const midEnd = Math.floor(len * 0.5);
@@ -132,18 +177,25 @@ export function LiquidBackground() {
     for (let i = 0; i < len; i++) overallSum += audio.dataArray[i];
     const overall = (overallSum / len / 255) * 1.0;
 
+    // Estimate tempo from bass rhythmic patterns
+    let beatEnergy = 0;
+    for (let i = 2; i < bassEnd; i++) {
+      beatEnergy += Math.abs(audio.dataArray[i] - audio.dataArray[i - 1]);
+    }
+    const tempo = 60 + beatEnergy * 0.5;
+
     audioRef.current.bass = bass;
     audioRef.current.mid = mid;
     audioRef.current.high = high;
     audioRef.current.overall = overall;
+    audioRef.current.tempo = tempo;
 
-    return { bass, mid, high, overall };
+    return { bass, mid, high, overall, tempo };
   }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
@@ -162,6 +214,7 @@ export function LiquidBackground() {
           colorIdx: i % 5,
           vx: 0,
           vy: 0,
+          phase: Math.random() * Math.PI * 2,
         });
       }
       blobsRef.current = blobs;
@@ -179,7 +232,7 @@ export function LiquidBackground() {
     requestAnimationFrame(resize);
     window.addEventListener("resize", resize);
 
-    // Mouse tracking
+    // Mouse
     const onMouseMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       mouseRef.current.x = (e.clientX - rect.left) / rect.width;
@@ -187,17 +240,11 @@ export function LiquidBackground() {
     };
     window.addEventListener("mousemove", onMouseMove);
 
-    // Noise helper
-    const noise = (x: number, y: number, t: number) => {
-      return Math.sin(x * 3.7 + t) * Math.cos(y * 5.3 + t * 0.7) * 0.5 +
-             Math.sin(x * 7.1 + t * 1.3) * Math.cos(y * 2.9 + t * 0.5) * 0.25;
-    };
-
     // Animation loop
     const animate = () => {
       const s = settingsRef.current;
       const time = (Date.now() - startTimeRef.current) / 1000;
-      const audio = s.liquid.audioReactive ? getAudioValues() : { bass: 0, mid: 0, high: 0, overall: 0 };
+      const audio = s.liquid.audioReactive ? getAudioValues() : { bass: 0, mid: 0, high: 0, overall: 0, tempo: 120 };
       const w = canvas.width;
       const h = canvas.height;
       const blobs = blobsRef.current;
@@ -205,11 +252,35 @@ export function LiquidBackground() {
       const speed = s.liquid.speed;
       const intensity = s.liquid.intensity;
 
-      // Clear
-      ctx.fillStyle = "#05020a";
+      // === BASE BACKGROUND: Dark base like Spotify ===
+      ctx.fillStyle = "#06030a";
       ctx.fillRect(0, 0, w, h);
 
-      // Re-initialize blobs if count changed
+      // === ROTATING COLOR GRADIENT (Spicy Lyrics style) ===
+      // Slow animated gradient that rotates over time
+      const rotationSpeed = 0.015 * speed * (audio.tempo / 120);
+      const rotTime = time * rotationSpeed;
+
+      // Large soft color washes
+      for (let i = 0; i < colors.length; i++) {
+        const c = colors[i];
+        const angle = rotTime + (i / colors.length) * Math.PI * 2;
+        const dist = Math.min(w, h) * 0.45;
+        const gx = w * 0.5 + Math.cos(angle) * dist;
+        const gy = h * 0.5 + Math.sin(angle) * dist;
+        const r = Math.min(w, h) * 0.8 * (1 + audio.overall * 0.3);
+
+        const grad = ctx.createRadialGradient(gx, gy, 0, gx, gy, r);
+        const alpha = 0.15 * intensity + audio.overall * 0.08;
+        grad.addColorStop(0, `rgba(${c.r}, ${c.g}, ${c.b}, ${alpha})`);
+        grad.addColorStop(0.5, `rgba(${c.r}, ${c.g}, ${c.b}, ${alpha * 0.4})`);
+        grad.addColorStop(1, `rgba(${c.r}, ${c.g}, ${c.b}, 0)`);
+
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, w, h);
+      }
+
+      // Re-init blobs if count changed
       if (blobs.length !== s.liquid.blobCount) {
         const newBlobs: Blob[] = [];
         for (let i = 0; i < s.liquid.blobCount; i++) {
@@ -225,12 +296,13 @@ export function LiquidBackground() {
             colorIdx: i % colors.length,
             vx: 0,
             vy: 0,
+            phase: Math.random() * Math.PI * 2,
           });
         }
         blobsRef.current = newBlobs;
       }
 
-      // Update blob positions
+      // Update blob positions with organic noise
       blobsRef.current.forEach((blob, i) => {
         const t = time * blob.speed * speed * 3.0;
         blob.angle = (i / blobs.length) * Math.PI * 2 + t * 0.5;
@@ -238,9 +310,11 @@ export function LiquidBackground() {
         blob.x = 0.5 + Math.cos(blob.angle) * orbitR;
         blob.y = 0.5 + Math.sin(blob.angle) * orbitR;
 
-        // Noise offset
-        blob.x += noise(i * 3.7, time * 0.25, 0) * 0.12;
-        blob.y += noise(i * 5.3 + 100, time * 0.25, 0) * 0.12;
+        // Spicy Lyrics-inspired smooth noise distortion
+        const n1 = smoothNoise(blob.x * 4 + i, blob.y * 4, time * 0.3);
+        const n2 = smoothNoise(blob.x * 6 + 100, blob.y * 6 + 50, time * 0.2);
+        blob.x += n1 * 0.08 + n2 * 0.04;
+        blob.y += n1 * 0.06 - n2 * 0.03;
 
         // Audio expansion
         blob.r = blob.baseR * intensity + audio.bass * 0.08 * intensity;
@@ -260,130 +334,69 @@ export function LiquidBackground() {
         }
       });
 
-      // Draw glow layer (metaball-like with distance field)
-      const drawMetaballField = () => {
-        const imageData = ctx.createImageData(w, h);
-        const data = imageData.data;
-        const scale = Math.min(w, h);
+      // === GLOW LAYERS (Spicy Lyrics saturation + brightness) ===
+      // Outer glow — very large, very soft (simulates blur passes)
+      ctx.globalCompositeOperation = "screen";
+      for (const blob of blobs) {
+        const c = colors[blob.colorIdx % colors.length];
+        const x = blob.x * w;
+        const y = blob.y * h;
+        const r = blob.r * Math.min(w, h) * 3.0;
 
-        for (let py = 0; py < h; py += 2) {
-          for (let px = 0; px < w; px += 2) {
-            const ux = px / w;
-            const uy = py / h;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
+        grad.addColorStop(0, `rgba(${c.r}, ${c.g}, ${c.b}, 0.08)`);
+        grad.addColorStop(0.3, `rgba(${c.r}, ${c.g}, ${c.b}, 0.03)`);
+        grad.addColorStop(1, `rgba(${c.r}, ${c.g}, ${c.b}, 0)`);
 
-            let field = 0;
-            let rSum = 0, gSum = 0, bSum = 0;
+        ctx.fillStyle = grad;
+        ctx.fillRect(x - r, y - r, r * 2, r * 2);
+      }
 
-            for (const blob of blobs) {
-              const bx = blob.x * w;
-              const by = blob.y * h;
-              const dx = px - bx;
-              const dy = py - by;
-              const dist = Math.sqrt(dx * dx + dy * dy);
-              const blobR = blob.r * scale;
+      // Middle glow
+      for (const blob of blobs) {
+        const c = colors[blob.colorIdx % colors.length];
+        const x = blob.x * w;
+        const y = blob.y * h;
+        const r = blob.r * Math.min(w, h) * 1.8;
 
-              const f = (blobR * blobR) / (dist * dist + 0.1);
-              field += f;
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
+        grad.addColorStop(0, `rgba(${c.r}, ${c.g}, ${c.b}, 0.20)`);
+        grad.addColorStop(0.5, `rgba(${c.r}, ${c.g}, ${c.b}, 0.06)`);
+        grad.addColorStop(1, `rgba(${c.r}, ${c.g}, ${c.b}, 0)`);
 
-              const c = colors[blob.colorIdx % colors.length];
-              const intensity = f * intensity;
-              rSum += c.r * intensity;
-              gSum += c.g * intensity;
-              bSum += c.b * intensity;
-            }
+        ctx.fillStyle = grad;
+        ctx.fillRect(x - r, y - r, r * 2, r * 2);
+      }
 
-            // Threshold for metaball edge
-            const threshold = 0.8;
-            const edge = Math.min(1, Math.max(0, (field - threshold) / 0.5));
-            const glow = Math.min(1, field / threshold) * 0.3;
+      // Inner core — bright center
+      for (const blob of blobs) {
+        const c = colors[blob.colorIdx % colors.length];
+        const x = blob.x * w;
+        const y = blob.y * h;
+        const r = blob.r * Math.min(w, h) * 0.9;
 
-            const baseR = 5 * (1 - edge);
-            const baseG = 2 * (1 - edge);
-            const baseB = 10 * (1 - edge);
+        const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
+        grad.addColorStop(0, `rgba(${c.r}, ${c.g}, ${c.b}, 0.6)`);
+        grad.addColorStop(0.5, `rgba(${c.r}, ${c.g}, ${c.b}, 0.2)`);
+        grad.addColorStop(1, `rgba(${c.r}, ${c.g}, ${c.b}, 0)`);
 
-            const r = Math.min(255, baseR + rSum * edge + rSum * glow * 0.5);
-            const g = Math.min(255, baseG + gSum * edge + gSum * glow * 0.5);
-            const b = Math.min(255, baseB + bSum * edge + bSum * glow * 0.5);
-            const a = Math.min(255, (edge + glow) * 255);
+        ctx.fillStyle = grad;
+        ctx.fillRect(x - r, y - r, r * 2, r * 2);
+      }
 
-            // Fill 2x2 block
-            for (let dy = 0; dy < 2 && py + dy < h; dy++) {
-              for (let dx = 0; dx < 2 && px + dx < w; dx++) {
-                const idx = ((py + dy) * w + (px + dx)) * 4;
-                data[idx] = r;
-                data[idx + 1] = g;
-                data[idx + 2] = b;
-                data[idx + 3] = a;
-              }
-            }
-          }
-        }
+      ctx.globalCompositeOperation = "source-over";
 
-        ctx.putImageData(imageData, 0, 0);
-      };
+      // === COLOR SATURATION BOOST (Spicy Lyrics: saturate(2.5)) ===
+      // Apply a subtle global color overlay to boost saturation
+      const avgR = colors.reduce((a, c) => a + c.r, 0) / colors.length;
+      const avgG = colors.reduce((a, c) => a + c.g, 0) / colors.length;
+      const avgB = colors.reduce((a, c) => a + c.b, 0) / colors.length;
+      ctx.fillStyle = `rgba(${avgR}, ${avgG}, ${avgB}, 0.03)`;
+      ctx.globalCompositeOperation = "saturation";
+      ctx.fillRect(0, 0, w, h);
+      ctx.globalCompositeOperation = "source-over";
 
-      // Use a simpler radial gradient approach for better performance
-      // but with multiple overlapping layers for metaball effect
-      const drawGlowLayers = () => {
-        // Background
-        ctx.fillStyle = "#05020a";
-        ctx.fillRect(0, 0, w, h);
-
-        // Outer glow (large, soft)
-        ctx.globalCompositeOperation = "screen";
-        for (const blob of blobs) {
-          const c = colors[blob.colorIdx % colors.length];
-          const x = blob.x * w;
-          const y = blob.y * h;
-          const r = blob.r * Math.min(w, h) * 2.5;
-
-          const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
-          grad.addColorStop(0, `rgba(${c.r}, ${c.g}, ${c.b}, 0.12)`);
-          grad.addColorStop(0.4, `rgba(${c.r}, ${c.g}, ${c.b}, 0.05)`);
-          grad.addColorStop(1, `rgba(${c.r}, ${c.g}, ${c.b}, 0)`);
-
-          ctx.fillStyle = grad;
-          ctx.fillRect(x - r, y - r, r * 2, r * 2);
-        }
-
-        // Middle glow
-        for (const blob of blobs) {
-          const c = colors[blob.colorIdx % colors.length];
-          const x = blob.x * w;
-          const y = blob.y * h;
-          const r = blob.r * Math.min(w, h) * 1.5;
-
-          const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
-          grad.addColorStop(0, `rgba(${c.r}, ${c.g}, ${c.b}, 0.25)`);
-          grad.addColorStop(0.5, `rgba(${c.r}, ${c.g}, ${c.b}, 0.08)`);
-          grad.addColorStop(1, `rgba(${c.r}, ${c.g}, ${c.b}, 0)`);
-
-          ctx.fillStyle = grad;
-          ctx.fillRect(x - r, y - r, r * 2, r * 2);
-        }
-
-        // Inner core
-        for (const blob of blobs) {
-          const c = colors[blob.colorIdx % colors.length];
-          const x = blob.x * w;
-          const y = blob.y * h;
-          const r = blob.r * Math.min(w, h) * 0.8;
-
-          const grad = ctx.createRadialGradient(x, y, 0, x, y, r);
-          grad.addColorStop(0, `rgba(${c.r}, ${c.g}, ${c.b}, 0.7)`);
-          grad.addColorStop(0.5, `rgba(${c.r}, ${c.g}, ${c.b}, 0.3)`);
-          grad.addColorStop(1, `rgba(${c.r}, ${c.g}, ${c.b}, 0)`);
-
-          ctx.fillStyle = grad;
-          ctx.fillRect(x - r, y - r, r * 2, r * 2);
-        }
-
-        ctx.globalCompositeOperation = "source-over";
-      };
-
-      drawGlowLayers();
-
-      // Film grain
+      // === FILM GRAIN ===
       if (s.liquid.grain) {
         const grainCanvas = document.createElement("canvas");
         grainCanvas.width = 256;
@@ -402,9 +415,12 @@ export function LiquidBackground() {
         ctx.fillRect(0, 0, w, h);
       }
 
-      // Vignette
+      // === VIGNETTE ===
       if (s.liquid.vignette) {
-        const vigGrad = ctx.createRadialGradient(w * 0.5, h * 0.5, 0, w * 0.5, h * 0.5, Math.max(w, h) * 0.7);
+        const vigGrad = ctx.createRadialGradient(
+          w * 0.5, h * 0.5, 0,
+          w * 0.5, h * 0.5, Math.max(w, h) * 0.7
+        );
         vigGrad.addColorStop(0, "rgba(0,0,0,0)");
         vigGrad.addColorStop(0.5, "rgba(0,0,0,0.1)");
         vigGrad.addColorStop(1, "rgba(0,0,0,0.45)");
@@ -412,10 +428,15 @@ export function LiquidBackground() {
         ctx.fillRect(0, 0, w, h);
       }
 
-      // Audio brightness boost
+      // === BRIGHTNESS OVERLAY (Spicy Lyrics: brightness(0.65)) ===
+      // Subtle darkening to keep things moody
+      ctx.fillStyle = `rgba(2, 1, 6, 0.15)`;
+      ctx.fillRect(0, 0, w, h);
+
+      // === AUDIO BRIGHTNESS PULSE ===
       if (s.liquid.audioReactive && audio.overall > 0.05) {
         const c = colors[0];
-        ctx.fillStyle = `rgba(${c.r}, ${c.g}, ${c.b}, ${audio.overall * 0.08})`;
+        ctx.fillStyle = `rgba(${c.r}, ${c.g}, ${c.b}, ${audio.overall * 0.06})`;
         ctx.fillRect(0, 0, w, h);
       }
 
@@ -423,7 +444,6 @@ export function LiquidBackground() {
     };
     rafRef.current = requestAnimationFrame(animate);
 
-    // Setup audio on first click
     const onClick = () => {
       setupAudio();
       window.removeEventListener("click", onClick);
@@ -435,9 +455,7 @@ export function LiquidBackground() {
       window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("click", onClick);
-      if (audioCtxRef.current) {
-        audioCtxRef.current.close();
-      }
+      if (audioCtxRef.current) audioCtxRef.current.close();
     };
   }, [getAudioValues, setupAudio, settings.liquid.audioReactive, settings.liquid.blobCount, settings.liquid.colorTheme, settings.liquid.grain, settings.liquid.intensity, settings.liquid.mouseReactive, settings.liquid.speed, settings.liquid.vignette]);
 
