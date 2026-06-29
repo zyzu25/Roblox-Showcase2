@@ -365,6 +365,65 @@
   border: 1px solid var(--c-border-soft);
 }
 
+/* ── Universal button hover (all buttons feel clickable) ── */
+button, [role="button"] {
+  cursor: pointer;
+}
+
+/* Ghost / outline buttons — theme color fill on hover */
+.btn-ghost,
+.btn-outline {
+  border: 1px solid var(--c-border-soft);
+  color: rgba(255,255,255,0.55);
+  background: transparent;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease,
+              box-shadow 0.3s ease, transform 0.2s ease;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.btn-ghost:hover,
+.btn-outline:hover {
+  background: var(--c-primary);
+  color: #fff;
+  border-color: var(--c-primary);
+  box-shadow: 0 0 22px var(--c-glow-soft), 0 4px 16px rgba(0,0,0,0.3);
+  transform: translateY(-2px) scale(1.015);
+}
+.btn-ghost:active,
+.btn-outline:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* Nav buttons / text-style interactive elements */
+nav button:not(.btn-primary):hover,
+.nav-link:hover {
+  color: rgba(255,255,255,0.9) !important;
+}
+
+/* Audio slider thumb */
+input[type=range].audio-slider {
+  background: transparent;
+}
+input[type=range].audio-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--c-primary);
+  box-shadow: 0 0 8px var(--c-glow-soft);
+  cursor: pointer;
+}
+input[type=range].audio-slider::-webkit-slider-runnable-track {
+  background: rgba(255,255,255,0.12);
+  border-radius: 4px;
+}
+
+/* Contact social cards */
+.contact-social-card {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
 /* ── Primary button with glow ── */
 .btn-primary {
   background: linear-gradient(135deg, var(--c-primary), var(--c-primary-dark));

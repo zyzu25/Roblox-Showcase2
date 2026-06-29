@@ -59,10 +59,26 @@ export function Contact() {
                 whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.4, duration: 0.5 }}
-                className="glass-bright rounded-2xl p-4 flex items-center gap-4"
-                whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+                className="contact-social-card glass-bright rounded-2xl p-4 flex items-center gap-4 cursor-pointer"
+                whileHover={{ scale: 1.03, y: -2, transition: { duration: 0.22 } }}
+                whileTap={{ scale: 0.98 }}
+                onMouseEnter={e => {
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.borderColor = "var(--c-border)";
+                  el.style.boxShadow = "0 0 28px var(--c-glow-soft), 0 8px 24px rgba(0,0,0,0.35)";
+                  el.style.background = "var(--c-glass-bright)";
+                }}
+                onMouseLeave={e => {
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.borderColor = "";
+                  el.style.boxShadow = "";
+                  el.style.background = "";
+                }}
               >
-                <img src="/images/discord.png" alt="Discord" className="w-10 h-10 rounded-xl object-cover flex-shrink-0" />
+                <div className="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center"
+                  style={{ background: "rgba(88,101,242,0.20)", border: "1px solid rgba(88,101,242,0.30)" }}>
+                  <img src="/images/discord.png" alt="Discord" className="w-full h-full object-cover" />
+                </div>
                 <div>
                   <p className="text-xs text-white/25 mb-0.5">Discord</p>
                   <p className="text-sm font-semibold text-white">mysticfusion7x</p>
@@ -73,10 +89,26 @@ export function Contact() {
                 whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.5, duration: 0.5 }}
-                className="glass-bright rounded-2xl p-4 flex items-center gap-4"
-                whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+                className="contact-social-card glass-bright rounded-2xl p-4 flex items-center gap-4 cursor-pointer"
+                whileHover={{ scale: 1.03, y: -2, transition: { duration: 0.22 } }}
+                whileTap={{ scale: 0.98 }}
+                onMouseEnter={e => {
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.borderColor = "var(--c-border)";
+                  el.style.boxShadow = "0 0 28px var(--c-glow-soft), 0 8px 24px rgba(0,0,0,0.35)";
+                  el.style.background = "var(--c-glass-bright)";
+                }}
+                onMouseLeave={e => {
+                  const el = e.currentTarget as HTMLElement;
+                  el.style.borderColor = "";
+                  el.style.boxShadow = "";
+                  el.style.background = "";
+                }}
               >
-                <img src="/images/roblox.png" alt="Roblox" className="w-10 h-10 rounded-xl object-cover flex-shrink-0" />
+                <div className="w-10 h-10 rounded-xl overflow-hidden flex-shrink-0 flex items-center justify-center"
+                  style={{ background: "rgba(255,80,40,0.18)", border: "1px solid rgba(255,80,40,0.25)" }}>
+                  <img src="/images/roblox.png" alt="Roblox" className="w-full h-full object-cover" />
+                </div>
                 <div>
                   <p className="text-xs text-white/25 mb-0.5">Roblox</p>
                   <p className="text-sm font-semibold text-white">ZYZU25</p>
