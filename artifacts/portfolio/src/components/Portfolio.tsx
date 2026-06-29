@@ -12,8 +12,6 @@ const SCREENSHOTS: Record<string, string[]> = {
     "/images/ui/image_1782699794486.png", // Events UI
     "/images/ui/image_1782699805450.png", // Emote Wheel
     "/images/ui/image_1782699769173.png", // ID Card UI
-    "", // Settings UI (no image)
-    "", // Cover Selection UI (no image)
   ],
   "Central Intelligence Agency": [
     "/images/ui/Group_1_(1)_1782698895070.png", // Main Menu
@@ -47,9 +45,9 @@ const projects = [
   {
     game: "Fort Benning",
     category: "Military RP",
-    screens: ["Loading Screen", "Main Menu", "BCT Hosting UI", "Events UI", "Emote Wheel", "ID Card UI", "Settings UI", "Cover Selection UI"],
-    desc: "Full UI suite for a military roleplay experience. Loading screen, main menu, settings, events, BCT hosting, emote selection wheel, cover selection, and identification card.",
-    tag: "8 Screens",
+    screens: ["Loading Screen", "Main Menu", "BCT Hosting UI", "Events UI", "Emote Wheel", "ID Card UI"],
+    desc: "Full UI suite for a military roleplay experience. Loading screen, main menu, BCT hosting, events system, emote selection wheel, and identification card.",
+    tag: "6 Screens",
   },
   {
     game: "Central Intelligence Agency",
@@ -128,38 +126,24 @@ function ScreenSlot({
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.05, duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-      className={`relative rounded-xl overflow-hidden group ${src && onClick ? 'cursor-zoom-in' : ''}`}
+      className={`relative rounded-xl overflow-hidden group ${onClick ? 'cursor-zoom-in' : ''}`}
       style={{ aspectRatio: '4/3' }}
       onClick={onClick}
     >
-      {src ? (
-        <>
-          <img
-            src={src}
-            alt={alt}
-            className="w-full h-full object-contain bg-black/40"
-            draggable={false}
-            onContextMenu={(e) => e.preventDefault()}
-            style={{ userSelect: 'none', WebkitUserSelect: 'none', pointerEvents: 'none' }}
-          />
-          <div
-            className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100"
-            style={{ pointerEvents: 'none' }}
-          >
-            <ZoomIn size={20} className="text-white/70" />
-          </div>
-        </>
-      ) : (
-        <div
-          className="w-full h-full flex items-end p-2"
-          style={{
-            background: 'linear-gradient(160deg, rgba(8,5,25,0.95) 0%, rgba(3,2,18,0.98) 100%)',
-            border: '1px solid var(--c-border-soft)',
-          }}
-        >
-          <span className="text-[9px] text-white/20 leading-tight font-medium">{alt}</span>
-        </div>
-      )}
+      <img
+        src={src}
+        alt={alt}
+        className="w-full h-full object-cover bg-black/40"
+        draggable={false}
+        onContextMenu={(e) => e.preventDefault()}
+        style={{ userSelect: 'none', WebkitUserSelect: 'none', pointerEvents: 'none' }}
+      />
+      <div
+        className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100"
+        style={{ pointerEvents: 'none' }}
+      >
+        <ZoomIn size={20} className="text-white/70" />
+      </div>
     </motion.div>
   );
 }
