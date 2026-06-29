@@ -10,11 +10,13 @@ import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { GlobalBackground } from "@/components/GlobalBackground";
 import { ScrollProgress } from "@/components/ScrollProgress";
+import { AmbientAudio } from "@/components/AmbientAudio";
 export default function Home() {
   return (
     <>
       <GlobalBackground />
       <ScrollProgress />
+      <AmbientAudio />
       <main className="relative min-h-screen text-foreground overflow-x-hidden" style={{ background: 'transparent' }}>
         <Navbar />
         <Hero />

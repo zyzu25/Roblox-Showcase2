@@ -260,12 +260,68 @@
   h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
 }
 
+/* ── Animated liquid blob keyframes ── */
+@keyframes blobDrift1 {
+  0%   { transform: translate(-50%,-50%) scale(1.00) rotate(0deg);   }
+  33%  { transform: translate(-42%,-58%) scale(1.08) rotate(8deg);   }
+  66%  { transform: translate(-60%,-44%) scale(0.95) rotate(-5deg);  }
+  100% { transform: translate(-50%,-55%) scale(1.04) rotate(3deg);   }
+}
+@keyframes blobDrift2 {
+  0%   { transform: translate(-50%,-50%) scale(1.00) rotate(0deg);   }
+  40%  { transform: translate(-60%,-42%) scale(1.10) rotate(-10deg); }
+  80%  { transform: translate(-40%,-60%) scale(0.92) rotate(6deg);   }
+  100% { transform: translate(-52%,-48%) scale(1.05) rotate(-3deg);  }
+}
+@keyframes blobDrift3 {
+  0%   { transform: translate(-50%,-50%) scale(1.00);  }
+  30%  { transform: translate(-44%,-57%) scale(1.12);  }
+  70%  { transform: translate(-56%,-43%) scale(0.90);  }
+  100% { transform: translate(-50%,-52%) scale(1.06);  }
+}
+@keyframes blobDrift4 {
+  0%   { transform: translate(-50%,-50%) scale(1.00) rotate(0deg);   }
+  50%  { transform: translate(-56%,-44%) scale(1.14) rotate(12deg);  }
+  100% { transform: translate(-46%,-54%) scale(0.94) rotate(-8deg);  }
+}
+@keyframes blobDrift5 {
+  0%   { transform: translate(-50%,-50%) scale(1.00);  }
+  45%  { transform: translate(-58%,-42%) scale(1.08);  }
+  100% { transform: translate(-44%,-58%) scale(0.96);  }
+}
+
 /* ── Glow pulse for status dot ── */
 @keyframes glow-pulse {
   0%, 100% { box-shadow: 0 0 4px rgba(74,222,128,0.6); }
   50%       { box-shadow: 0 0 10px rgba(74,222,128,1); }
 }
 .glow-pulse { animation: glow-pulse 2s ease-in-out infinite; }
+
+/* ── Shimmer sweep (for card highlights) ── */
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+/* ── Float up/down ── */
+@keyframes floatY {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
+.float-anim { animation: floatY 4s ease-in-out infinite; }
+
+/* ── Fade-scale in ── */
+@keyframes fadeScaleIn {
+  from { opacity: 0; transform: scale(0.92) translateY(16px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0);    }
+}
+.fade-scale-in { animation: fadeScaleIn 0.6s cubic-bezier(0.23,1,0.32,1) forwards; }
+
+/* ── Liquid blob divs ── */
+.liquid-blob {
+  will-change: transform;
+  mix-blend-mode: screen;
+}
 
 /* ── Card hover ── */
 .card-hover {
@@ -313,11 +369,31 @@
 .btn-primary {
   background: linear-gradient(135deg, var(--c-primary), var(--c-primary-dark));
   box-shadow: 0 0 18px var(--c-glow-soft), 0 0 50px var(--c-glow-soft);
-  transition: box-shadow 0.25s ease, transform 0.2s ease;
+  transition: background 0.35s ease, box-shadow 0.35s ease, transform 0.2s ease, filter 0.35s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
 }
 .btn-primary:hover {
-  box-shadow: 0 0 28px var(--c-glow), 0 0 70px var(--c-glow-soft);
-  transform: translateY(-1px);
+  box-shadow: 0 0 36px var(--c-glow), 0 0 80px var(--c-glow-soft), 0 8px 24px rgba(0,0,0,0.35);
+  transform: translateY(-2px) scale(1.015);
+  filter: brightness(1.18) saturate(1.15);
+}
+.btn-primary:hover::after {
+  opacity: 1;
+}
+.btn-primary:active {
+  transform: translateY(0px) scale(0.98);
+  filter: brightness(0.95);
 }
 
 /* ── Section glow divider ── */
