@@ -79,6 +79,7 @@ export function MagneticButton({
         transform: `translate(${pos.x.toFixed(2)}px, ${pos.y.toFixed(2)}px)`,
         transition: "transform 0.15s cubic-bezier(0.23, 1, 0.32, 1)",
         willChange: "transform",
+        cursor: "pointer",
         ...style,
       }}
     >

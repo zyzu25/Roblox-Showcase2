@@ -92,12 +92,23 @@ export function Services() {
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ delay: i * 0.08, duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
               >
-                <TiltCard className="glass rounded-2xl p-6 group cursor-default h-full" intensity={12}>
-                  <div className={`w-11 h-11 ${service.bg} rounded-xl flex items-center justify-center mb-5 transition-all duration-300 group-hover:scale-110`}>
-                    <Icon className={`w-5 h-5 ${service.color}`} />
+                <TiltCard className="glass rounded-2xl p-6 group cursor-default h-full relative overflow-hidden" intensity={12}>
+                  {/* shimmer on hover */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-2xl"
+                    style={{ background: "linear-gradient(135deg, var(--c-glow-soft) 0%, transparent 60%)" }} />
+                  <div
+                    className="w-11 h-11 rounded-xl flex items-center justify-center mb-5 transition-all duration-400 group-hover:scale-115 group-hover:rotate-3"
+                    style={{
+                      background: "var(--elevate-2)",
+                      boxShadow: "0 0 0 1px var(--c-border-soft)",
+                      transition: "background 0.4s ease, box-shadow 0.4s ease, transform 0.35s cubic-bezier(0.23,1,0.32,1)",
+                    }}
+                  >
+                    <Icon className="w-5 h-5 transition-colors duration-400"
+                      style={{ color: "var(--c-primary)" }} />
                   </div>
-                  <h3 className="text-base font-semibold text-white mb-2">{service.title}</h3>
-                  <p className="text-white/40 leading-relaxed text-sm">{service.description}</p>
+                  <h3 className="text-base font-semibold text-white mb-2 transition-colors duration-300">{service.title}</h3>
+                  <p className="text-white/40 leading-relaxed text-sm transition-colors duration-300 group-hover:text-white/55">{service.description}</p>
                 </TiltCard>
               </motion.div>
             );

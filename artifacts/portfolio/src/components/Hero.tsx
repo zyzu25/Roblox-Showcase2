@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Users, Monitor } from "lucide-react";
+import { Users, Monitor, ChevronDown } from "lucide-react";
 import { MagneticButton } from "./MagneticButton";
 
 const headline = [
@@ -102,6 +102,24 @@ export function Hero() {
           </motion.div>
 
         </div>
+
+        {/* Scroll indicator */}
+        <motion.div
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 cursor-pointer"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.6, duration: 0.7 }}
+          onClick={() => document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' })}
+        >
+          <span className="text-[10px] uppercase tracking-[0.2em] text-white/25 font-medium">Scroll</span>
+          <motion.div
+            animate={{ y: [0, 5, 0] }}
+            transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <ChevronDown className="w-4 h-4 text-white/25" />
+          </motion.div>
+        </motion.div>
+
       </div>
     </section>
   );
