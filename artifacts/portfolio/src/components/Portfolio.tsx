@@ -1,6 +1,8 @@
-import { motion } from "framer-motion";
+import { useState, useCallback, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { TiltCard } from "./TiltCard";
 import { AnimatedText } from "./AnimatedText";
+import { X, ZoomIn } from "lucide-react";
 
 const SCREENSHOTS: Record<string, string[]> = {
   "Fort Benning": [
@@ -28,6 +30,8 @@ const SCREENSHOTS: Record<string, string[]> = {
   ],
   "Troll Tower X": [
     "/images/ui/Slide_16_9_-_1_(1)_1782698895072.png", // Gloves Shop
+    "/images/ui/image_1782699117451.png", // Inventory
+    "/images/ui/image_1782699122523.png", // Settings
   ],
   "Various Clients": [
     "/images/ui/Slide_16_9_-_2_(2)_1782698895073.png", // Anime UI
@@ -65,9 +69,10 @@ const projects = [
   {
     game: "Troll Tower X",
     category: "Shop UI",
-    screens: ["Gloves Shop"],
-    desc: "Clean, branded gloves shop UI with item display grid and purchase flow.",
-    tag: "1 Screen",
+    screens: ["Gloves Shop", "Inventory", "Settings"],
+    desc: "Clean, branded shop UI with item grid, inventory management, and settings panel.",
+    tag: "3 Screens",
+    compact: true,
   },
   {
     game: "Various Clients",
@@ -78,18 +83,81 @@ const projects = [
   },
 ];
 
-function ScreenSlot({ src, alt, index }: { src: string; alt: string; index: number }) {
+function Lightbox({ src, alt, onClose }: { src: string; alt: string; onClose: () => void }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-12"
+      style={{ background: 'rgba(2,2,12,0.92)', backdropFilter: 'blur(12px)' }}
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.9, opacity: 0 }}
+        transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
+        className="relative max-w-full max-h-full"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <img
+          src={src}
+          alt={alt}
+          className="max-w-full max-h-[85vh] rounded-xl object-contain select-none"
+          style={{ pointerEvents: 'none', userSelect: 'none', WebkitUserSelect: 'none' }}
+          draggable={false}
+        />
+        <button
+          onClick={onClose}
+          className="absolute -top-10 right-0 text-white/60 hover:text-white transition-colors"
+        >
+          <X size={24} />
+        </button>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function ScreenSlot({
+  src,
+  alt,
+  index,
+  onClick,
+}: {
+  src: string;
+  alt: string;
+  index: number;
+  onClick?: () => void;
+}) {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.92 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.05, duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-      className="relative rounded-xl overflow-hidden"
+      className={`relative rounded-xl overflow-hidden group ${src && onClick ? 'cursor-zoom-in' : ''}`}
       style={{ aspectRatio: '4/3' }}
+      onClick={onClick}
     >
       {src ? (
-        <img src={src} alt={alt} className="w-full h-full object-cover" />
+        <>
+          <img
+            src={src}
+            alt={alt}
+            className="w-full h-full object-contain bg-black/40"
+            draggable={false}
+            onContextMenu={(e) => e.preventDefault()}
+            style={{ userSelect: 'none', WebkitUserSelect: 'none', pointerEvents: 'none' }}
+          />
+          <div
+            className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100"
+            style={{ pointerEvents: 'none' }}
+          >
+            <ZoomIn size={20} className="text-white/70" />
+          </div>
+        </>
       ) : (
         <div
           className="w-full h-full flex items-end p-2"
@@ -106,8 +174,35 @@ function ScreenSlot({ src, alt, index }: { src: string; alt: string; index: numb
 }
 
 export function Portfolio() {
+  const [lightbox, setLightbox] = useState<{ src: string; alt: string } | null>(null);
+
+  const openLightbox = useCallback((src: string, alt: string) => {
+    setLightbox({ src, alt });
+  }, []);
+
+  const closeLightbox = useCallback(() => {
+    setLightbox(null);
+  }, []);
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeLightbox();
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [closeLightbox]);
+
   return (
-    <section className="py-28 border-t border-white/5 section-glow" id="portfolio" style={{ zIndex: 2 }}>
+    <section
+      className="py-28 border-t border-white/5 section-glow"
+      id="portfolio"
+      style={{ zIndex: 2 }}
+      onContextMenu={(e) => {
+        if ((e.target as HTMLElement).closest('#portfolio img')) {
+          e.preventDefault();
+        }
+      }}
+    >
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="flex items-end justify-between mb-14">
           <div>
@@ -136,8 +231,12 @@ export function Portfolio() {
 
         <div className="space-y-5">
           {projects.map((project, index) => (
-            <TiltCard key={index} className="glass rounded-2xl overflow-hidden card-hover" intensity={6}>
-              <div className="p-6 md:p-8">
+            <TiltCard
+              key={index}
+              className={`glass rounded-2xl overflow-hidden card-hover ${(project as any).compact ? 'max-w-3xl mx-auto' : ''}`}
+              intensity={6}
+            >
+              <div className={`${(project as any).compact ? 'p-5 md:p-6' : 'p-6 md:p-8'}`}>
                 <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
                   <div>
                     <div className="flex items-center gap-3 mb-1">
@@ -153,22 +252,40 @@ export function Portfolio() {
 
                 <div
                   className="grid gap-2"
-                  style={{ gridTemplateColumns: `repeat(${Math.min(project.screens.length, 6)}, 1fr)` }}
+                  style={{
+                    gridTemplateColumns: (project as any).compact
+                      ? `repeat(${Math.min(project.screens.length, 3)}, 1fr)`
+                      : `repeat(${Math.min(project.screens.length, 6)}, 1fr)`,
+                  }}
                 >
-                  {project.screens.map((screen, i) => (
-                    <ScreenSlot
-                      key={i}
-                      src={SCREENSHOTS[project.game]?.[i] ?? ""}
-                      alt={screen}
-                      index={i}
-                    />
-                  ))}
+                  {project.screens.map((screen, i) => {
+                    const src = SCREENSHOTS[project.game]?.[i] ?? "";
+                    return (
+                      <ScreenSlot
+                        key={i}
+                        src={src}
+                        alt={screen}
+                        index={i}
+                        onClick={src ? () => openLightbox(src, `${project.game} — ${screen}`) : undefined}
+                      />
+                    );
+                  })}
                 </div>
               </div>
             </TiltCard>
           ))}
         </div>
       </div>
+
+      <AnimatePresence>
+        {lightbox && (
+          <Lightbox
+            src={lightbox.src}
+            alt={lightbox.alt}
+            onClose={closeLightbox}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 }

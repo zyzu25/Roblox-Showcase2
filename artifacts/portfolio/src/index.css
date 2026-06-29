@@ -347,3 +347,20 @@
 .theme-selector {
   transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 }
+
+/* ── Anti-copy protection ── */
+.no-copy,
+#portfolio img {
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+}
+#portfolio img {
+  -webkit-user-drag: none;
+  pointer-events: auto;
+}
+body {
+  -webkit-user-select: text;
+  user-select: text;
+}
