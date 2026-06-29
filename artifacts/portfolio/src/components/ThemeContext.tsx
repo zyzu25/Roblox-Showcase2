@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-type Theme = "purple" | "blue" | "white";
+type Theme = "purple" | "light" | "dark";
 
 const ThemeCtx = createContext<{
   theme: Theme;
@@ -10,7 +10,8 @@ const ThemeCtx = createContext<{
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>(() => {
     if (typeof window !== "undefined") {
-      return (localStorage.getItem("portfolio-theme") as Theme) || "purple";
+      const stored = localStorage.getItem("portfolio-theme");
+      if (stored === "purple" || stored === "light" || stored === "dark") return stored;
     }
     return "purple";
   });

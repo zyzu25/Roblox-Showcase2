@@ -24,12 +24,11 @@ export function Navbar() {
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
-  const themeColors = {
-    purple: { bg: "#8b3dff", active: true },
-    blue:   { bg: "#3366ff", active: false },
-    white:  { bg: "#ffffff", active: false },
+  const themeConfig = {
+    purple: { bg: "#4000ff", label: "Purple" },
+    light:  { bg: "#B2D5E5", label: "Light"  },
+    dark:   { bg: "#444444", label: "Dark"   },
   };
-  themeColors[theme].active = true;
 
   return (
     <motion.header
@@ -89,19 +88,20 @@ export function Navbar() {
           </motion.button>
 
           {/* Theme switcher */}
-          <div className="flex items-center gap-1 ml-2 mr-2 pl-2 border-l border-white/10">
-            {(["purple", "blue", "white"] as const).map((t) => (
+          <div className="flex items-center gap-1.5 ml-2 mr-2 pl-2 border-l border-white/10">
+            {(["purple", "light", "dark"] as const).map((t) => (
               <button
                 key={t}
                 onClick={() => setTheme(t)}
+                title={`${themeConfig[t].label} theme`}
                 className="w-4 h-4 rounded-full transition-all duration-300"
                 style={{
-                  background: themeColors[t].bg,
-                  boxShadow: theme === t ? `0 0 8px ${themeColors[t].bg}` : "none",
-                  transform: theme === t ? "scale(1.2)" : "scale(1)",
+                  background: themeConfig[t].bg,
+                  boxShadow: theme === t ? `0 0 8px ${themeConfig[t].bg}` : "none",
+                  transform: theme === t ? "scale(1.25)" : "scale(1)",
                   opacity: theme === t ? 1 : 0.5,
+                  border: t === "dark" ? "1px solid rgba(255,255,255,0.15)" : "none",
                 }}
-                title={`${t.charAt(0).toUpperCase() + t.slice(1)} theme`}
               />
             ))}
           </div>
