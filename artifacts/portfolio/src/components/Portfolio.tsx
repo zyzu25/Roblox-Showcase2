@@ -2,9 +2,6 @@ import { motion } from "framer-motion";
 import { TiltCard } from "./TiltCard";
 import { AnimatedText } from "./AnimatedText";
 
-// ── Replace each "" with the path to your screenshot ─────────────────────────
-// Example: "/images/fort-benning-loading.jpg"
-// Place your images in artifacts/portfolio/public/images/ and reference as "/images/filename.jpg"
 const SCREENSHOTS: Record<string, string[]> = {
   "Fort Benning": [
     "", // Loading Screen
@@ -17,25 +14,29 @@ const SCREENSHOTS: Record<string, string[]> = {
     "", // Cover Selection UI
   ],
   "Central Intelligence Agency": [
-    "", // Main Menu
-    "", // Case Dashboard
-    "", // Loading Screen
+    "/images/ui/Group_1_(1)_1782698895070.png", // Main Menu
+    "/images/ui/CIA_CASE_DASHBOARD_1782698943338.png", // Case Dashboard
+    "/images/ui/Screenshot_2_1782698943343.png", // Loading Screen
   ],
   "SCP Site Aether": [
-    "", // Loading Screen
-    "", // Locker UI
-    "", // Health & Stamina HUD
-    "", // Settings UI
-    "", // Notifications
-    "", // Proximity Prompt
+    "/images/ui/Group_2_(1)_1782698943340.png", // Loading Screen
+    "/images/ui/Screenshot_6_1782698943344.png", // Class Icons
+    "/images/ui/Screenshot_3_1782698943343.png", // Health & Stamina HUD
+    "/images/ui/Screenshot_4_1782698943344.png", // Settings UI
+    "/images/ui/Group_2_(2)_1782698943341.png", // Notifications
+    "/images/ui/image-Photoroom_(3)_1782698943342.png", // Proximity Prompt
   ],
   "Troll Tower X": [
-    "", // Gloves Shop
+    "/images/ui/Slide_16_9_-_1_(1)_1782698895072.png", // Gloves Shop
   ],
   "Various Clients": [
-    "", // Anime UI
-    "", // Car Shop UI
-    "", // Daily Rewards
+    "/images/ui/Slide_16_9_-_2_(2)_1782698895073.png", // Anime UI
+    "/images/ui/Group_23_1782698895072.png", // Car Shop UI
+    "/images/ui/DailyRewardsUI_1782698895071.png", // Daily Rewards
+    "/images/ui/Frame_2_1782698895068.png", // Redeem Codes
+    "/images/ui/Frame_1_1782698895069.png", // Leaderboard
+    "/images/ui/Group_5_1782698943341.png", // Quests
+    "/images/ui/Group_1_(2)_1782698943338.png", // Kill Feed
   ],
 };
 
@@ -57,8 +58,8 @@ const projects = [
   {
     game: "SCP Site Aether",
     category: "SCP / Military RP",
-    screens: ["Loading Screen", "Locker UI", "Health & Stamina HUD", "Settings UI", "Notifications", "Proximity Prompt"],
-    desc: "Dark, immersive UI system for an SCP roleplay site. Loading screen, locker, notifications, custom proximity prompt, settings, and a health/stamina HUD.",
+    screens: ["Loading Screen", "Class Icons", "Health & Stamina HUD", "Settings UI", "Notifications", "Proximity Prompt"],
+    desc: "Dark, immersive UI system for an SCP roleplay site. Loading screen, class selection, notifications, custom proximity prompt, settings, and a health/stamina HUD.",
     tag: "6 Screens",
   },
   {
@@ -71,9 +72,9 @@ const projects = [
   {
     game: "Various Clients",
     category: "Mixed",
-    screens: ["Anime UI", "Car Shop UI", "Daily Rewards"],
-    desc: "Standalone commissions including glowing anime-style interfaces, a car shop UI, and a daily rewards popup system.",
-    tag: "3 Screens",
+    screens: ["Anime UI", "Car Shop UI", "Daily Rewards", "Redeem Codes", "Leaderboard", "Quests", "Kill Feed"],
+    desc: "Standalone commissions including anime-style interfaces, car shop, daily rewards, redeem codes, leaderboards, quests, and kill feed systems.",
+    tag: "7 Screens",
   },
 ];
 
