@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { About } from "@/components/About";
@@ -11,13 +12,26 @@ import { Footer } from "@/components/Footer";
 import { GlobalBackground } from "@/components/GlobalBackground";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { AmbientAudio } from "@/components/AmbientAudio";
+import { LoadingScreen } from "@/components/LoadingScreen";
+
 export default function Home() {
+  const [loaded, setLoaded] = useState(false);
+
   return (
     <>
+      <LoadingScreen onDone={() => setLoaded(true)} />
       <GlobalBackground />
       <ScrollProgress />
       <AmbientAudio />
-      <main className="relative min-h-screen text-foreground overflow-x-hidden" style={{ background: 'transparent' }}>
+      <main
+        className="relative min-h-screen text-foreground overflow-x-hidden"
+        style={{
+          background: "transparent",
+          opacity: loaded ? 1 : 0,
+          transition: "opacity 0.7s ease",
+          pointerEvents: loaded ? "auto" : "none",
+        }}
+      >
         <Navbar />
         <Hero />
         <About />
