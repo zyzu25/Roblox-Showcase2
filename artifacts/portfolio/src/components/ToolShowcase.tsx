@@ -22,14 +22,7 @@ const TOOLS = [
     desc: "Building and testing all UI components inside live Roblox environments",
     level: 75,
     icon: (
-      <svg viewBox="0 0 200 200" fill="none" className="w-7 h-7">
-        <rect width="200" height="200" rx="28" fill="#e8272a"/>
-        <g transform="rotate(-24, 100, 100)">
-          <rect x="44" y="62" width="112" height="76" rx="6" fill="white"/>
-          <rect x="56" y="74" width="88" height="52" rx="4" fill="#e8272a"/>
-          <rect x="68" y="86" width="64" height="28" rx="3" fill="white"/>
-        </g>
-      </svg>
+      <img src="/logo-roblox.png" alt="Roblox Studio" className="w-7 h-7 object-contain" />
     ),
   },
   {
@@ -38,17 +31,7 @@ const TOOLS = [
     desc: "Quick graphics, social assets, and presentation visuals for project showcases",
     level: 75,
     icon: (
-      <svg viewBox="0 0 100 100" fill="none" className="w-7 h-7">
-        <circle cx="50" cy="50" r="50" fill="#7D2AE7"/>
-        <path
-          d="M67.5 57.5c-1.5 4.5-5.5 8-10.5 8-6.6 0-12-5.4-12-12s5.4-12 12-12c4.7 0 8.8 2.7 10.8 6.7"
-          stroke="white"
-          strokeWidth="7"
-          strokeLinecap="round"
-          fill="none"
-        />
-        <circle cx="71" cy="50" r="4" fill="white"/>
-      </svg>
+      <img src="/logo-canva.png" alt="Canva" className="w-7 h-7 object-contain rounded-lg" />
     ),
   },
 ];
