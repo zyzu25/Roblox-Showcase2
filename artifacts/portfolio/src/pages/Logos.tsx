@@ -1,9 +1,11 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, ArrowLeft, Palette, ChevronDown, Droplets, Flame } from "lucide-react";
+import { Check, ArrowLeft, Palette, ChevronDown, Droplets, Flame, Waves, Sparkles, ZoomIn, ZoomOut, X } from "lucide-react";
 import { useLocation } from "wouter";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { GlobalBackground } from "@/components/GlobalBackground";
 import { FireBackground } from "@/components/FireBackground";
+import { SeaBackground } from "@/components/SeaBackground";
+import { WaterfallBackground } from "@/components/WaterfallBackground";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { TiltCard } from "@/components/TiltCard";
 import { MagneticButton } from "@/components/MagneticButton";
@@ -21,29 +23,153 @@ const WM_SVG = encodeURIComponent(
 );
 const WM_URL = `url("data:image/svg+xml,${WM_SVG}")`;
 
-function ProtectedImage({ src, alt }: { src: string; alt: string }) {
+interface LightboxState {
+  src: string;
+  alt: string;
+  zoom: number;
+}
+
+function ProtectedImage({
+  src,
+  alt,
+  onClick,
+}: {
+  src: string;
+  alt: string;
+  onClick?: () => void;
+}) {
   return (
     <div
-      className="relative select-none overflow-hidden rounded-xl"
+      className="relative select-none overflow-hidden rounded-xl cursor-zoom-in group"
       onContextMenu={(e) => e.preventDefault()}
+      onClick={onClick}
     >
       <img
         src={src}
         alt={alt}
         draggable={false}
-        className="w-full h-auto block rounded-xl"
+        className="w-full h-auto block rounded-xl transition-transform duration-300 group-hover:scale-105"
         style={{ pointerEvents: "none", userSelect: "none" }}
       />
       <div
         className="absolute inset-0 rounded-xl"
         style={{ backgroundImage: WM_URL, backgroundSize: "170px 170px", pointerEvents: "none" }}
       />
+      {/* Zoom hint overlay */}
+      <div className="absolute inset-0 rounded-xl flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+        style={{ background: "rgba(0,0,0,0.35)" }}>
+        <ZoomIn className="w-6 h-6 text-white/80" />
+      </div>
       <div
         className="absolute inset-0 rounded-xl"
         onContextMenu={(e) => e.preventDefault()}
-        style={{ cursor: "default" }}
+        style={{ cursor: "zoom-in" }}
       />
     </div>
+  );
+}
+
+function Lightbox({ state, onClose }: { state: LightboxState; onClose: () => void }) {
+  const [zoom, setZoom] = useState(state.zoom);
+  const MIN_ZOOM = 0.5;
+  const MAX_ZOOM = 3;
+  const STEP = 0.25;
+
+  const zoomIn  = () => setZoom(z => Math.min(z + STEP, MAX_ZOOM));
+  const zoomOut = () => setZoom(z => Math.max(z - STEP, MIN_ZOOM));
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === "+" || e.key === "=") zoomIn();
+      if (e.key === "-") zoomOut();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
+  }, []);
+
+  return (
+    <motion.div
+      className="fixed inset-0 z-[9999] flex items-center justify-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.25 }}
+      style={{ background: "rgba(0,0,0,0.85)", backdropFilter: "blur(12px)" }}
+      onClick={onClose}
+    >
+      {/* Controls */}
+      <div
+        className="absolute top-5 right-5 flex items-center gap-2 z-10"
+        onClick={e => e.stopPropagation()}
+      >
+        <motion.button
+          whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
+          onClick={zoomOut}
+          disabled={zoom <= MIN_ZOOM}
+          className="w-9 h-9 rounded-full flex items-center justify-center transition-all disabled:opacity-30"
+          style={{ background: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.15)" }}
+        >
+          <ZoomOut className="w-4 h-4 text-white" />
+        </motion.button>
+        <span className="text-xs font-mono text-white/50 min-w-[3rem] text-center">
+          {Math.round(zoom * 100)}%
+        </span>
+        <motion.button
+          whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
+          onClick={zoomIn}
+          disabled={zoom >= MAX_ZOOM}
+          className="w-9 h-9 rounded-full flex items-center justify-center transition-all disabled:opacity-30"
+          style={{ background: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.15)" }}
+        >
+          <ZoomIn className="w-4 h-4 text-white" />
+        </motion.button>
+        <motion.button
+          whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
+          onClick={onClose}
+          className="w-9 h-9 rounded-full flex items-center justify-center ml-2"
+          style={{ background: "rgba(255,255,255,0.10)", border: "1px solid rgba(255,255,255,0.15)" }}
+        >
+          <X className="w-4 h-4 text-white" />
+        </motion.button>
+      </div>
+
+      {/* Image */}
+      <motion.div
+        onClick={e => e.stopPropagation()}
+        initial={{ scale: 0.85 }}
+        animate={{ scale: 1 }}
+        exit={{ scale: 0.85 }}
+        transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
+        style={{ transform: `scale(${zoom})`, transition: "transform 0.2s ease" }}
+        className="max-w-[90vw] max-h-[85vh] overflow-hidden rounded-2xl select-none"
+        onContextMenu={e => e.preventDefault()}
+      >
+        <div className="relative">
+          <img
+            src={state.src}
+            alt={state.alt}
+            draggable={false}
+            className="max-w-[80vw] max-h-[80vh] object-contain rounded-2xl"
+            style={{ pointerEvents: "none", userSelect: "none" }}
+          />
+          <div
+            className="absolute inset-0 rounded-2xl"
+            style={{ backgroundImage: WM_URL, backgroundSize: "170px 170px", pointerEvents: "none" }}
+          />
+        </div>
+      </motion.div>
+
+      {/* Click to close hint */}
+      <p className="absolute bottom-5 left-1/2 -translate-x-1/2 text-xs text-white/25">
+        Click outside or press Esc to close · +/- to zoom
+      </p>
+    </motion.div>
   );
 }
 
@@ -160,6 +286,13 @@ const THEME_CONFIG: Record<Theme, { bg: string; label: string; dot: string }> = 
 };
 const THEME_ORDER: Theme[] = ["purple", "white", "light", "dark", "gold", "red"];
 
+const LOGO_ANIMATIONS = [
+  { id: "liquid"    as const, label: "Liquid Flow",  icon: Droplets, desc: "WebGL domain warp"  },
+  { id: "fire"      as const, label: "Calming Fire", icon: Flame,    desc: "Rising embers"      },
+  { id: "sea"       as const, label: "Ocean Waves",  icon: Waves,    desc: "WebGL ocean shader" },
+  { id: "waterfall" as const, label: "Waterfall",    icon: Sparkles, desc: "Flowing water"      },
+];
+
 function LogosNavbar({ onContact }: { onContact: () => void }) {
   const [dropOpen, setDropOpen]     = useState(false);
   const { theme, setTheme }         = useTheme();
@@ -205,7 +338,6 @@ function LogosNavbar({ onContact }: { onContact: () => void }) {
         </div>
 
         <div className="flex items-center gap-2">
-          {/* View counter */}
           <ViewCounter />
 
           {/* Style dropdown */}
@@ -280,10 +412,7 @@ function LogosNavbar({ onContact }: { onContact: () => void }) {
                   <div className="px-4 py-3">
                     <p className="text-[10px] font-semibold uppercase tracking-widest text-white/25 mb-2">Animation</p>
                     <div className="flex flex-col gap-1">
-                      {([
-                        { id: "liquid" as const, label: "Liquid Flow",  icon: Droplets, desc: "WebGL domain warp" },
-                        { id: "fire"   as const, label: "Calming Fire", icon: Flame,    desc: "Rising embers"   },
-                      ] as const).map(({ id, label, icon: Icon, desc }) => {
+                      {LOGO_ANIMATIONS.map(({ id, label, icon: Icon, desc }) => {
                         const active = animation === id;
                         return (
                           <motion.button
@@ -331,19 +460,38 @@ export default function Logos() {
   const [, navigate]                = useLocation();
   const { animation }               = useAnimation();
   const TIER                        = useTierConfig();
+  const [lightbox, setLightbox]     = useState<LightboxState | null>(null);
+
+  const openLightbox = useCallback((src: string, alt: string) => {
+    setLightbox({ src, alt, zoom: 1 });
+  }, []);
 
   const goContact = () => {
     navigate("/");
     setTimeout(() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" }), 300);
   };
 
+  function BgComponent() {
+    if (animation === "fire")      return <FireBackground />;
+    if (animation === "sea")       return <SeaBackground />;
+    if (animation === "waterfall") return <WaterfallBackground />;
+    return <GlobalBackground />;
+  }
+
   return (
     <>
-      {animation === "fire" ? <FireBackground /> : <GlobalBackground />}
+      <BgComponent />
       <ScrollProgress />
       <AmbientAudio />
-      <main className="relative min-h-screen overflow-x-hidden" style={{ background: "transparent" }}>
 
+      {/* Lightbox */}
+      <AnimatePresence>
+        {lightbox && (
+          <Lightbox state={lightbox} onClose={() => setLightbox(null)} />
+        )}
+      </AnimatePresence>
+
+      <main className="relative min-h-screen overflow-x-hidden" style={{ background: "transparent" }}>
         <LogosNavbar onContact={goContact} />
 
         {/* Hero */}
@@ -395,7 +543,11 @@ export default function Logos() {
                     className="rounded-2xl p-4 flex flex-col gap-3"
                     style={{ background: t.bg, border: t.border }}
                   >
-                    <ProtectedImage src={`/images/logos/${logo.file}`} alt={logo.name} />
+                    <ProtectedImage
+                      src={`/images/logos/${logo.file}`}
+                      alt={logo.name}
+                      onClick={() => openLightbox(`/images/logos/${logo.file}`, logo.name)}
+                    />
                     <div>
                       <span
                         className="text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full inline-block mb-1.5"
@@ -513,81 +665,36 @@ export default function Logos() {
             >
               <p className="text-xs font-semibold uppercase tracking-widest text-white/25">Add-Ons</p>
               {[
-                { label: "Different colors / extra color variant:", value: "+$1" },
-                { label: "Priority (start sooner):", value: "+$5" },
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: "var(--c-primary)", boxShadow: "0 0 6px var(--c-glow)" }} />
-                  <span className="text-sm text-white/40">
-                    {item.label}{" "}
-                    <span className="text-white/65 font-semibold">{item.value}</span>
-                  </span>
+                { label: "Rush Delivery", value: "+$3" },
+                { label: "Extra Revision", value: "+$1 each" },
+                { label: "ROBLOX Paid", value: "−20% on USD price" },
+              ].map((a) => (
+                <div key={a.label} className="flex items-center gap-2">
+                  <span className="text-xs text-white/40">{a.label}</span>
+                  <span className="text-xs font-bold" style={{ color: "var(--c-primary)" }}>{a.value}</span>
                 </div>
               ))}
             </motion.div>
-          </div>
-        </section>
 
-        {/* How to Order */}
-        <section className="px-6 pb-28 border-t border-white/5" style={{ position: "relative", zIndex: 2 }}>
-          <div className="max-w-7xl mx-auto pt-20 grid md:grid-cols-2 gap-14 items-center">
+            {/* Order form */}
             <motion.div
-              initial={{ opacity: 0, x: -30, filter: "blur(10px)" }}
-              whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
+              className="mt-6 glass rounded-2xl p-5"
             >
-              <p className="text-xs font-semibold uppercase tracking-widest gradient-text-blue mb-4">How to Order</p>
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-5">
-                DM me with this<br />
-                <span className="gradient-text">order template.</span>
-              </h2>
-              <p className="text-white/40 text-sm leading-relaxed mb-8">
-                Fill in the template below and send it to me on Discord. I'll reply with the exact price and start date. Simple, fast, no back-and-forth.
-              </p>
-              <MagneticButton
-                onClick={goContact}
-                className="btn-primary flex items-center gap-2 px-7 py-3.5 text-white text-sm font-semibold rounded-full"
-              >
-                Commission Me Now
-              </MagneticButton>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 30, filter: "blur(10px)" }}
-              whileInView={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-            >
-              <TiltCard className="glass-bright rounded-2xl p-6" intensity={6}>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-white/20 mb-5">Order Template</p>
-                <div className="space-y-0">
-                  {orderFields.map(([key, val], i) => (
-                    <motion.div
-                      key={i}
-                      initial={{ opacity: 0, x: 12 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: 0.05 + i * 0.06, duration: 0.4 }}
-                      className="flex gap-4 py-2.5 border-b border-white/5 last:border-0"
-                    >
-                      <span className="text-[11px] text-white/30 font-mono min-w-[10.5rem] flex-shrink-0">{key}:</span>
-                      <span className="text-[11px] text-white/55 font-mono">{val}</span>
-                    </motion.div>
-                  ))}
-                </div>
-              </TiltCard>
+              <p className="text-xs font-semibold uppercase tracking-widest text-white/25 mb-4">Order Template (DM on Discord)</p>
+              <div className="grid sm:grid-cols-2 gap-2">
+                {orderFields.map(([field, hint]) => (
+                  <div key={field} className="flex items-baseline gap-2">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-white/30 min-w-[120px] flex-shrink-0">{field}:</span>
+                    <span className="text-[10px] text-white/20 italic">{hint}</span>
+                  </div>
+                ))}
+              </div>
             </motion.div>
           </div>
         </section>
-
-        {/* Footer note */}
-        <div className="text-center pb-12 px-6" style={{ position: "relative", zIndex: 2 }}>
-          <p className="text-xs text-white/15">
-            All logos shown are works created by MYSTICFUSION7X. Unauthorized copying or use is prohibited.
-          </p>
-        </div>
-
       </main>
     </>
   );

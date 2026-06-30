@@ -121,6 +121,10 @@ function ruleBasedReply(lastUserMessage: string): string {
   if (/price|cost|how much|pricing|rate|charge/.test(msg))
     return "Here's a quick breakdown: **Starter UI** $5–$15 (1–2 screens) · **Game Package** $15–$50 (up to 4 screens) · **Full Package** $50–$100 (5+ screens) · **Premium** $100+ for large-scale games. What does your game need?";
 
+  // "Not sure" / help me decide queries
+  if (/not sure|don'?t know|help me|what do i need|what should i|unsure|no idea|confused|where do i start|getting started/.test(msg))
+    return "No worries! Let's figure it out together 😊 Answer these quick questions:\n1. What type of game? (simulator, tycoon, RP, FPS...)\n2. How many screens do you need? (just a menu? or HUD + shop + inventory?)\n3. Budget range? (USD or Robux?)\n\nOnce I know that, I'll point you straight to the right package!";
+
   // Greeting / general opener
   if (/^(hi|hey|hello|sup|yo|hii|helo|what'?s up|howdy)/.test(msg.trim()))
     return "Hey! 👋 Tell me what UI screens you need for your game and I'll give you an instant price estimate. Not sure? Just describe your game and I'll figure out what fits!";

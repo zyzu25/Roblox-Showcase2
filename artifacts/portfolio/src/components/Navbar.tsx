@@ -6,7 +6,7 @@ import { useAnimation } from "./AnimationContext";
 import { MagneticButton } from "./MagneticButton";
 import { AvailableHours } from "./AvailableHours";
 import { ViewCounter } from "./ViewCounter";
-import { ChevronDown, Palette, Flame, Droplets, Sparkles } from "lucide-react";
+import { ChevronDown, Palette, Flame, Droplets, Sparkles, Waves, Copy, Check } from "lucide-react";
 
 const THEME_CONFIG: Record<Theme, { bg: string; label: string; dot: string }> = {
   purple: { bg: "#4000ff", label: "Purple",  dot: "#7c3aff" },
@@ -19,9 +19,12 @@ const THEME_CONFIG: Record<Theme, { bg: string; label: string; dot: string }> = 
 
 const THEME_ORDER: Theme[] = ["purple", "white", "light", "dark", "gold", "red"];
 
+const DISCORD_TAG = "mysticfusion7x";
+
 export function Navbar() {
   const [hidden, setHidden]         = useState(false);
   const [dropOpen, setDropOpen]     = useState(false);
+  const [copied, setCopied]         = useState(false);
   const { scrollY }                 = useScroll();
   const [, navigate]                = useLocation();
   const { theme, setTheme }         = useTheme();
@@ -48,6 +51,32 @@ export function Navbar() {
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
+
+  const copyDiscord = async () => {
+    try {
+      await navigator.clipboard.writeText(DISCORD_TAG);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      const ta = document.createElement("textarea");
+      ta.value = DISCORD_TAG;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const ANIMATIONS = [
+    { id: "liquid"    as const, label: "Liquid Flow",  icon: Droplets, desc: "WebGL domain warp"  },
+    { id: "fire"      as const, label: "Calming Fire", icon: Flame,    desc: "Rising embers"      },
+    { id: "sea"       as const, label: "Ocean Waves",  icon: Waves,    desc: "WebGL ocean shader" },
+    { id: "waterfall" as const, label: "Waterfall",    icon: Sparkles, desc: "Flowing water"      },
+  ];
 
   return (
     <motion.header
@@ -107,6 +136,35 @@ export function Navbar() {
             data-testid="nav-link-logos"
           >
             Logos
+          </motion.button>
+
+          {/* Discord copy button */}
+          <motion.button
+            onClick={copyDiscord}
+            whileHover={{ scale: 1.06 }}
+            whileTap={{ scale: 0.94 }}
+            title={copied ? "Copied!" : `Copy Discord: ${DISCORD_TAG}`}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all"
+            style={{
+              background: copied ? "rgba(139,61,255,0.18)" : "rgba(255,255,255,0.05)",
+              border: copied ? "1px solid var(--c-border-soft)" : "1px solid rgba(255,255,255,0.08)",
+              color: copied ? "var(--c-primary)" : "rgba(255,255,255,0.45)",
+              boxShadow: copied ? "0 0 10px var(--c-glow-soft)" : "none",
+              transition: "all 0.3s ease",
+            }}
+          >
+            <AnimatePresence mode="wait">
+              {copied ? (
+                <motion.span key="check" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                  <Check className="w-3 h-3" />
+                </motion.span>
+              ) : (
+                <motion.span key="copy" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }}>
+                  <Copy className="w-3 h-3" />
+                </motion.span>
+              )}
+            </AnimatePresence>
+            <span>{copied ? "Copied!" : DISCORD_TAG}</span>
           </motion.button>
 
           {/* View counter */}
@@ -194,10 +252,7 @@ export function Navbar() {
                   <div className="px-4 py-3">
                     <p className="text-[10px] font-semibold uppercase tracking-widest text-white/25 mb-2">Animation</p>
                     <div className="flex flex-col gap-1">
-                      {([
-                        { id: "liquid" as const, label: "Liquid Flow",   icon: Droplets, desc: "WebGL domain warp" },
-                        { id: "fire"   as const, label: "Calming Fire",  icon: Flame,    desc: "Rising embers"   },
-                      ] as const).map(({ id, label, icon: Icon, desc }) => {
+                      {ANIMATIONS.map(({ id, label, icon: Icon, desc }) => {
                         const active = animation === id;
                         return (
                           <motion.button

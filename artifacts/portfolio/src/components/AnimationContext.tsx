@@ -1,17 +1,19 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-export type AnimationMode = "liquid" | "fire" | "mix";
+export type AnimationMode = "liquid" | "fire" | "mix" | "sea" | "waterfall";
 
 const AnimationCtx = createContext<{
   animation: AnimationMode;
   setAnimation: (a: AnimationMode) => void;
 }>({ animation: "liquid", setAnimation: () => {} });
 
+const VALID: AnimationMode[] = ["liquid", "fire", "mix", "sea", "waterfall"];
+
 export function AnimationProvider({ children }: { children: React.ReactNode }) {
   const [animation, setAnimation] = useState<AnimationMode>(() => {
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem("portfolio-animation");
-      if (stored === "liquid" || stored === "fire" || stored === "mix") return stored;
+      if (VALID.includes(stored as AnimationMode)) return stored as AnimationMode;
     }
     return "liquid";
   });
