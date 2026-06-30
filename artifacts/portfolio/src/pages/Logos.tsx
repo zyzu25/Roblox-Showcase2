@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, ArrowLeft, Palette, ChevronDown, Droplets, Flame, Waves, Sparkles, ZoomIn, ZoomOut, X, Blend } from "lucide-react";
+import { Check, ArrowLeft, Palette, ChevronDown, Droplets, Flame, Waves, Sparkles, ZoomIn, ZoomOut, X, Blend, CloudRain } from "lucide-react";
 import { useLocation } from "wouter";
 import { useRef, useState, useEffect, useCallback } from "react";
 import { GlobalBackground } from "@/components/GlobalBackground";
@@ -292,7 +292,8 @@ const LOGO_ANIMATIONS = [
   { id: "fire"      as const, label: "Calming Fire", icon: Flame,    desc: "Rising embers"          },
   { id: "sea"       as const, label: "Ocean Waves",  icon: Waves,    desc: "WebGL ocean shader"     },
   { id: "waterfall" as const, label: "Waterfall",    icon: Sparkles, desc: "Flowing water"          },
-  { id: "mix"       as const, label: "Aurora Mix",   icon: Blend,    desc: "All themes, all motion" },
+  { id: "mix"       as const, label: "Aurora Mix",   icon: Blend,     desc: "All themes, all motion" },
+  { id: "storm"     as const, label: "Calm Storm",   icon: CloudRain, desc: "Rain & distant thunder" },
 ];
 
 function LogosNavbar({ onContact }: { onContact: () => void }) {
