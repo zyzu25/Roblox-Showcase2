@@ -45,6 +45,16 @@ const faqs = [
       "No. Every project is purpose-built for your game from scratch. You won't receive a reskinned template — all UI systems are designed around your game's identity and requirements.",
   },
   {
+    question: "Do you script / do you do scripting?",
+    answer:
+      "No — I'm a UI designer, not a scripter. I design and build the visual side of your UI (layouts, frames, icons, animations in Figma/Roblox Studio), but I don't write Lua scripts to make them functional. You'll need a separate developer to handle scripting.",
+  },
+  {
+    question: "What tools and platforms do you use?",
+    answer:
+      "My primary design tool is Figma, where I do the majority of my design work — wireframing, layout, iconography, and asset creation. I also work directly in Roblox Studio to build and implement UI within your game.",
+  },
+  {
     question: "Can you refuse my order?",
     answer:
       "Yes. I reserve the right to refuse unclear or incomplete requests. If your brief isn't detailed enough to work from, I'll ask for more information. Providing clear project details upfront is the best way to avoid delays.",
