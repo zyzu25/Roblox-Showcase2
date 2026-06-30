@@ -1,38 +1,58 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Calculator, Zap, ExternalLink } from "lucide-react";
+import { X, Calculator, Zap, ExternalLink, Info } from "lucide-react";
 
 const COMPLEXITY = ["Simple", "Standard", "Complex"] as const;
 type Complexity = typeof COMPLEXITY[number];
 
+/**
+ * Price logic aligned with actual package tiers:
+ *  Starter UI      → $5–$15  (1–2 screens, simple/standard)
+ *  Game UI Package → $15–$50 (3–5 screens, or 1–2 complex)
+ *  Full Game UI    → $50–$80 (6–8 screens, any complexity)
+ *  Premium UI      → $80–$150 (8+ / all complex / rush big projects)
+ *
+ * Rush = +25% of base (per delivery policy), min $5 bump.
+ * Robux = USD × 250.
+ */
 function calcPrice(screens: number, complexity: Complexity, rush: boolean, robux: boolean) {
+  const complexMult = complexity === "Simple" ? 1 : complexity === "Standard" ? 1.35 : 1.8;
+
   let label = "";
   let low = 0;
   let high = 0;
   let days = "";
 
-  if (screens <= 2 && complexity === "Simple") {
-    label = "Starter UI"; low = 5; high = 15; days = "1-2 days";
-  } else if (screens <= 2 && complexity === "Standard") {
-    label = "Starter UI"; low = 10; high = 20; days = "1-3 days";
+  if (screens <= 2 && complexity !== "Complex") {
+    label = "Starter UI"; low = 5; high = 15; days = "1–2 days";
   } else if (screens <= 2 && complexity === "Complex") {
-    label = "Game UI Package"; low = 20; high = 35; days = "2-4 days";
+    label = "Game UI Package"; low = 18; high = 32; days = "2–4 days";
   } else if (screens <= 4 && complexity === "Simple") {
-    label = "Game UI Package"; low = 15; high = 35; days = "2-4 days";
+    label = "Game UI Package"; low = 15; high = 30; days = "2–4 days";
   } else if (screens <= 4 && complexity === "Standard") {
-    label = "Game UI Package"; low = 25; high = 50; days = "3-5 days";
+    label = "Game UI Package"; low = 25; high = 50; days = "3–5 days";
   } else if (screens <= 4 && complexity === "Complex") {
-    label = "Full Game UI"; low = 45; high = 70; days = "4-7 days";
-  } else if (screens <= 6 && complexity !== "Complex") {
-    label = "Full Game UI"; low = 50; high = 80; days = "5-8 days";
+    label = "Full Game UI"; low = 45; high = 75; days = "4–7 days";
+  } else if (screens <= 6 && complexity === "Simple") {
+    label = "Full Game UI"; low = 40; high = 65; days = "4–6 days";
+  } else if (screens <= 6 && complexity === "Standard") {
+    label = "Full Game UI"; low = 55; high = 80; days = "5–8 days";
+  } else if (screens <= 6 && complexity === "Complex") {
+    label = "Premium UI"; low = 75; high = 120; days = "1–2 weeks";
   } else {
-    label = screens >= 7 || complexity === "Complex" ? "Premium UI" : "Full Game UI";
-    low = complexity === "Complex" ? 80 : 60;
-    high = complexity === "Complex" ? 150 : 100;
-    days = "1-3 weeks";
+    // 7–8+ screens
+    const base = complexity === "Simple" ? 65 : complexity === "Standard" ? 85 : 110;
+    const baseHigh = complexity === "Simple" ? 100 : complexity === "Standard" ? 130 : 175;
+    label = complexity === "Complex" ? "Premium UI" : screens >= 8 ? "Premium UI" : "Full Game UI";
+    low = base; high = baseHigh; days = complexity === "Complex" ? "2–3 weeks" : "1–2 weeks";
   }
 
-  if (rush) { low += 5; high += 5; }
+  // Rush = 25% extra, minimum +$5
+  if (rush) {
+    const rushLow = Math.max(5, Math.round(low * 0.25));
+    const rushHigh = Math.max(5, Math.round(high * 0.25));
+    low += rushLow; high += rushHigh;
+  }
 
   if (robux) {
     return { label, low: Math.round(low * 250), high: Math.round(high * 250), days, currency: "R$" };
@@ -46,6 +66,7 @@ export function PriceCalculator() {
   const [complexity, setComplexity] = useState<Complexity>("Standard");
   const [rush, setRush] = useState(false);
   const [robux, setRobux] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
 
   const result = calcPrice(screens, complexity, rush, robux);
 
@@ -110,19 +131,42 @@ export function PriceCalculator() {
                 style={{ background: "var(--c-glow-soft)", border: "1px solid var(--c-border)" }}>
                 <Calculator className="w-3.5 h-3.5" style={{ color: "var(--c-primary)" }} />
               </div>
-              <div>
+              <div className="flex-1">
                 <p className="text-xs font-semibold text-white leading-none">Price Calculator</p>
-                <p className="text-[10px] text-white/30 mt-0.5">Live estimate · Instant</p>
+                <p className="text-[10px] text-white/30 mt-0.5">Estimate · Prices are approximate</p>
               </div>
+              <button onClick={() => setShowInfo(i => !i)} className="text-white/20 hover:text-white/50 transition-colors">
+                <Info className="w-3.5 h-3.5" />
+              </button>
             </div>
+
+            <AnimatePresence>
+              {showInfo && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.25 }}
+                  className="overflow-hidden"
+                >
+                  <div className="px-4 py-3 text-[11px] text-white/40 leading-relaxed space-y-1 border-b border-white/5"
+                    style={{ background: "rgba(255,255,255,0.02)" }}>
+                    <p>• Prices reflect actual package tiers</p>
+                    <p>• Rush fee = +25% of the base price</p>
+                    <p>• USD payers get a 20% discount on checkout</p>
+                    <p>• Final price confirmed before work starts</p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             <div className="px-4 py-4 space-y-5">
               {/* Screens slider */}
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[11px] font-semibold text-white/60 uppercase tracking-wide">Screens</span>
+                  <span className="text-[11px] font-semibold text-white/60 uppercase tracking-wide">Screens / UI Frames</span>
                   <span className="text-xs font-bold" style={{ color: "var(--c-primary)" }}>
-                    {screens === 8 ? "8+" : screens}
+                    {screens >= 8 ? "8+" : screens}
                   </span>
                 </div>
                 <input
@@ -159,11 +203,13 @@ export function PriceCalculator() {
                     </button>
                   ))}
                 </div>
+                <p className="text-[9px] text-white/20 mt-1.5">
+                  {complexity === "Simple" ? "Basic shapes, flat colors" : complexity === "Standard" ? "Animations, gradients, effects" : "Full motion, complex FX, custom assets"}
+                </p>
               </div>
 
               {/* Toggles */}
               <div className="flex gap-3">
-                {/* Rush */}
                 <button
                   onClick={() => setRush(r => !r)}
                   className="flex-1 flex items-center gap-2 px-3 py-2 rounded-xl text-[11px] font-semibold transition-all"
@@ -174,10 +220,9 @@ export function PriceCalculator() {
                   }}
                 >
                   <Zap className="w-3 h-3 flex-shrink-0" />
-                  Rush +$5
+                  Rush (+25%)
                 </button>
 
-                {/* USD / Robux */}
                 <button
                   onClick={() => setRobux(r => !r)}
                   className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-[11px] font-semibold transition-all"
@@ -210,6 +255,9 @@ export function PriceCalculator() {
                   {result.currency}{result.high.toLocaleString()}
                 </p>
                 <p className="text-[10px] text-white/30 mt-0.5">Delivered in {result.days}</p>
+                {!robux && (
+                  <p className="text-[9px] mt-1" style={{ color: "var(--c-primary)", opacity: 0.7 }}>USD payers get 20% off at checkout</p>
+                )}
               </motion.div>
 
               {/* CTA */}

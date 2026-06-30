@@ -14,8 +14,8 @@ import { Footer } from "@/components/Footer";
 import { StickyPill } from "@/components/StickyPill";
 import { PriceCalculator } from "@/components/PriceCalculator";
 import { StyleQuiz } from "@/components/StyleQuiz";
-import { CustomCursor } from "@/components/CustomCursor";
-import { ReferralSection } from "@/components/ReferralSection";
+import { PromoSection } from "@/components/PromoSection";
+import { ReviewsSection } from "@/components/ReviewsSection";
 import { WhyChooseUs } from "@/components/WhyChooseUs";
 import { Process } from "@/components/Process";
 import { RevisionPolicy } from "@/components/RevisionPolicy";
@@ -29,7 +29,6 @@ export default function Home() {
 
   return (
     <>
-      <CustomCursor />
       <LoadingScreen onDone={() => setLoaded(true)} />
       <GlobalBackground />
       <ScrollProgress />
@@ -53,8 +52,9 @@ export default function Home() {
         <Services />
         <Pricing />
         <RevisionPolicy />
-        <ReferralSection />
+        <PromoSection />
         <Testimonials />
+        <ReviewsSection />
         <Policies />
         <FAQ />
         <Contact />
