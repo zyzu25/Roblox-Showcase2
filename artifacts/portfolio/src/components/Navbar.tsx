@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useLocation } from "wouter";
 import { useTheme } from "./ThemeContext";
 import { MagneticButton } from "./MagneticButton";
+import { AvailableHours } from "./AvailableHours";
 
 export function Navbar() {
   const [hidden, setHidden] = useState(false);
@@ -62,7 +63,7 @@ export function Navbar() {
             { label: "Work",     id: "portfolio"  },
             { label: "Services", id: "services"   },
             { label: "Pricing",  id: "pricing"    },
-            { label: "Policies", id: "policies"   },
+            { label: "Referral", id: "referral"   },
             { label: "FAQ",      id: "faq"        },
           ].map((item) => (
             <motion.button
@@ -105,6 +106,10 @@ export function Navbar() {
                 }}
               />
             ))}
+          </div>
+
+          <div className="ml-2">
+            <AvailableHours />
           </div>
 
           <MagneticButton

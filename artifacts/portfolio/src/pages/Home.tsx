@@ -11,6 +11,9 @@ import { Testimonials } from "@/components/Testimonials";
 import { FAQ } from "@/components/FAQ";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
+import { StickyPill } from "@/components/StickyPill";
+import { AIPriceChat } from "@/components/AIPriceChat";
+import { ReferralSection } from "@/components/ReferralSection";
 import { GlobalBackground } from "@/components/GlobalBackground";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { AmbientAudio } from "@/components/AmbientAudio";
@@ -41,12 +44,15 @@ export default function Home() {
         <Portfolio />
         <Services />
         <Pricing />
+        <ReferralSection />
         <Testimonials />
         <Policies />
         <FAQ />
         <Contact />
         <Footer />
       </main>
+      <StickyPill />
+      <AIPriceChat />
     </>
   );
 }
