@@ -503,3 +503,15 @@ body {
   -webkit-user-select: text;
   user-select: text;
 }
+
+/* ── Client strip marquee ── */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.client-marquee {
+  animation: marquee 28s linear infinite;
+}
+.client-marquee:hover {
+  animation-play-state: paused;
+}
