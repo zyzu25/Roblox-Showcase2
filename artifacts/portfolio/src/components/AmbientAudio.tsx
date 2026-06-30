@@ -110,7 +110,7 @@ export function AmbientAudio() {
                   height: 90,
                   width: 4,
                   cursor: "pointer",
-                  appearance: "slider-vertical",
+                  appearance: "slider-vertical" as React.CSSProperties["appearance"],
                   WebkitAppearance: "slider-vertical",
                   accentColor: "var(--c-primary)",
                 }}
