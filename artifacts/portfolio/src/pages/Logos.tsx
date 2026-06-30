@@ -433,8 +433,16 @@ function LogosNavbar({ onContact }: { onContact: () => void }) {
                             }}
                           >
                             <Icon className="w-3.5 h-3.5 flex-shrink-0" style={{ color: active ? "var(--c-primary)" : "rgba(255,255,255,0.30)" }} />
-                            <div>
-                              <p className="text-xs font-medium" style={{ color: active ? "rgba(255,255,255,0.90)" : "rgba(255,255,255,0.45)" }}>{label}</p>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-1.5 flex-wrap">
+                                <p className="text-xs font-medium" style={{ color: active ? "rgba(255,255,255,0.90)" : "rgba(255,255,255,0.45)" }}>{label}</p>
+                                {id === "mix" && (
+                                  <span className="text-[8px] px-1.5 py-0.5 rounded-full font-semibold leading-none flex-shrink-0"
+                                    style={{ background: "rgba(251,191,36,0.15)", color: "#fbbf24", border: "1px solid rgba(251,191,36,0.25)" }}>
+                                    ⚠ GPU heavy
+                                  </span>
+                                )}
+                              </div>
                               <p className="text-[9px] text-white/20 leading-none mt-0.5">{desc}</p>
                             </div>
                             {active && (
