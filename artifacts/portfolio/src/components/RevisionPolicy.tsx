@@ -20,7 +20,7 @@ const packages = [
     maxRevisions: 3,
     turnaround: "2–5 days",
     extraCost: "$2",
-    notes: "Two full revision rounds included. Any feedback is consolidated per round — not per individual comment.",
+    notes: "Two full revision rounds included. Any feedback is consolidated per round, not per individual comment.",
     color: "var(--c-primary)",
     popular: true,
   },
@@ -41,7 +41,7 @@ const packages = [
     maxRevisions: 3,
     turnaround: "1–3 weeks",
     extraCost: "Included",
-    notes: "Revisions are collaborative — we work together until the result is exactly right. No limit.",
+    notes: "Revisions are collaborative. We work together until the result is exactly right. No limit.",
     color: "#f59e0b",
   },
 ];
@@ -236,7 +236,7 @@ export function RevisionPolicy() {
         >
           <RotateCcw className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" style={{ color: "var(--c-primary)" }} />
           <p className="text-xs text-white/35 leading-relaxed">
-            All revision counts reset per project. Revisions are for adjusting existing elements — not adding new screens or features outside the original brief.
+            All revision counts reset per project. Revisions are for adjusting existing elements, not adding new screens or features outside the original brief.
           </p>
         </motion.div>
       </div>

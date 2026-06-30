@@ -133,7 +133,7 @@ function ReferralInfo() {
         </p>
         <h3 className="text-lg font-bold text-white mb-1">Want your own code?</h3>
         <p className="text-xs text-white/35 leading-relaxed">
-          I run a personal referral program — when you refer someone who commissions, you both earn discounts on future orders.
+          I run a personal referral program. When you refer someone who commissions, you both earn discounts on future orders.
         </p>
       </div>
 

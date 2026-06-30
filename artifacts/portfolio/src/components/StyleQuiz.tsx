@@ -23,7 +23,7 @@ const questions = [
 
 const packages: Record<string, { name: string; price: string; desc: string; days: string; color: string }> = {
   starter: { name: "Starter UI", price: "$5–$15", days: "1-2 days", color: "#4ade80", desc: "Perfect for a simple 1-2 screen UI. Clean, fast, and affordable." },
-  game: { name: "Game UI Package", price: "$15–$50", days: "2-5 days", color: "var(--c-primary)", desc: "Up to 4 connected screens — the most popular choice for growing games." },
+  game: { name: "Game UI Package", price: "$15–$50", days: "2-5 days", color: "var(--c-primary)", desc: "Up to 4 connected screens. The most popular choice for growing games." },
   full: { name: "Full Game UI", price: "$50–$100", days: "5-10 days", color: "#22d3ee", desc: "Complete UI system with 5+ screens, cohesive style, and full polish." },
   premium: { name: "Premium UI", price: "$100+", days: "1-3 weeks", color: "#f59e0b", desc: "High-end, large-scale UI for games that demand a strong visual identity." },
 };

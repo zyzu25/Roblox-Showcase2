@@ -191,7 +191,7 @@ export function EmojiReaction() {
             className="text-center"
           >
             <p className="text-xs font-semibold" style={{ color: lastSwipe.dir === "right" ? "#4ade80" : "#f87171" }}>
-              {lastSwipe.dir === "right" ? `🔥 You said "${lastSwipe.label}"` : `😐 Fair enough — "${lastSwipe.label}"`}
+              {lastSwipe.dir === "right" ? `🔥 You said "${lastSwipe.label}"` : `😐 Fair enough. "${lastSwipe.label}"`}
             </p>
           </motion.div>
         )}
