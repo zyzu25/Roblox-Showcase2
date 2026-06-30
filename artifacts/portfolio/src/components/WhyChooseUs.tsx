@@ -5,14 +5,14 @@ const reasons = [
   {
     icon: Zap,
     title: "Fast Turnaround",
-    desc: "Most projects ship in 1–5 days. No waiting weeks for your UI — get it done while momentum is high.",
+    desc: "Most projects ship in 1–5 days. No waiting weeks for your UI. Get it done while momentum is high.",
     color: "#f59e0b",
     glow: "rgba(245,158,11,0.18)",
   },
   {
     icon: Shield,
     title: "Quality Guaranteed",
-    desc: "Every frame is polished, pixel-perfect, and built to fit your game's identity — no generic templates.",
+    desc: "Every frame is polished, pixel-perfect, and built to fit your game's identity. No generic templates.",
     color: "var(--c-primary)",
     glow: "var(--c-glow-soft)",
   },
