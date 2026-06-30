@@ -63,6 +63,7 @@ export function Navbar() {
             { label: "Services", id: "services"   },
             { label: "Pricing",  id: "pricing"    },
             { label: "Policies", id: "policies"   },
+            { label: "FAQ",      id: "faq"        },
           ].map((item) => (
             <motion.button
               key={item.id}

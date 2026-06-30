@@ -7,6 +7,7 @@ import { Services } from "@/components/Services";
 import { Pricing } from "@/components/Pricing";
 import { Policies } from "@/components/Policies";
 import { Testimonials } from "@/components/Testimonials";
+import { FAQ } from "@/components/FAQ";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { GlobalBackground } from "@/components/GlobalBackground";
@@ -40,6 +41,7 @@ export default function Home() {
         <Pricing />
         <Testimonials />
         <Policies />
+        <FAQ />
         <Contact />
         <Footer />
       </main>
