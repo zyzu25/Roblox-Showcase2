@@ -10,8 +10,8 @@ interface Track {
 }
 
 const TRACKS: Track[] = [
-  { id: "ambient", label: "Ambient Glow",  src: "/ambient.mp3",  youtubeId: null           },
-  { id: "chill",   label: "Lofi Chill",    src: null,            youtubeId: "7gtIh5dF9Xk"  },
+  { id: "ambient",   label: "Let Go - Ark Patrol",                   src: "/ambient.mp3",    youtubeId: null },
+  { id: "jazz-noir", label: "The Last Sip Comes Slow - Sean Broke",  src: "/jazz-noir.mp3",  youtubeId: null },
 ];
 
 function pickRandom(): Track {

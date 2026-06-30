@@ -6,7 +6,7 @@ import { useAnimation } from "./AnimationContext";
 import { MagneticButton } from "./MagneticButton";
 import { AvailableHours } from "./AvailableHours";
 import { ViewCounter } from "./ViewCounter";
-import { ChevronDown, Palette, Flame, Droplets, Sparkles, Waves, Copy, Check, Blend } from "lucide-react";
+import { ChevronDown, Palette, Flame, Droplets, Sparkles, Waves, Copy, Check, Blend, CloudRain } from "lucide-react";
 
 const THEME_CONFIG: Record<Theme, { bg: string; label: string; dot: string; gradient?: string }> = {
   purple: { bg: "#4000ff", label: "Purple",  dot: "#7c3aff" },
@@ -77,7 +77,8 @@ export function Navbar() {
     { id: "fire"      as const, label: "Calming Fire", icon: Flame,    desc: "Rising embers"          },
     { id: "sea"       as const, label: "Ocean Waves",  icon: Waves,    desc: "WebGL ocean shader"     },
     { id: "waterfall" as const, label: "Waterfall",    icon: Sparkles, desc: "Flowing water"          },
-    { id: "mix"       as const, label: "Aurora Mix",   icon: Blend,    desc: "All themes, all motion" },
+    { id: "mix"       as const, label: "Aurora Mix",   icon: Blend,     desc: "All themes, all motion" },
+    { id: "storm"     as const, label: "Calm Storm",   icon: CloudRain, desc: "Rain & distant thunder" },
   ];
 
   return (
