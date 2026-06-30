@@ -5,6 +5,7 @@ import { GlobalBackground } from "@/components/GlobalBackground";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { TiltCard } from "@/components/TiltCard";
 import { MagneticButton } from "@/components/MagneticButton";
+import { AmbientAudio } from "@/components/AmbientAudio";
 
 const WM_SVG = encodeURIComponent(
   `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">` +
@@ -143,6 +144,7 @@ export default function Logos() {
     <>
       <GlobalBackground />
       <ScrollProgress />
+      <AmbientAudio />
       <main className="relative min-h-screen overflow-x-hidden" style={{ background: "transparent" }}>
 
         {/* Navbar */}
