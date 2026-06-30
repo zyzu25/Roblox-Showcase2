@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Users, Monitor, ChevronDown } from "lucide-react";
+import { Users, Monitor, ChevronDown, UserPlus } from "lucide-react";
 import { MagneticButton } from "./MagneticButton";
 
 const headline = [
@@ -7,6 +7,15 @@ const headline = [
   { text: "Make Your Game", gradient: false },
   { text: "Unforgettable.", gradient: true },
 ];
+
+function VerifiedBadge({ size = 16, color = "var(--c-primary)" }: { size?: number; color?: string }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className="flex-shrink-0 inline-block align-middle">
+      <circle cx="12" cy="12" r="12" fill={color} />
+      <path d="M7 12.5l3.5 3.5 6.5-7" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
 
 export function Hero() {
   return (
@@ -22,6 +31,23 @@ export function Hero() {
           >
             <span className="w-1.5 h-1.5 rounded-full bg-green-400" style={{ boxShadow: '0 0 8px #4ade80' }} />
             <span className="text-xs text-white/70 font-medium tracking-wide">Open for commissions</span>
+          </motion.div>
+
+          {/* Name badge with verification */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.05 }}
+            className="inline-flex items-center gap-2 mb-4"
+          >
+            <div
+              className="w-7 h-7 rounded-lg overflow-hidden flex-shrink-0"
+              style={{ boxShadow: "0 0 10px var(--c-glow)" }}
+            >
+              <img src="/images/profile.jpg" alt="MYSTICFUSION7X" className="w-full h-full object-cover" />
+            </div>
+            <span className="text-sm font-semibold text-white/60">MYSTICFUSION7X</span>
+            <VerifiedBadge size={15} />
           </motion.div>
 
           <h1 className="font-bold leading-[1.04] tracking-tight mb-6" style={{ fontSize: 'clamp(3rem, 8vw, 6.5rem)' }}>
@@ -73,6 +99,28 @@ export function Hero() {
               <Users className="w-4 h-4" />
               Commission Me
             </MagneticButton>
+            {/* Roblox follow CTA */}
+            <motion.a
+              href="https://www.roblox.com/users/1510973392/profile"
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 1.1, duration: 0.5 }}
+              className="flex items-center gap-2 px-5 py-3.5 text-sm font-semibold rounded-full transition-all"
+              style={{
+                background: "rgba(255,255,255,0.04)",
+                border: "1px solid rgba(255,255,255,0.10)",
+                color: "rgba(255,255,255,0.55)",
+                textDecoration: "none",
+              }}
+              whileHover={{ scale: 1.05, borderColor: "rgba(255,255,255,0.22)", color: "rgba(255,255,255,0.85)" }}
+              whileTap={{ scale: 0.97 }}
+            >
+              <img src="/images/roblox.png" alt="Roblox" className="w-4 h-4 rounded object-cover" />
+              Follow on Roblox
+              <UserPlus className="w-3.5 h-3.5 opacity-60" />
+            </motion.a>
           </motion.div>
 
           <motion.div

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Send, Bot, Loader2 } from "lucide-react";
+import { X, Send, Loader2, Sparkles } from "lucide-react";
 
 interface Message {
   role: "user" | "assistant";
@@ -66,7 +66,7 @@ export function AIPriceChat() {
 
   return (
     <>
-      {/* Toggle button — sits just above the sticky pill area, left side */}
+      {/* Toggle button */}
       <motion.button
         initial={{ opacity: 0, scale: 0.8, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -88,11 +88,21 @@ export function AIPriceChat() {
               <X className="w-5 h-5 text-white" />
             </motion.span>
           ) : (
-            <motion.span key="bot" initial={{ opacity: 0, rotate: 90 }} animate={{ opacity: 1, rotate: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
-              <Bot className="w-5 h-5" style={{ color: "var(--c-primary)" }} />
+            <motion.span key="spark" initial={{ opacity: 0, rotate: 90 }} animate={{ opacity: 1, rotate: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
+              <Sparkles className="w-5 h-5" style={{ color: "var(--c-primary)" }} />
             </motion.span>
           )}
         </AnimatePresence>
+
+        {/* Pulse ring when closed to draw attention */}
+        {!open && (
+          <motion.span
+            className="absolute inset-0 rounded-full pointer-events-none"
+            animate={{ scale: [1, 1.6, 1], opacity: [0.3, 0, 0.3] }}
+            transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 3 }}
+            style={{ border: "1px solid var(--c-primary)" }}
+          />
+        )}
       </motion.button>
 
       {/* Chat panel */}
@@ -117,7 +127,7 @@ export function AIPriceChat() {
             <div className="px-4 py-3 border-b border-white/7 flex items-center gap-3">
               <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
                 style={{ background: "var(--c-glow-soft)", border: "1px solid var(--c-border)" }}>
-                <Bot className="w-3.5 h-3.5" style={{ color: "var(--c-primary)" }} />
+                <Sparkles className="w-3.5 h-3.5" style={{ color: "var(--c-primary)" }} />
               </div>
               <div>
                 <p className="text-xs font-semibold text-white leading-none">Price Estimator</p>
@@ -162,7 +172,7 @@ export function AIPriceChat() {
               <div ref={bottomRef} />
             </div>
 
-            {/* Starter prompts (only on first message) */}
+            {/* Starter prompts */}
             {messages.length === 1 && (
               <div className="px-3 pb-2 flex flex-wrap gap-1.5">
                 {STARTERS.map(s => (

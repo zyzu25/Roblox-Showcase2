@@ -8,7 +8,67 @@ const LOADING_LINES = [
   "Almost there...",
 ];
 
+type LoadingTheme = {
+  bg: string;
+  glow: string;
+  particleHue: [number, number];
+  scanColor: string;
+  progressFrom: string;
+  progressTo: string;
+  progressGlow: string;
+  cornerColor: string;
+  taglineColor: string;
+  lineColor: string;
+  filterStyle: string;
+};
+
+const THEMES: LoadingTheme[] = [
+  // Purple (original)
+  {
+    bg: "linear-gradient(160deg, #040408 0%, #0a0812 50%, #140d1a 100%)",
+    glow: "radial-gradient(ellipse at 50% 55%, rgba(80,20,160,0.18) 0%, transparent 65%)",
+    particleHue: [260, 40],
+    scanColor: "rgba(160,100,255,0.4)",
+    progressFrom: "#5b21b6",
+    progressTo: "#a855f7",
+    progressGlow: "rgba(168,85,247,0.6)",
+    cornerColor: "rgba(160,100,255,0.18)",
+    taglineColor: "rgba(180,140,255,0.35)",
+    lineColor: "rgba(160,120,255,0.4)",
+    filterStyle: "invert(1) brightness(0.8) contrast(1.1) sepia(0.3) hue-rotate(260deg)",
+  },
+  // Dark / noir
+  {
+    bg: "linear-gradient(160deg, #020204 0%, #06070f 50%, #0a0c18 100%)",
+    glow: "radial-gradient(ellipse at 50% 55%, rgba(20,40,100,0.20) 0%, transparent 65%)",
+    particleHue: [210, 30],
+    scanColor: "rgba(80,120,220,0.35)",
+    progressFrom: "#1e3a8a",
+    progressTo: "#3b82f6",
+    progressGlow: "rgba(59,130,246,0.55)",
+    cornerColor: "rgba(60,100,200,0.18)",
+    taglineColor: "rgba(130,170,255,0.35)",
+    lineColor: "rgba(100,140,220,0.4)",
+    filterStyle: "invert(1) brightness(0.7) contrast(1.0) sepia(0.2) hue-rotate(195deg)",
+  },
+  // Light / cosmic (gold tones)
+  {
+    bg: "linear-gradient(160deg, #050404 0%, #100c08 50%, #1a1208 100%)",
+    glow: "radial-gradient(ellipse at 50% 55%, rgba(120,80,20,0.18) 0%, transparent 65%)",
+    particleHue: [35, 25],
+    scanColor: "rgba(220,160,60,0.35)",
+    progressFrom: "#92400e",
+    progressTo: "#f59e0b",
+    progressGlow: "rgba(245,158,11,0.55)",
+    cornerColor: "rgba(200,140,40,0.18)",
+    taglineColor: "rgba(240,190,100,0.35)",
+    lineColor: "rgba(220,165,60,0.4)",
+    filterStyle: "invert(1) brightness(0.75) contrast(1.05) sepia(0.5) hue-rotate(10deg)",
+  },
+];
+
 export function LoadingScreen({ onDone }: { onDone: () => void }) {
+  const [theme] = useState<LoadingTheme>(() => THEMES[Math.floor(Math.random() * THEMES.length)]);
   const [phase, setPhase]       = useState<"intro" | "signature" | "name" | "outro">("intro");
   const [visible, setVisible]   = useState(true);
   const [progress, setProgress] = useState(0);
@@ -30,6 +90,7 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
     resize();
     window.addEventListener("resize", resize);
 
+    const [hueBase, hueRange] = theme.particleHue;
     const particles: { x: number; y: number; vy: number; opacity: number; size: number; hue: number }[] = [];
     for (let i = 0; i < 70; i++) {
       particles.push({
@@ -38,7 +99,7 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
         vy:      0.3 + Math.random() * 0.7,
         opacity: 0.02 + Math.random() * 0.08,
         size:    0.8 + Math.random() * 1.4,
-        hue:     260 + Math.random() * 40,
+        hue:     hueBase + Math.random() * hueRange,
       });
     }
 
@@ -60,9 +121,9 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
       cancelAnimationFrame(rafRef.current);
       window.removeEventListener("resize", resize);
     };
-  }, []);
+  }, [theme]);
 
-  /* Phase sequencing — ~6s total */
+  /* Phase sequencing */
   useEffect(() => {
     const t1 = setTimeout(() => setPhase("signature"), 400);
     const t2 = setTimeout(() => setPhase("name"),      2000);
@@ -74,7 +135,7 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
     return () => { [t1, t2, t3, t4].forEach(clearTimeout); };
   }, [onDone]);
 
-  /* Progress bar animation */
+  /* Progress bar */
   useEffect(() => {
     const milestones = [
       { at: 200,  val: 15 },
@@ -103,7 +164,7 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
           transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
           style={{
             position: "fixed", inset: 0, zIndex: 9999,
-            background: "linear-gradient(160deg, #040408 0%, #0a0812 50%, #140d1a 100%)",
+            background: theme.bg,
             display: "flex", flexDirection: "column",
             alignItems: "center", justifyContent: "center",
             overflow: "hidden",
@@ -111,10 +172,10 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
         >
           <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, pointerEvents: "none" }} />
 
-          {/* Purple radial glow */}
+          {/* Radial glow */}
           <div style={{
             position: "absolute", inset: 0,
-            background: "radial-gradient(ellipse at 50% 55%, rgba(80,20,160,0.18) 0%, transparent 65%)",
+            background: theme.glow,
             pointerEvents: "none",
           }} />
 
@@ -125,7 +186,7 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
             transition={{ duration: 2.2, ease: "easeInOut" }}
             style={{
               position: "absolute", top: "50%", left: 0, right: 0, height: 1,
-              background: "linear-gradient(90deg, transparent, rgba(160,100,255,0.4), transparent)",
+              background: `linear-gradient(90deg, transparent, ${theme.scanColor}, transparent)`,
               transformOrigin: "left", pointerEvents: "none",
             }}
           />
@@ -146,14 +207,14 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
                   alt="MYSTICFUSION7X"
                   style={{
                     width: "min(480px, 72vw)", height: "auto",
-                    filter: "invert(1) brightness(0.8) contrast(1.1) sepia(0.3) hue-rotate(260deg)",
+                    filter: theme.filterStyle,
                     userSelect: "none", pointerEvents: "none", display: "block",
                   }}
                   draggable={false}
                 />
                 <div style={{
                   position: "absolute", bottom: -24, left: "5%", right: "5%", height: 40,
-                  background: "radial-gradient(ellipse, rgba(120,60,255,0.12) 0%, transparent 70%)",
+                  background: `radial-gradient(ellipse, ${theme.progressGlow.replace("0.6", "0.12")} 0%, transparent 70%)`,
                   filter: "blur(10px)", pointerEvents: "none",
                 }} />
               </motion.div>
@@ -173,7 +234,7 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
               >
                 <p style={{
                   fontSize: "0.6rem", letterSpacing: "0.3em",
-                  textTransform: "uppercase", color: "rgba(180,140,255,0.35)",
+                  textTransform: "uppercase", color: theme.taglineColor,
                   fontFamily: "var(--font-display, sans-serif)", fontWeight: 600,
                 }}>
                   MYSTICFUSION7X · Roblox UI Design
@@ -202,7 +263,7 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
                     transition={{ duration: 0.35 }}
                     style={{
                       fontSize: "0.65rem", letterSpacing: "0.18em",
-                      textTransform: "uppercase", color: "rgba(160,120,255,0.4)",
+                      textTransform: "uppercase", color: theme.lineColor,
                       fontFamily: "var(--font-display, sans-serif)",
                     }}
                   >
@@ -223,8 +284,8 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
               transition={{ duration: 0.6, ease: "easeOut" }}
               style={{
                 height: "100%",
-                background: "linear-gradient(90deg, #5b21b6, #a855f7)",
-                boxShadow: "0 0 12px rgba(168,85,247,0.6)",
+                background: `linear-gradient(90deg, ${theme.progressFrom}, ${theme.progressTo})`,
+                boxShadow: `0 0 12px ${theme.progressGlow}`,
               }}
             />
           </div>
@@ -243,7 +304,7 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
               transition={{ delay: 0.15 + i * 0.07, duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
               style={{
                 position: "absolute", width: 18, height: 18,
-                borderColor: "rgba(160,100,255,0.18)", borderStyle: "solid", borderWidth: 0,
+                borderColor: theme.cornerColor, borderStyle: "solid", borderWidth: 0,
                 borderTopWidth:    (s as any).borderTop    ? 1 : 0,
                 borderBottomWidth: (s as any).borderBottom ? 1 : 0,
                 borderLeftWidth:   (s as any).borderLeft   ? 1 : 0,

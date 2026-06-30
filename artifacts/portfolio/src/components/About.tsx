@@ -2,12 +2,22 @@ import { motion } from "framer-motion";
 import { AnimatedLine } from "./AnimatedText";
 import { TiltCard } from "./TiltCard";
 import { CountUp } from "./CountUp";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Users } from "lucide-react";
+import { DiscordStatus } from "./DiscordStatus";
 
 const skills = [
   "ScreenGuis", "Frames & Layouts", "Roblox Studio",
   "Figma", "Iconography", "Military RP UIs",
 ];
+
+function VerifiedBadge({ color = "#5865F2" }: { color?: string }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" className="flex-shrink-0 inline-block align-middle">
+      <circle cx="12" cy="12" r="12" fill={color} />
+      <path d="M7 12.5l3.5 3.5 6.5-7" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
 
 export function About() {
   return (
@@ -175,10 +185,11 @@ export function About() {
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
+                    <div className="flex items-center gap-1.5 mb-0.5">
                       <p className="text-sm font-bold text-white">ZYZU25</p>
+                      <VerifiedBadge color="var(--c-primary)" />
                       <span
-                        className="text-[10px] px-2 py-0.5 rounded-full font-medium"
+                        className="text-[10px] px-2 py-0.5 rounded-full font-medium ml-0.5"
                         style={{ background: "var(--c-glow-soft)", color: "var(--c-primary)", border: "1px solid var(--c-border)" }}
                       >
                         Roblox
@@ -191,6 +202,53 @@ export function About() {
                 </div>
               </a>
             </motion.div>
+
+            {/* NOVARA UGC group — Support card */}
+            <motion.div
+              initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
+              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3, duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
+            >
+              <a
+                href="https://www.roblox.com/communities/6075277/NOVARA-UGC"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block rounded-2xl p-4 hover:opacity-90 transition-all duration-300 group"
+                style={{
+                  background: "linear-gradient(135deg, rgba(120,60,255,0.14) 0%, rgba(80,20,200,0.10) 100%)",
+                  border: "1px solid rgba(140,80,255,0.30)",
+                  textDecoration: "none",
+                }}
+              >
+                <div className="flex items-center gap-4">
+                  <div
+                    className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{
+                      background: "linear-gradient(135deg, rgba(120,60,255,0.35), rgba(60,20,180,0.4))",
+                      border: "1px solid rgba(140,80,255,0.4)",
+                      boxShadow: "0 0 14px rgba(120,60,255,0.25)",
+                    }}
+                  >
+                    <Users className="w-5 h-5" style={{ color: "var(--c-primary)" }} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5 mb-0.5">
+                      <p className="text-sm font-bold text-white">NOVARA UGC</p>
+                      <VerifiedBadge color="var(--c-primary)" />
+                    </div>
+                    <p className="text-[11px] text-white/40 leading-relaxed">
+                      Support me by joining my Roblox community group.
+                    </p>
+                  </div>
+                  <ExternalLink className="w-4 h-4 text-white/20 group-hover:text-white/50 transition-colors flex-shrink-0" />
+                </div>
+              </a>
+            </motion.div>
+
+            {/* Discord live presence */}
+            <DiscordStatus />
+
           </motion.div>
 
         </div>
