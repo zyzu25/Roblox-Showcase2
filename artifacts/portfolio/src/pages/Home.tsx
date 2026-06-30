@@ -27,7 +27,6 @@ import { ToolShowcase } from "@/components/ToolShowcase";
 import { IdleAnimation } from "@/components/IdleAnimation";
 import { ReturnGreeting } from "@/components/ReturnGreeting";
 import { StreakDisplay } from "@/components/StreakDisplay";
-import { AIPriceChat } from "@/components/AIPriceChat";
 
 export default function Home() {
   const [loaded, setLoaded] = useState(false);
@@ -69,7 +68,6 @@ export default function Home() {
       <StickyPill />
       <PriceCalculator />
       <StyleQuiz />
-      <AIPriceChat />
       <IdleAnimation />
       <ReturnGreeting />
       <StreakDisplay />
