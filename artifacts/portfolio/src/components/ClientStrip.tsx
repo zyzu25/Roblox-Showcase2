@@ -1,18 +1,13 @@
 import { motion } from "framer-motion";
 
 const clients = [
-  { name: "Site Aether",           src: "/images/logos/site-aether.png"        },
-  { name: "Troll Tower X",         src: "/images/logos/troll-tower-x.png"      },
-  { name: "CIA",                   src: "/images/logos/cia.png"                },
-  { name: "BlueWhale Studio",      src: "/images/logos/bluewhale-studio.png"   },
+  { name: "Site Aether",           src: "/images/logos/site-aether.png"         },
+  { name: "Troll Tower X",         src: "/images/logos/troll-tower-x.png"       },
+  { name: "CIA",                   src: "/images/logos/cia.png"                 },
+  { name: "BlueWhale Studio",      src: "/images/logos/bluewhale-studio.png"    },
   { name: "US Army Fort Benning",  src: "/images/logos/us-army-fort-benning.png"},
-  { name: "UGC",                   src: "/images/logos/ugc.png"               },
-  { name: "Extra Client",          src: "/images/logos/extra-client.png"       },
-  { name: "NASA",                  src: "/images/logos/nasa.png"               },
-  { name: "NSA",                   src: "/images/logos/nsa.png"                },
-  { name: "FBI",                   src: "/images/logos/fbi.png"                },
-  { name: "US Space Command",      src: "/images/logos/usspacecom.png"         },
-  { name: "Vanguard Intel",        src: "/images/logos/vanguard-intel.png"     },
+  { name: "UGC",                   src: "/images/logos/ugc.png"                },
+  { name: "Extra Client",          src: "/images/logos/extra-client.png"        },
 ];
 
 // Duplicate so the strip loops seamlessly
