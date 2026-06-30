@@ -12,7 +12,9 @@ import { FAQ } from "@/components/FAQ";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { StickyPill } from "@/components/StickyPill";
-import { AIPriceChat } from "@/components/AIPriceChat";
+import { PriceCalculator } from "@/components/PriceCalculator";
+import { StyleQuiz } from "@/components/StyleQuiz";
+import { CustomCursor } from "@/components/CustomCursor";
 import { ReferralSection } from "@/components/ReferralSection";
 import { WhyChooseUs } from "@/components/WhyChooseUs";
 import { Process } from "@/components/Process";
@@ -26,6 +28,7 @@ export default function Home() {
 
   return (
     <>
+      <CustomCursor />
       <LoadingScreen onDone={() => setLoaded(true)} />
       <GlobalBackground />
       <ScrollProgress />
@@ -56,7 +59,8 @@ export default function Home() {
         <Footer />
       </main>
       <StickyPill />
-      <AIPriceChat />
+      <PriceCalculator />
+      <StyleQuiz />
     </>
   );
 }
