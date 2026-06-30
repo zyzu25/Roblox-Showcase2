@@ -6,18 +6,19 @@ import { useAnimation } from "./AnimationContext";
 import { MagneticButton } from "./MagneticButton";
 import { AvailableHours } from "./AvailableHours";
 import { ViewCounter } from "./ViewCounter";
-import { ChevronDown, Palette, Flame, Droplets, Sparkles, Waves, Copy, Check } from "lucide-react";
+import { ChevronDown, Palette, Flame, Droplets, Sparkles, Waves, Copy, Check, Blend } from "lucide-react";
 
-const THEME_CONFIG: Record<Theme, { bg: string; label: string; dot: string }> = {
+const THEME_CONFIG: Record<Theme, { bg: string; label: string; dot: string; gradient?: string }> = {
   purple: { bg: "#4000ff", label: "Purple",  dot: "#7c3aff" },
   white:  { bg: "#d4d4d4", label: "White",   dot: "#e8e8e8" },
   light:  { bg: "#B2D5E5", label: "Light",   dot: "#B2D5E5" },
   dark:   { bg: "#444444", label: "Dark",    dot: "#666666" },
   gold:   { bg: "#d4a017", label: "Gold",    dot: "#d4a017" },
   red:    { bg: "#CC1A1A", label: "Red",     dot: "#CC1A1A" },
+  calm:   { bg: "#8fb8d8", label: "Calm",    dot: "#8fb8d8", gradient: "linear-gradient(135deg,#7c3aff 0%,#8fb8d8 35%,#C8A94A 65%,#8fb8d8 100%)" },
 };
 
-const THEME_ORDER: Theme[] = ["purple", "white", "light", "dark", "gold", "red"];
+const THEME_ORDER: Theme[] = ["purple", "white", "light", "dark", "gold", "red", "calm"];
 
 const DISCORD_TAG = "mysticfusion7x";
 
@@ -72,10 +73,11 @@ export function Navbar() {
   };
 
   const ANIMATIONS = [
-    { id: "liquid"    as const, label: "Liquid Flow",  icon: Droplets, desc: "WebGL domain warp"  },
-    { id: "fire"      as const, label: "Calming Fire", icon: Flame,    desc: "Rising embers"      },
-    { id: "sea"       as const, label: "Ocean Waves",  icon: Waves,    desc: "WebGL ocean shader" },
-    { id: "waterfall" as const, label: "Waterfall",    icon: Sparkles, desc: "Flowing water"      },
+    { id: "liquid"    as const, label: "Liquid Flow",  icon: Droplets, desc: "WebGL domain warp"      },
+    { id: "fire"      as const, label: "Calming Fire", icon: Flame,    desc: "Rising embers"          },
+    { id: "sea"       as const, label: "Ocean Waves",  icon: Waves,    desc: "WebGL ocean shader"     },
+    { id: "waterfall" as const, label: "Waterfall",    icon: Sparkles, desc: "Flowing water"          },
+    { id: "mix"       as const, label: "Aurora Mix",   icon: Blend,    desc: "All themes, all motion" },
   ];
 
   return (
@@ -197,7 +199,7 @@ export function Navbar() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -8, scale: 0.96 }}
                   transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-                  className="absolute right-0 top-full mt-2 w-56 rounded-2xl overflow-hidden z-[200]"
+                  className="absolute right-0 top-full mt-2 w-64 rounded-2xl overflow-hidden z-[200]"
                   style={{
                     background: "rgba(8,6,20,0.92)",
                     border: "1px solid rgba(255,255,255,0.10)",
@@ -208,7 +210,7 @@ export function Navbar() {
                   {/* Theme section */}
                   <div className="px-4 pt-4 pb-3">
                     <p className="text-[10px] font-semibold uppercase tracking-widest text-white/25 mb-3">Theme</p>
-                    <div className="grid grid-cols-3 gap-1.5">
+                    <div className="grid grid-cols-4 gap-1">
                       {THEME_ORDER.map((t) => {
                         const cfg = THEME_CONFIG[t];
                         const active = theme === t;
@@ -225,17 +227,20 @@ export function Navbar() {
                             }}
                           >
                             <div
-                              className="w-5 h-5 rounded-full"
+                              className="w-4.5 h-4.5 rounded-full"
                               style={{
-                                background: cfg.bg,
+                                background: cfg.gradient ?? cfg.bg,
                                 boxShadow: active ? `0 0 10px ${cfg.dot}` : "none",
                                 border: t === "dark" ? "1px solid rgba(255,255,255,0.2)" : "none",
-                                transform: active ? "scale(1.18)" : "scale(1)",
+                                transform: active ? "scale(1.2)" : "scale(1)",
                                 transition: "all 0.25s ease",
+                                width: "18px",
+                                height: "18px",
+                                flexShrink: 0,
                               }}
                             />
                             <span
-                              className="text-[9px] font-medium tracking-wide"
+                              className="text-[8px] font-medium tracking-wide leading-none"
                               style={{ color: active ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.35)" }}
                             >
                               {cfg.label}

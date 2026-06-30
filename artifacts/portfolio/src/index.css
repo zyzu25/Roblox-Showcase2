@@ -117,6 +117,73 @@
   --chart-5: 270 100% 55%;
 }
 
+/* ── Calm — aurora blend of all themes, soft & relaxing ── */
+:root[data-theme="calm"] {
+  --theme-hue: 230;
+  --theme-accent: 200;
+  --c-primary: #8fb8d8;
+  --c-primary-2: #b0d0e8;
+  --c-primary-dark: #6a9abf;
+  --c-glow: rgba(143,184,216,0.42);
+  --c-glow-soft: rgba(143,184,216,0.16);
+  --c-text-glow: rgba(143,184,216,0.55);
+  --c-border: rgba(143,184,216,0.24);
+  --c-border-soft: rgba(143,184,216,0.11);
+  --c-glass-bg: rgba(3, 7, 18, 0.60);
+  --c-glass-bright: rgba(6, 12, 28, 0.70);
+  --c-bg: #030509;
+  --c-bg-alt: #060b14;
+  /* orbs: soft purple, teal-blue, warm amber-purple, silver-blue, gold-teal */
+  --c-blob-1: rgba(90, 70, 160, 0.55);
+  --c-blob-2: rgba(60, 130, 170, 0.50);
+  --c-blob-3: rgba(160, 120, 50, 0.25);
+  --c-blob-4: rgba(100, 160, 190, 0.30);
+  --c-blob-5: rgba(120, 80, 200, 0.25);
+  --c-orb-r: 90;  --c-orb-g: 70;  --c-orb-b: 160;
+  --c-orb2-r: 60; --c-orb2-g: 130; --c-orb2-b: 170;
+  --c-orb3-r: 160; --c-orb3-g: 120; --c-orb3-b: 50;
+  --c-orb4-r: 100; --c-orb4-g: 160; --c-orb4-b: 190;
+  --c-orb5-r: 120; --c-orb5-g: 80;  --c-orb5-b: 200;
+  --background: 220 40% 2%;
+  --foreground: 210 10% 97%;
+  --border: 210 35% 18%;
+  --input: 210 30% 12%;
+  --ring: 210 45% 65%;
+  --card: 220 30% 4%;
+  --card-foreground: 210 8% 97%;
+  --card-border: 210 30% 14%;
+  --popover: 220 30% 4%;
+  --popover-foreground: 210 8% 97%;
+  --popover-border: 210 30% 14%;
+  --primary: 210 45% 67%;
+  --primary-foreground: 220 30% 6%;
+  --secondary: 220 20% 10%;
+  --secondary-foreground: 210 8% 97%;
+  --muted: 220 15% 8%;
+  --muted-foreground: 210 10% 50%;
+  --accent: 210 45% 67%;
+  --accent-foreground: 220 30% 6%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --button-outline: rgba(143,184,216,0.12);
+  --badge-outline: rgba(143,184,216,0.06);
+  --elevate-1: rgba(143,184,216,0.04);
+  --elevate-2: rgba(143,184,216,0.08);
+  --sidebar: 220 30% 4%;
+  --sidebar-foreground: 210 8% 97%;
+  --sidebar-border: 210 30% 14%;
+  --sidebar-primary: 210 45% 67%;
+  --sidebar-primary-foreground: 220 30% 6%;
+  --sidebar-accent: 220 15% 8%;
+  --sidebar-accent-foreground: 210 8% 97%;
+  --sidebar-ring: 210 45% 65%;
+  --chart-1: 210 45% 68%;
+  --chart-2: 240 40% 62%;
+  --chart-3: 42 50% 58%;
+  --chart-4: 200 45% 65%;
+  --chart-5: 260 40% 64%;
+}
+
 :root[data-theme="white"] {
   --theme-hue: 0;
   --theme-accent: 0;
