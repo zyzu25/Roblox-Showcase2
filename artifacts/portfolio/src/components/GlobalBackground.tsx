@@ -163,12 +163,21 @@ const THEMES: Record<string, {
     ],
   },
   gold: {
-    bg: "#0a0700",
+    bg: "#080600",
     c1: "#8B6000", c2: "#C8960A", c3: "#5C3E00", c4: "#E5B830", c5: "#A07010",
     sat: 2.8, bri: 0.62,
     blobs: [
       "rgba(180,120,0,0.70)", "rgba(140,90,0,0.55)", "rgba(210,160,20,0.44)",
       "rgba(100,65,0,0.36)",  "rgba(230,180,40,0.30)",
+    ],
+  },
+  red: {
+    bg: "#080000",
+    c1: "#8B0000", c2: "#CC1010", c3: "#5C0000", c4: "#E01818", c5: "#A00808",
+    sat: 2.8, bri: 0.58,
+    blobs: [
+      "rgba(160,10,10,0.72)", "rgba(120,8,8,0.56)", "rgba(200,16,16,0.44)",
+      "rgba(85,5,5,0.36)",    "rgba(220,20,20,0.30)",
     ],
   },
 };
@@ -297,7 +306,7 @@ export function GlobalBackground() {
         zIndex: 0,
         pointerEvents: "none",
         overflow: "hidden",
-        background: theme === "dark" ? "#020202" : theme === "gold" ? "#0a0700" : "#000000",
+        background: theme === "dark" ? "#020202" : theme === "gold" ? "#080600" : theme === "red" ? "#080000" : "#000000",
       }}
     >
       {/* CSS animated blobs — always visible, provide color even when WebGL unavailable */}

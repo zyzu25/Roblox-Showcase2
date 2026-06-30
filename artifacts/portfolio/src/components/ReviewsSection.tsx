@@ -158,7 +158,7 @@ export function ReviewsSection() {
           <motion.p initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
             transition={{ delay: 0.15, duration: 0.6 }}
             className="text-base text-white/40 leading-relaxed">
-            Leave an honest rating after your commission. No account needed — just stars and your words.
+            Leave an honest rating after your commission. No account needed, just stars and your words.
           </motion.p>
         </div>
 
@@ -178,7 +178,7 @@ export function ReviewsSection() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
               >
-                {avg > 0 ? avg.toFixed(1) : "—"}
+                {avg > 0 ? avg.toFixed(1) : "0.0"}
               </motion.p>
               <div className="flex justify-center gap-0.5 mt-2">
                 {[1, 2, 3, 4, 5].map(s => (
