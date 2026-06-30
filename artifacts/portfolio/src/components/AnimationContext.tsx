@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-type AnimationMode = "liquid" | "fire";
+export type AnimationMode = "liquid" | "fire" | "mix";
 
 const AnimationCtx = createContext<{
   animation: AnimationMode;
@@ -11,7 +11,7 @@ export function AnimationProvider({ children }: { children: React.ReactNode }) {
   const [animation, setAnimation] = useState<AnimationMode>(() => {
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem("portfolio-animation");
-      if (stored === "liquid" || stored === "fire") return stored;
+      if (stored === "liquid" || stored === "fire" || stored === "mix") return stored;
     }
     return "liquid";
   });

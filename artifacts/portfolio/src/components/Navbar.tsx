@@ -6,7 +6,7 @@ import { useAnimation } from "./AnimationContext";
 import { MagneticButton } from "./MagneticButton";
 import { AvailableHours } from "./AvailableHours";
 import { ViewCounter } from "./ViewCounter";
-import { ChevronDown, Palette, Flame, Droplets } from "lucide-react";
+import { ChevronDown, Palette, Flame, Droplets, Sparkles } from "lucide-react";
 
 const THEME_CONFIG: Record<Theme, { bg: string; label: string; dot: string }> = {
   purple: { bg: "#4000ff", label: "Purple",  dot: "#7c3aff" },
