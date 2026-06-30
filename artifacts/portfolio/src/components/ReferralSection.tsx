@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Copy, Check, Gift, Users, Percent, ChevronRight, Loader2 } from "lucide-react";
+import { Copy, Check, Gift, Users, Percent, ChevronRight, Loader2, TrendingUp } from "lucide-react";
 
 const STEPS = [
   { icon: Gift,    title: "Generate your code",       desc: "Enter your Discord to get a personal referral link." },
@@ -336,29 +336,94 @@ export function ReferralSection() {
           </motion.p>
         </div>
 
-        {/* Steps */}
-        <div className="grid grid-cols-3 gap-4 mb-10">
-          {STEPS.map((step, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
-              whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.08, duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
-              className="glass rounded-2xl p-4 flex items-start gap-3"
-            >
-              <div
-                className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"
-                style={{ background: "var(--c-glow-soft)", border: "1px solid var(--c-border)" }}
-              >
-                <step.icon className="w-4 h-4" style={{ color: "var(--c-primary)" }} />
+        {/* Two-tier explanation */}
+        <div className="grid md:grid-cols-2 gap-4 mb-10">
+          {/* Tier 1 — one-time */}
+          <motion.div
+            initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
+            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+            className="glass rounded-2xl p-5"
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                style={{ background: "var(--c-glow-soft)", border: "1px solid var(--c-border)" }}>
+                <Percent className="w-3.5 h-3.5" style={{ color: "var(--c-primary)" }} />
               </div>
               <div>
-                <p className="text-sm font-semibold text-white mb-0.5">{step.title}</p>
-                <p className="text-xs text-white/35 leading-relaxed">{step.desc}</p>
+                <p className="text-sm font-bold text-white leading-none">One-Time Referral</p>
+                <p className="text-[10px] text-white/30 mt-0.5">Send one friend, get rewarded</p>
               </div>
-            </motion.div>
-          ))}
+              <span className="ml-auto text-[10px] px-2 py-1 rounded-full font-semibold flex-shrink-0"
+                style={{ background: "rgba(120,60,255,0.12)", color: "var(--c-primary)", border: "1px solid var(--c-border)" }}>
+                Standard
+              </span>
+            </div>
+            <div className="space-y-2">
+              {STEPS.map((step, i) => (
+                <div key={i} className="flex items-start gap-2.5">
+                  <step.icon className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" style={{ color: "var(--c-primary)", opacity: 0.7 }} />
+                  <div>
+                    <p className="text-xs font-semibold text-white/70">{step.title}</p>
+                    <p className="text-[10px] text-white/30 leading-snug">{step.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* Tier 2 — long-term partner */}
+          <motion.div
+            initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
+            whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1, duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+            className="rounded-2xl p-5"
+            style={{
+              background: "linear-gradient(135deg, rgba(251,191,36,0.06), rgba(120,60,255,0.08))",
+              border: "1px solid rgba(251,191,36,0.20)",
+            }}
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0"
+                style={{ background: "rgba(251,191,36,0.12)", border: "1px solid rgba(251,191,36,0.25)" }}>
+                <TrendingUp className="w-3.5 h-3.5" style={{ color: "#fbbf24" }} />
+              </div>
+              <div>
+                <p className="text-sm font-bold text-white leading-none">Long-Term Partner</p>
+                <p className="text-[10px] text-white/30 mt-0.5">Consistently bring clients</p>
+              </div>
+              <span className="ml-auto text-[10px] px-2 py-1 rounded-full font-semibold flex-shrink-0"
+                style={{ background: "rgba(251,191,36,0.12)", color: "#fbbf24", border: "1px solid rgba(251,191,36,0.25)" }}>
+                Partner
+              </span>
+            </div>
+            <div className="space-y-2.5">
+              <div className="flex items-start gap-2.5">
+                <Users className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" style={{ color: "#fbbf24", opacity: 0.8 }} />
+                <div>
+                  <p className="text-xs font-semibold text-white/70">Earn a cut, not a discount</p>
+                  <p className="text-[10px] text-white/30 leading-snug">Instead of 10% off your order, you receive a percentage of every commission you bring in — paid directly.</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-2.5">
+                <TrendingUp className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" style={{ color: "#fbbf24", opacity: 0.8 }} />
+                <div>
+                  <p className="text-xs font-semibold text-white/70">Ongoing, per-commission</p>
+                  <p className="text-[10px] text-white/30 leading-snug">Every client you send earns you a cut of that specific job — no cap, no expiry.</p>
+                </div>
+              </div>
+              <div
+                className="rounded-xl px-3 py-2 mt-1"
+                style={{ background: "rgba(251,191,36,0.07)", border: "1px solid rgba(251,191,36,0.15)" }}
+              >
+                <p className="text-[10px] text-white/40 leading-relaxed">
+                  Partner status is earned by consistently referring paying clients. Rate is agreed on a case-by-case basis — DM to discuss.
+                </p>
+              </div>
+            </div>
+          </motion.div>
         </div>
 
         {/* Two panels */}
