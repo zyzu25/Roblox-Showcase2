@@ -10,12 +10,12 @@ interface Track {
 }
 
 const TRACKS: Track[] = [
-  { id: "ambient",   label: "Let Go - Ark Patrol",                   src: "/ambient.mp3",    youtubeId: null },
   { id: "jazz-noir", label: "The Last Sip Comes Slow - Sean Broke",  src: "/jazz-noir.mp3",  youtubeId: null },
+  { id: "ambient",   label: "Let Go - Ark Patrol",                   src: "/ambient.mp3",    youtubeId: null },
 ];
 
-function pickRandom(): Track {
-  return TRACKS[Math.floor(Math.random() * TRACKS.length)];
+function defaultTrack(): Track {
+  return TRACKS[0];
 }
 
 const DEFAULT_VOLUME = 0.25;
@@ -24,7 +24,7 @@ export function AmbientAudio() {
   const audioRef   = useRef<HTMLAudioElement | null>(null);
   const iframeRef  = useRef<HTMLIFrameElement | null>(null);
 
-  const [track,      setTrack]      = useState<Track>(() => pickRandom());
+  const [track,      setTrack]      = useState<Track>(() => defaultTrack());
   const [playing,    setPlaying]    = useState(false);
   const [ready,      setReady]      = useState(false);
   const [volume,     setVolume]     = useState(DEFAULT_VOLUME);
