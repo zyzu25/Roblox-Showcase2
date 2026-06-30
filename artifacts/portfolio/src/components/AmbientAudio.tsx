@@ -81,7 +81,7 @@ export function AmbientAudio() {
 
       <div
         ref={panelRef}
-        className="fixed bottom-6 right-6 z-[200] flex flex-col items-end gap-2"
+        className="fixed bottom-20 right-6 z-[200] flex flex-col items-end gap-2"
       >
         {/* Volume panel */}
         <AnimatePresence>

@@ -18,6 +18,7 @@ import { CustomCursor } from "@/components/CustomCursor";
 import { ReferralSection } from "@/components/ReferralSection";
 import { WhyChooseUs } from "@/components/WhyChooseUs";
 import { Process } from "@/components/Process";
+import { RevisionPolicy } from "@/components/RevisionPolicy";
 import { GlobalBackground } from "@/components/GlobalBackground";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { AmbientAudio } from "@/components/AmbientAudio";
@@ -51,6 +52,7 @@ export default function Home() {
         <Process />
         <Services />
         <Pricing />
+        <RevisionPolicy />
         <ReferralSection />
         <Testimonials />
         <Policies />
