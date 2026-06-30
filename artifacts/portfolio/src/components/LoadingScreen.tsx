@@ -9,6 +9,7 @@ const LOADING_LINES = [
 ];
 
 type LoadingTheme = {
+  name: string;
   bg: string;
   glow: string;
   particleHue: [number, number];
@@ -22,61 +23,96 @@ type LoadingTheme = {
   filterStyle: string;
 };
 
+// One entry per website theme — picked randomly on each load
 const THEMES: LoadingTheme[] = [
-  // Purple (original)
+  // ── Purple (default website theme) ────────────────────────────────────────
   {
+    name: "purple",
     bg: "linear-gradient(160deg, #040408 0%, #0a0812 50%, #140d1a 100%)",
-    glow: "radial-gradient(ellipse at 50% 55%, rgba(80,20,160,0.18) 0%, transparent 65%)",
+    glow: "radial-gradient(ellipse at 50% 55%, rgba(80,20,160,0.22) 0%, transparent 65%)",
     particleHue: [260, 40],
-    scanColor: "rgba(160,100,255,0.4)",
+    scanColor: "rgba(160,100,255,0.45)",
     progressFrom: "#5b21b6",
     progressTo: "#a855f7",
-    progressGlow: "rgba(168,85,247,0.6)",
-    cornerColor: "rgba(160,100,255,0.18)",
-    taglineColor: "rgba(180,140,255,0.35)",
-    lineColor: "rgba(160,120,255,0.4)",
+    progressGlow: "rgba(168,85,247,0.65)",
+    cornerColor: "rgba(160,100,255,0.22)",
+    taglineColor: "rgba(180,140,255,0.38)",
+    lineColor: "rgba(160,120,255,0.45)",
     filterStyle: "invert(1) brightness(0.8) contrast(1.1) sepia(0.3) hue-rotate(260deg)",
   },
-  // Dark / noir
+  // ── Light / ice-blue (website "light" theme) ───────────────────────────────
   {
-    bg: "linear-gradient(160deg, #020204 0%, #06070f 50%, #0a0c18 100%)",
-    glow: "radial-gradient(ellipse at 50% 55%, rgba(20,40,100,0.20) 0%, transparent 65%)",
-    particleHue: [210, 30],
-    scanColor: "rgba(80,120,220,0.35)",
-    progressFrom: "#1e3a8a",
-    progressTo: "#3b82f6",
-    progressGlow: "rgba(59,130,246,0.55)",
-    cornerColor: "rgba(60,100,200,0.18)",
-    taglineColor: "rgba(130,170,255,0.35)",
-    lineColor: "rgba(100,140,220,0.4)",
-    filterStyle: "invert(1) brightness(0.7) contrast(1.0) sepia(0.2) hue-rotate(195deg)",
+    name: "light",
+    bg: "linear-gradient(160deg, #020608 0%, #060e14 50%, #0a1620 100%)",
+    glow: "radial-gradient(ellipse at 50% 55%, rgba(30,100,170,0.22) 0%, transparent 65%)",
+    particleHue: [200, 30],
+    scanColor: "rgba(100,190,240,0.45)",
+    progressFrom: "#0e5a8a",
+    progressTo: "#5bb8e5",
+    progressGlow: "rgba(91,184,229,0.60)",
+    cornerColor: "rgba(80,180,230,0.22)",
+    taglineColor: "rgba(140,210,245,0.40)",
+    lineColor: "rgba(100,190,235,0.45)",
+    filterStyle: "invert(1) brightness(0.75) contrast(1.05) sepia(0.15) hue-rotate(185deg)",
   },
-  // Light / cosmic (gold tones)
+  // ── Dark / noir (website "dark" theme) ────────────────────────────────────
   {
-    bg: "linear-gradient(160deg, #050404 0%, #100c08 50%, #1a1208 100%)",
-    glow: "radial-gradient(ellipse at 50% 55%, rgba(120,80,20,0.18) 0%, transparent 65%)",
-    particleHue: [35, 25],
-    scanColor: "rgba(220,160,60,0.35)",
-    progressFrom: "#92400e",
-    progressTo: "#f59e0b",
-    progressGlow: "rgba(245,158,11,0.55)",
-    cornerColor: "rgba(200,140,40,0.18)",
-    taglineColor: "rgba(240,190,100,0.35)",
-    lineColor: "rgba(220,165,60,0.4)",
-    filterStyle: "invert(1) brightness(0.75) contrast(1.05) sepia(0.5) hue-rotate(10deg)",
+    name: "dark",
+    bg: "linear-gradient(160deg, #020202 0%, #080808 50%, #0e0e0e 100%)",
+    glow: "radial-gradient(ellipse at 50% 55%, rgba(80,80,80,0.18) 0%, transparent 65%)",
+    particleHue: [0, 0],
+    scanColor: "rgba(180,180,180,0.30)",
+    progressFrom: "#333333",
+    progressTo: "#888888",
+    progressGlow: "rgba(150,150,150,0.50)",
+    cornerColor: "rgba(160,160,160,0.20)",
+    taglineColor: "rgba(200,200,200,0.30)",
+    lineColor: "rgba(180,180,180,0.35)",
+    filterStyle: "invert(1) brightness(0.65) contrast(0.9) grayscale(1)",
+  },
+  // ── Gold / amber (website "gold" theme) ───────────────────────────────────
+  {
+    name: "gold",
+    bg: "linear-gradient(160deg, #060400 0%, #100c00 50%, #1a1200 100%)",
+    glow: "radial-gradient(ellipse at 50% 55%, rgba(160,100,0,0.24) 0%, transparent 65%)",
+    particleHue: [38, 20],
+    scanColor: "rgba(230,175,50,0.45)",
+    progressFrom: "#7a5200",
+    progressTo: "#d4a017",
+    progressGlow: "rgba(212,160,23,0.65)",
+    cornerColor: "rgba(210,160,30,0.22)",
+    taglineColor: "rgba(240,190,80,0.40)",
+    lineColor: "rgba(225,170,50,0.45)",
+    filterStyle: "invert(1) brightness(0.75) contrast(1.08) sepia(0.6) hue-rotate(8deg)",
+  },
+  // ── Red / blood (website "red" theme) ─────────────────────────────────────
+  {
+    name: "red",
+    bg: "linear-gradient(160deg, #060000 0%, #100000 50%, #1a0000 100%)",
+    glow: "radial-gradient(ellipse at 50% 55%, rgba(160,10,10,0.24) 0%, transparent 65%)",
+    particleHue: [0, 18],
+    scanColor: "rgba(230,40,40,0.45)",
+    progressFrom: "#7a0000",
+    progressTo: "#cc1a1a",
+    progressGlow: "rgba(204,26,26,0.65)",
+    cornerColor: "rgba(210,30,30,0.22)",
+    taglineColor: "rgba(240,100,100,0.40)",
+    lineColor: "rgba(225,60,60,0.45)",
+    filterStyle: "invert(1) brightness(0.72) contrast(1.12) sepia(0.8) hue-rotate(300deg)",
   },
 ];
 
 export function LoadingScreen({ onDone }: { onDone: () => void }) {
+  // Pick a random theme once per mount, keep it stable
   const [theme] = useState<LoadingTheme>(() => THEMES[Math.floor(Math.random() * THEMES.length)]);
-  const [phase, setPhase]       = useState<"intro" | "signature" | "name" | "outro">("intro");
-  const [visible, setVisible]   = useState(true);
+  const [phase, setPhase]     = useState<"intro" | "signature" | "name" | "outro">("intro");
+  const [visible, setVisible] = useState(true);
   const [progress, setProgress] = useState(0);
   const [lineIdx, setLineIdx]   = useState(0);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef    = useRef<number>(0);
 
-  /* Particle rain canvas */
+  /* ── Particle rain canvas ────────────────────────────────────────────── */
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -91,7 +127,13 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
     window.addEventListener("resize", resize);
 
     const [hueBase, hueRange] = theme.particleHue;
-    const particles: { x: number; y: number; vy: number; opacity: number; size: number; hue: number }[] = [];
+    // For dark (grayscale) theme, use white particles
+    const isDark = theme.name === "dark";
+
+    const particles: {
+      x: number; y: number; vy: number;
+      opacity: number; size: number; hue: number;
+    }[] = [];
     for (let i = 0; i < 70; i++) {
       particles.push({
         x:       Math.random() * window.innerWidth,
@@ -108,7 +150,9 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
       particles.forEach(p => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-        ctx.fillStyle = `hsla(${p.hue}, 80%, 70%, ${p.opacity})`;
+        ctx.fillStyle = isDark
+          ? `rgba(200,200,200,${p.opacity})`
+          : `hsla(${p.hue}, 80%, 70%, ${p.opacity})`;
         ctx.fill();
         p.y += p.vy;
         if (p.y > canvas.height) { p.y = -4; p.x = Math.random() * canvas.width; }
@@ -123,7 +167,7 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
     };
   }, [theme]);
 
-  /* Phase sequencing */
+  /* ── Phase sequencing ────────────────────────────────────────────────── */
   useEffect(() => {
     const t1 = setTimeout(() => setPhase("signature"), 400);
     const t2 = setTimeout(() => setPhase("name"),      2000);
@@ -135,21 +179,21 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
     return () => { [t1, t2, t3, t4].forEach(clearTimeout); };
   }, [onDone]);
 
-  /* Progress bar */
+  /* ── Progress bar ────────────────────────────────────────────────────── */
   useEffect(() => {
     const milestones = [
-      { at: 200,  val: 15 },
-      { at: 800,  val: 40 },
-      { at: 2200, val: 65 },
-      { at: 3800, val: 82 },
-      { at: 5000, val: 95 },
+      { at: 200,  val: 15  },
+      { at: 800,  val: 40  },
+      { at: 2200, val: 65  },
+      { at: 3800, val: 82  },
+      { at: 5000, val: 95  },
       { at: 5600, val: 100 },
     ];
     const timers = milestones.map(m => setTimeout(() => setProgress(m.val), m.at));
     return () => timers.forEach(clearTimeout);
   }, []);
 
-  /* Cycle loading lines */
+  /* ── Cycle loading lines ─────────────────────────────────────────────── */
   useEffect(() => {
     const id = setInterval(() => setLineIdx(i => (i + 1) % LOADING_LINES.length), 1400);
     return () => clearInterval(id);
@@ -170,14 +214,11 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
             overflow: "hidden",
           }}
         >
+          {/* Particle rain */}
           <canvas ref={canvasRef} style={{ position: "absolute", inset: 0, pointerEvents: "none" }} />
 
           {/* Radial glow */}
-          <div style={{
-            position: "absolute", inset: 0,
-            background: theme.glow,
-            pointerEvents: "none",
-          }} />
+          <div style={{ position: "absolute", inset: 0, background: theme.glow, pointerEvents: "none" }} />
 
           {/* Scan line */}
           <motion.div
@@ -214,7 +255,7 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
                 />
                 <div style={{
                   position: "absolute", bottom: -24, left: "5%", right: "5%", height: 40,
-                  background: `radial-gradient(ellipse, ${theme.progressGlow.replace("0.6", "0.12")} 0%, transparent 70%)`,
+                  background: `radial-gradient(ellipse, ${theme.progressGlow.replace(/[\d.]+\)$/, "0.12)")} 0%, transparent 70%)`,
                   filter: "blur(10px)", pointerEvents: "none",
                 }} />
               </motion.div>
@@ -243,7 +284,7 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
             )}
           </AnimatePresence>
 
-          {/* Outro: loading line text */}
+          {/* Outro: cycling loading text */}
           <AnimatePresence>
             {phase === "outro" && (
               <motion.div
@@ -292,10 +333,10 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
 
           {/* Corner decorations */}
           {[
-            { top: 20, left: 20,   borderTop: true,    borderLeft: true    },
-            { top: 20, right: 20,  borderTop: true,    borderRight: true   },
-            { bottom: 20, left: 20,  borderBottom: true, borderLeft: true    },
-            { bottom: 20, right: 20, borderBottom: true, borderRight: true   },
+            { top: 20,    left: 20,   borderTop: true,    borderLeft: true    },
+            { top: 20,    right: 20,  borderTop: true,    borderRight: true   },
+            { bottom: 20, left: 20,   borderBottom: true, borderLeft: true    },
+            { bottom: 20, right: 20,  borderBottom: true, borderRight: true   },
           ].map((s, i) => (
             <motion.div
               key={i}

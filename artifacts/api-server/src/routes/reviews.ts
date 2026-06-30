@@ -1,6 +1,13 @@
 import { Router } from "express";
+import { readFileSync, writeFileSync, mkdirSync } from "fs";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 
 const router = Router();
+
+const __dir = dirname(fileURLToPath(import.meta.url));
+const DATA_DIR  = join(__dir, "../../data");
+const DATA_FILE = join(DATA_DIR, "reviews.json");
 
 interface Review {
   id: string;
@@ -9,9 +16,29 @@ interface Review {
   createdAt: string;
 }
 
-// In-memory store (persists per server process)
-const reviews: Review[] = [];
+// ── Load from disk on startup ────────────────────────────────────────────────
+function loadReviews(): Review[] {
+  try {
+    mkdirSync(DATA_DIR, { recursive: true });
+    const raw = readFileSync(DATA_FILE, "utf8");
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) return parsed as Review[];
+  } catch { /* first run or corrupt file — start fresh */ }
+  return [];
+}
 
+function saveReviews(list: Review[]): void {
+  try {
+    mkdirSync(DATA_DIR, { recursive: true });
+    writeFileSync(DATA_FILE, JSON.stringify(list, null, 2), "utf8");
+  } catch (err) {
+    console.error("Failed to save reviews:", err);
+  }
+}
+
+const reviews: Review[] = loadReviews();
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
 function getStats() {
   const total = reviews.length;
   const average = total > 0
@@ -22,16 +49,12 @@ function getStats() {
   return { total, average, distribution };
 }
 
-// GET /api/reviews
+// ── GET /api/reviews ─────────────────────────────────────────────────────────
 router.get("/reviews", (_req, res) => {
-  const stats = getStats();
-  res.json({
-    reviews: [...reviews].reverse().slice(0, 30),
-    ...stats,
-  });
+  res.json({ reviews: [...reviews].reverse().slice(0, 50), ...getStats() });
 });
 
-// POST /api/reviews
+// ── POST /api/reviews ────────────────────────────────────────────────────────
 router.post("/reviews", (req, res) => {
   const { rating, comment } = req.body as { rating?: unknown; comment?: unknown };
 
@@ -48,9 +71,9 @@ router.post("/reviews", (req, res) => {
     createdAt: new Date().toISOString(),
   };
   reviews.push(review);
+  saveReviews(reviews);
 
-  const stats = getStats();
-  res.status(201).json({ ok: true, review, ...stats });
+  res.status(201).json({ ok: true, review, ...getStats() });
 });
 
 export default router;
