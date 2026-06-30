@@ -29,6 +29,7 @@ export function Navbar() {
     purple: { bg: "#4000ff", label: "Purple" },
     light:  { bg: "#B2D5E5", label: "Light"  },
     dark:   { bg: "#444444", label: "Dark"   },
+    gold:   { bg: "#d4a017", label: "Gold"   },
   };
 
   return (
@@ -91,7 +92,7 @@ export function Navbar() {
 
           {/* Theme switcher */}
           <div className="flex items-center gap-1.5 ml-2 mr-2 pl-2 border-l border-white/10">
-            {(["purple", "light", "dark"] as const).map((t) => (
+            {(["purple", "light", "dark", "gold"] as const).map((t) => (
               <button
                 key={t}
                 onClick={() => setTheme(t)}

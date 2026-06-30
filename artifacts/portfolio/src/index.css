@@ -247,6 +247,70 @@
   --chart-5: 0 0% 64%;
 }
 
+:root[data-theme="gold"] {
+  --theme-hue: 40;
+  --theme-accent: 30;
+  --c-primary: #d4a017;
+  --c-primary-2: #f0bc2e;
+  --c-primary-dark: #a87c0a;
+  --c-glow: rgba(212,160,23,0.5);
+  --c-glow-soft: rgba(212,160,23,0.2);
+  --c-text-glow: rgba(212,160,23,0.55);
+  --c-border: rgba(212,160,23,0.22);
+  --c-border-soft: rgba(212,160,23,0.10);
+  --c-glass-bg: rgba(10, 7, 2, 0.65);
+  --c-glass-bright: rgba(18, 12, 3, 0.75);
+  --c-bg: #04030100;
+  --c-bg-alt: #0a0702;
+  --c-blob-1: rgba(30, 20, 2, 0.95);
+  --c-blob-2: rgba(40, 26, 4, 0.95);
+  --c-blob-3: rgba(22, 14, 1, 0.95);
+  --c-blob-4: rgba(50, 32, 6, 0.95);
+  --c-blob-5: rgba(35, 22, 3, 0.95);
+  --c-orb-r: 30;  --c-orb-g: 20;  --c-orb-b: 2;
+  --c-orb2-r: 40; --c-orb2-g: 26; --c-orb2-b: 4;
+  --c-orb3-r: 22; --c-orb3-g: 14; --c-orb3-b: 1;
+  --c-orb4-r: 50; --c-orb4-g: 32; --c-orb4-b: 6;
+  --c-orb5-r: 35; --c-orb5-g: 22; --c-orb5-b: 3;
+  --background: 40 80% 2%;
+  --foreground: 40 10% 98%;
+  --border: 40 40% 18%;
+  --input: 40 30% 10%;
+  --ring: 40 70% 50%;
+  --card: 40 20% 5%;
+  --card-foreground: 40 10% 98%;
+  --card-border: 40 30% 14%;
+  --popover: 40 20% 5%;
+  --popover-foreground: 40 10% 98%;
+  --popover-border: 40 30% 14%;
+  --primary: 40 80% 50%;
+  --primary-foreground: 40 10% 5%;
+  --secondary: 40 20% 10%;
+  --secondary-foreground: 40 10% 98%;
+  --muted: 40 15% 8%;
+  --muted-foreground: 40 10% 50%;
+  --accent: 40 80% 50%;
+  --accent-foreground: 40 10% 5%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --button-outline: rgba(212,160,23,0.15);
+  --badge-outline: rgba(212,160,23,0.08);
+  --elevate-1: rgba(212,160,23,0.04);
+  --elevate-2: rgba(212,160,23,0.08);
+  --sidebar: 40 20% 5%;
+  --sidebar-foreground: 40 10% 98%;
+  --sidebar-border: 40 30% 14%;
+  --sidebar-primary: 40 80% 50%;
+  --sidebar-primary-foreground: 40 10% 5%;
+  --sidebar-accent: 40 15% 8%;
+  --sidebar-accent-foreground: 40 10% 98%;
+  --sidebar-ring: 40 70% 50%;
+  --chart-1: 40 80% 55%;
+  --chart-2: 40 70% 48%;
+  --chart-3: 40 75% 52%;
+  --chart-4: 40 65% 44%;
+  --chart-5: 40 85% 60%;
+}
 
 @layer base {
   * { @apply border-border; }
