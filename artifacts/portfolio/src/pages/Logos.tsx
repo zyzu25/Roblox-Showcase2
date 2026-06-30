@@ -1,11 +1,16 @@
-import { motion } from "framer-motion";
-import { Check, ArrowLeft } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Check, ArrowLeft, Palette, ChevronDown, Droplets, Flame } from "lucide-react";
 import { useLocation } from "wouter";
+import { useRef, useState, useEffect } from "react";
 import { GlobalBackground } from "@/components/GlobalBackground";
+import { FireBackground } from "@/components/FireBackground";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { TiltCard } from "@/components/TiltCard";
 import { MagneticButton } from "@/components/MagneticButton";
 import { AmbientAudio } from "@/components/AmbientAudio";
+import { useTheme, type Theme } from "@/components/ThemeContext";
+import { useAnimation } from "@/components/AnimationContext";
+import { ViewCounter } from "@/components/ViewCounter";
 
 const WM_SVG = encodeURIComponent(
   `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">` +
@@ -31,11 +36,7 @@ function ProtectedImage({ src, alt }: { src: string; alt: string }) {
       />
       <div
         className="absolute inset-0 rounded-xl"
-        style={{
-          backgroundImage: WM_URL,
-          backgroundSize: "170px 170px",
-          pointerEvents: "none",
-        }}
+        style={{ backgroundImage: WM_URL, backgroundSize: "170px 170px", pointerEvents: "none" }}
       />
       <div
         className="absolute inset-0 rounded-xl"
@@ -65,11 +66,28 @@ const logos = [
   { file: "ncti-bw.png",        name: "Natl. Counterintelligence Training Institute", tag: "NCTI (B&W)",   tier: "LOW"  },
 ];
 
-const TIER = {
-  HIGH: { bg: "rgba(139,61,255,0.12)",  border: "rgba(139,61,255,0.35)",  color: "#a855f7", label: "HIGH QUALITY" },
-  MID:  { bg: "rgba(168,85,247,0.12)",  border: "rgba(168,85,247,0.35)",  color: "#c084fc", label: "MID QUALITY"  },
-  LOW:  { bg: "rgba(192,132,252,0.12)",  border: "rgba(192,132,252,0.35)",  color: "#d8b4fe", label: "LOW QUALITY"  },
-};
+function useTierConfig() {
+  return {
+    HIGH: {
+      bg:     "var(--c-glass-bright)",
+      border: "1px solid var(--c-border)",
+      color:  "var(--c-primary)",
+      label: "HIGH QUALITY",
+    },
+    MID: {
+      bg:     "var(--c-glass-bg)",
+      border: "1px solid var(--c-border-soft)",
+      color:  "var(--c-primary-2)",
+      label: "MID QUALITY",
+    },
+    LOW: {
+      bg:     "rgba(255,255,255,0.02)",
+      border: "1px solid rgba(255,255,255,0.06)",
+      color:  "var(--c-primary-dark)",
+      label: "LOW QUALITY",
+    },
+  };
+}
 
 const plans = [
   {
@@ -132,8 +150,187 @@ const orderFields = [
   ["STYLE EXAMPLE",           "reference here"],
 ];
 
+const THEME_CONFIG: Record<Theme, { bg: string; label: string; dot: string }> = {
+  purple: { bg: "#4000ff", label: "Purple", dot: "#7c3aff" },
+  white:  { bg: "#d4d4d4", label: "White",  dot: "#e8e8e8" },
+  light:  { bg: "#B2D5E5", label: "Light",  dot: "#B2D5E5" },
+  dark:   { bg: "#444444", label: "Dark",   dot: "#666666" },
+  gold:   { bg: "#d4a017", label: "Gold",   dot: "#d4a017" },
+  red:    { bg: "#CC1A1A", label: "Red",    dot: "#CC1A1A" },
+};
+const THEME_ORDER: Theme[] = ["purple", "white", "light", "dark", "gold", "red"];
+
+function LogosNavbar({ onContact }: { onContact: () => void }) {
+  const [dropOpen, setDropOpen]     = useState(false);
+  const { theme, setTheme }         = useTheme();
+  const { animation, setAnimation } = useAnimation();
+  const [, navigate]                = useLocation();
+  const dropRef                     = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (dropRef.current && !dropRef.current.contains(e.target as Node)) setDropOpen(false);
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  return (
+    <motion.header
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="fixed top-0 left-0 right-0 z-[99] border-b border-white/5"
+      style={{ background: "rgba(0,0,5,0.75)", backdropFilter: "blur(24px) saturate(1.2)" }}
+    >
+      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <MagneticButton
+            onClick={() => navigate("/")}
+            className="flex items-center gap-1.5 text-white/45 hover:text-white transition-colors text-sm font-medium"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Portfolio
+          </MagneticButton>
+          <div className="w-px h-5 bg-white/10" />
+          <div className="flex items-center gap-2.5">
+            <div
+              className="w-7 h-7 rounded-lg overflow-hidden flex-shrink-0"
+              style={{ boxShadow: "0 0 10px var(--c-glow)" }}
+            >
+              <img src="/images/profile.jpg" alt="MYSTICFUSION7X" className="w-full h-full object-cover" />
+            </div>
+            <span className="font-display font-bold text-sm tracking-tight text-white">Logo Design</span>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2">
+          {/* View counter */}
+          <ViewCounter />
+
+          {/* Style dropdown */}
+          <div className="relative" ref={dropRef}>
+            <motion.button
+              onClick={() => setDropOpen((o) => !o)}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm text-white/50 hover:text-white transition-colors hover:bg-white/5"
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
+            >
+              <Palette className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Style</span>
+              <motion.div animate={{ rotate: dropOpen ? 180 : 0 }} transition={{ duration: 0.25 }}>
+                <ChevronDown className="w-3 h-3 opacity-60" />
+              </motion.div>
+            </motion.button>
+
+            <AnimatePresence>
+              {dropOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                  transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+                  className="absolute right-0 top-full mt-2 w-56 rounded-2xl overflow-hidden z-[200]"
+                  style={{
+                    background: "rgba(8,6,20,0.92)",
+                    border: "1px solid rgba(255,255,255,0.10)",
+                    backdropFilter: "blur(24px)",
+                    boxShadow: "0 8px 32px rgba(0,0,0,0.6), 0 0 0 0.5px rgba(255,255,255,0.05)",
+                  }}
+                >
+                  <div className="px-4 pt-4 pb-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-white/25 mb-3">Theme</p>
+                    <div className="grid grid-cols-3 gap-1.5">
+                      {THEME_ORDER.map((t) => {
+                        const cfg = THEME_CONFIG[t];
+                        const active = theme === t;
+                        return (
+                          <motion.button
+                            key={t}
+                            onClick={() => setTheme(t)}
+                            whileHover={{ scale: 1.06 }}
+                            whileTap={{ scale: 0.94 }}
+                            className="flex flex-col items-center gap-1.5 px-1 py-2 rounded-xl transition-all"
+                            style={{
+                              background: active ? "rgba(255,255,255,0.08)" : "transparent",
+                              border: active ? "1px solid rgba(255,255,255,0.14)" : "1px solid transparent",
+                            }}
+                          >
+                            <div
+                              className="w-5 h-5 rounded-full"
+                              style={{
+                                background: cfg.bg,
+                                boxShadow: active ? `0 0 10px ${cfg.dot}` : "none",
+                                border: t === "dark" ? "1px solid rgba(255,255,255,0.2)" : "none",
+                                transform: active ? "scale(1.18)" : "scale(1)",
+                                transition: "all 0.25s ease",
+                              }}
+                            />
+                            <span className="text-[9px] font-medium tracking-wide" style={{ color: active ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.35)" }}>
+                              {cfg.label}
+                            </span>
+                          </motion.button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="mx-4 border-t border-white/6" />
+
+                  <div className="px-4 py-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-white/25 mb-2">Animation</p>
+                    <div className="flex flex-col gap-1">
+                      {([
+                        { id: "liquid" as const, label: "Liquid Flow",  icon: Droplets, desc: "WebGL domain warp" },
+                        { id: "fire"   as const, label: "Calming Fire", icon: Flame,    desc: "Rising embers"   },
+                      ] as const).map(({ id, label, icon: Icon, desc }) => {
+                        const active = animation === id;
+                        return (
+                          <motion.button
+                            key={id}
+                            onClick={() => setAnimation(id)}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-left transition-all w-full"
+                            style={{
+                              background: active ? "rgba(255,255,255,0.07)" : "transparent",
+                              border: active ? "1px solid rgba(255,255,255,0.12)" : "1px solid transparent",
+                            }}
+                          >
+                            <Icon className="w-3.5 h-3.5 flex-shrink-0" style={{ color: active ? "var(--c-primary)" : "rgba(255,255,255,0.30)" }} />
+                            <div>
+                              <p className="text-xs font-medium" style={{ color: active ? "rgba(255,255,255,0.90)" : "rgba(255,255,255,0.45)" }}>{label}</p>
+                              <p className="text-[9px] text-white/20 leading-none mt-0.5">{desc}</p>
+                            </div>
+                            {active && (
+                              <div className="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: "var(--c-primary)", boxShadow: "0 0 6px var(--c-glow)" }} />
+                            )}
+                          </motion.button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <MagneticButton
+            onClick={onContact}
+            className="btn-primary px-5 py-2 text-sm font-semibold text-white rounded-full"
+          >
+            Order Now
+          </MagneticButton>
+        </div>
+      </div>
+    </motion.header>
+  );
+}
+
 export default function Logos() {
-  const [, navigate] = useLocation();
+  const [, navigate]                = useLocation();
+  const { animation }               = useAnimation();
+  const TIER                        = useTierConfig();
 
   const goContact = () => {
     navigate("/");
@@ -142,47 +339,12 @@ export default function Logos() {
 
   return (
     <>
-      <GlobalBackground />
+      {animation === "fire" ? <FireBackground /> : <GlobalBackground />}
       <ScrollProgress />
       <AmbientAudio />
       <main className="relative min-h-screen overflow-x-hidden" style={{ background: "transparent" }}>
 
-        {/* Navbar */}
-        <motion.header
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          className="fixed top-0 left-0 right-0 z-[99] border-b border-white/5"
-          style={{ background: "rgba(0,0,5,0.75)", backdropFilter: "blur(24px) saturate(1.2)" }}
-        >
-          <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <MagneticButton
-                onClick={() => navigate("/")}
-                className="flex items-center gap-1.5 text-white/45 hover:text-white transition-colors text-sm font-medium"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Portfolio
-              </MagneticButton>
-              <div className="w-px h-5 bg-white/10" />
-              <div className="flex items-center gap-2.5">
-                <div
-                  className="w-7 h-7 rounded-lg overflow-hidden flex-shrink-0"
-                  style={{ boxShadow: "0 0 10px var(--c-glow)" }}
-                >
-                  <img src="/images/profile.jpg" alt="MYSTICFUSION7X" className="w-full h-full object-cover" />
-                </div>
-                <span className="font-display font-bold text-sm tracking-tight text-white">Logo Design</span>
-              </div>
-            </div>
-            <MagneticButton
-              onClick={goContact}
-              className="btn-primary px-5 py-2 text-sm font-semibold text-white rounded-full"
-            >
-              Order Now
-            </MagneticButton>
-          </div>
-        </motion.header>
+        <LogosNavbar onContact={goContact} />
 
         {/* Hero */}
         <section className="pt-36 pb-16 px-6" style={{ position: "relative", zIndex: 2 }}>
@@ -231,16 +393,13 @@ export default function Logos() {
                     transition={{ delay: i * 0.035, duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
                     whileHover={{ y: -4, transition: { duration: 0.25 } }}
                     className="rounded-2xl p-4 flex flex-col gap-3"
-                    style={{
-                      background: t.bg,
-                      border: `1px solid ${t.border}`,
-                    }}
+                    style={{ background: t.bg, border: t.border }}
                   >
                     <ProtectedImage src={`/images/logos/${logo.file}`} alt={logo.name} />
                     <div>
                       <span
                         className="text-[9px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full inline-block mb-1.5"
-                        style={{ background: `${t.color}22`, border: `1px solid ${t.border}`, color: t.color }}
+                        style={{ background: "var(--c-glass-bg)", border: t.border, color: t.color }}
                       >
                         {t.label}
                       </span>
@@ -288,12 +447,12 @@ export default function Logos() {
                     <TiltCard className="rounded-2xl h-full card-hover" intensity={10}>
                       <div
                         className="p-6 flex flex-col h-full rounded-2xl"
-                        style={{ background: t.bg, border: `1px solid ${t.border}` }}
+                        style={{ background: t.bg, border: t.border }}
                       >
                         <div className="mb-5">
                           <span
                             className="text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full inline-block mb-3"
-                            style={{ background: `${t.color}22`, border: `1px solid ${t.border}`, color: t.color }}
+                            style={{ background: "var(--c-glass-bg)", border: t.border, color: t.color }}
                           >
                             {plan.tier} QUALITY
                           </span>
@@ -305,7 +464,7 @@ export default function Logos() {
                           <div className="flex items-baseline gap-2 mb-1">
                             <span
                               className="text-3xl font-bold text-white font-display"
-                              style={{ textShadow: `0 0 24px ${t.color}80` }}
+                              style={{ textShadow: "0 0 24px var(--c-glow)" }}
                             >
                               {plan.usd}
                             </span>
@@ -314,12 +473,8 @@ export default function Logos() {
                           <p className="text-sm font-semibold" style={{ color: t.color }}>{plan.robux}</p>
                           <p className="text-xs text-white/25">{plan.note}</p>
                           <div className="mt-2 flex flex-wrap gap-2">
-                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/4 border border-white/7 text-white/40">
-                              {plan.time}
-                            </span>
-                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/4 border border-white/7 text-white/40">
-                              {plan.min}
-                            </span>
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/4 border border-white/7 text-white/40">{plan.time}</span>
+                            <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/4 border border-white/7 text-white/40">{plan.min}</span>
                           </div>
                         </div>
 
@@ -328,7 +483,7 @@ export default function Logos() {
                             <li key={fi} className="flex items-start gap-2 text-xs text-white/50">
                               <Check
                                 className="w-3.5 h-3.5 flex-shrink-0 mt-0.5"
-                                style={{ color: t.color, filter: `drop-shadow(0 0 4px ${t.color}80)` }}
+                                style={{ color: t.color, filter: "drop-shadow(0 0 4px var(--c-glow-soft))" }}
                               />
                               {f}
                             </li>
@@ -338,7 +493,7 @@ export default function Logos() {
                         <MagneticButton
                           onClick={goContact}
                           className="w-full py-2.5 rounded-xl text-sm font-semibold text-white/75 hover:text-white transition-colors"
-                          style={{ background: `${t.color}18`, border: `1px solid ${t.border}` } as React.CSSProperties}
+                          style={{ background: "var(--c-glass-bg)", border: t.border } as React.CSSProperties}
                         >
                           Order {plan.name}
                         </MagneticButton>
@@ -362,10 +517,7 @@ export default function Logos() {
                 { label: "Priority (start sooner):", value: "+$5" },
               ].map((item, i) => (
                 <div key={i} className="flex items-center gap-2">
-                  <div
-                    className="w-2 h-2 rounded-full flex-shrink-0"
-                    style={{ background: "var(--c-primary)", boxShadow: "0 0 6px var(--c-glow)" }}
-                  />
+                  <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: "var(--c-primary)", boxShadow: "0 0 6px var(--c-glow)" }} />
                   <span className="text-sm text-white/40">
                     {item.label}{" "}
                     <span className="text-white/65 font-semibold">{item.value}</span>
