@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { AnimatedLine } from "./AnimatedText";
 import { TiltCard } from "./TiltCard";
 import { CountUp } from "./CountUp";
-import { ExternalLink, Users } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { DiscordStatus } from "./DiscordStatus";
 
 const skills = [
@@ -223,14 +223,13 @@ export function About() {
               >
                 <div className="flex items-center gap-4">
                   <div
-                    className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
+                    className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0"
                     style={{
-                      background: "linear-gradient(135deg, rgba(120,60,255,0.35), rgba(60,20,180,0.4))",
                       border: "1px solid rgba(140,80,255,0.4)",
                       boxShadow: "0 0 14px rgba(120,60,255,0.25)",
                     }}
                   >
-                    <Users className="w-5 h-5" style={{ color: "var(--c-primary)" }} />
+                    <img src="/images/novara-ugc.png" alt="NOVARA UGC" className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 mb-0.5">
