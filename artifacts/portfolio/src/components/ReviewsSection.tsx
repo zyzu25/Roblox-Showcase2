@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, Send, TrendingUp, Loader2, BadgeCheck } from "lucide-react";
+import { EmojiReaction } from "./EmojiReaction";
 
 interface Review {
   id: string;
@@ -266,25 +267,30 @@ export function ReviewsSection() {
             </AnimatePresence>
           </motion.div>
 
-          {/* Right: recent reviews */}
+          {/* Right: emoji vibe check + recent reviews */}
           <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
             transition={{ delay: 0.15, duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
-            className="flex flex-col gap-4 max-h-[520px] overflow-y-auto pr-1"
-            style={{ scrollbarWidth: "none" }}>
-            {loading && (
-              <div className="flex justify-center py-10">
-                <Loader2 className="w-5 h-5 animate-spin text-white/30" />
-              </div>
-            )}
-            {!loading && (!data || data.reviews.length === 0) && (
-              <div className="glass rounded-2xl p-8 text-center flex flex-col items-center gap-3">
-                <Star className="w-8 h-8 text-white/10" />
-                <p className="text-sm text-white/30">No reviews yet. Be the first!</p>
-              </div>
-            )}
-            {data?.reviews.map((r, i) => (
-              <ReviewCard key={r.id} review={r} i={i} />
-            ))}
+            className="flex flex-col gap-4">
+            {/* Emoji drag reaction */}
+            <EmojiReaction />
+
+            {/* Recent written reviews */}
+            <div className="flex flex-col gap-3 max-h-[340px] overflow-y-auto pr-1" style={{ scrollbarWidth: "none" }}>
+              {loading && (
+                <div className="flex justify-center py-8">
+                  <Loader2 className="w-5 h-5 animate-spin text-white/30" />
+                </div>
+              )}
+              {!loading && (!data || data.reviews.length === 0) && (
+                <div className="glass rounded-2xl p-6 text-center flex flex-col items-center gap-3">
+                  <Star className="w-7 h-7 text-white/10" />
+                  <p className="text-sm text-white/30">No written reviews yet. Be the first!</p>
+                </div>
+              )}
+              {data?.reviews.map((r, i) => (
+                <ReviewCard key={r.id} review={r} i={i} />
+              ))}
+            </div>
           </motion.div>
         </div>
       </div>
