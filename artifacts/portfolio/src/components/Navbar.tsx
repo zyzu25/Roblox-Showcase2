@@ -1,36 +1,52 @@
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
-import { useState } from "react";
+import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-motion";
+import { useState, useRef, useEffect } from "react";
 import { useLocation } from "wouter";
-import { useTheme } from "./ThemeContext";
+import { useTheme, type Theme } from "./ThemeContext";
+import { useAnimation } from "./AnimationContext";
 import { MagneticButton } from "./MagneticButton";
 import { AvailableHours } from "./AvailableHours";
+import { ViewCounter } from "./ViewCounter";
+import { ChevronDown, Palette, Flame, Droplets } from "lucide-react";
+
+const THEME_CONFIG: Record<Theme, { bg: string; label: string; dot: string }> = {
+  purple: { bg: "#4000ff", label: "Purple",  dot: "#7c3aff" },
+  white:  { bg: "#d4d4d4", label: "White",   dot: "#e8e8e8" },
+  light:  { bg: "#B2D5E5", label: "Light",   dot: "#B2D5E5" },
+  dark:   { bg: "#444444", label: "Dark",    dot: "#666666" },
+  gold:   { bg: "#d4a017", label: "Gold",    dot: "#d4a017" },
+  red:    { bg: "#CC1A1A", label: "Red",     dot: "#CC1A1A" },
+};
+
+const THEME_ORDER: Theme[] = ["purple", "white", "light", "dark", "gold", "red"];
 
 export function Navbar() {
-  const [hidden, setHidden] = useState(false);
-  const { scrollY } = useScroll();
-  const [, navigate] = useLocation();
-  const { theme, setTheme } = useTheme();
+  const [hidden, setHidden]         = useState(false);
+  const [dropOpen, setDropOpen]     = useState(false);
+  const { scrollY }                 = useScroll();
+  const [, navigate]                = useLocation();
+  const { theme, setTheme }         = useTheme();
+  const { animation, setAnimation } = useAnimation();
+  const dropRef                     = useRef<HTMLDivElement>(null);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const prev = scrollY.getPrevious() ?? 0;
-    if (latest > prev && latest > 150) {
-      setHidden(true);
-    } else {
-      setHidden(false);
-    }
+    setHidden(latest > prev && latest > 150);
   });
 
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (dropRef.current && !dropRef.current.contains(e.target as Node)) {
+        setDropOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
   const scrollTo = (id: string) => {
+    setDropOpen(false);
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: "smooth" });
-  };
-
-  const themeConfig = {
-    purple: { bg: "#4000ff", label: "Purple" },
-    light:  { bg: "#B2D5E5", label: "Light"  },
-    dark:   { bg: "#444444", label: "Dark"   },
-    gold:   { bg: "#d4a017", label: "Gold"   },
-    red:    { bg: "#CC1A1A", label: "Red"    },
   };
 
   return (
@@ -43,6 +59,8 @@ export function Navbar() {
       data-testid="navbar"
     >
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+
+        {/* Logo */}
         <motion.button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className="flex items-center gap-2.5 cursor-pointer"
@@ -61,12 +79,12 @@ export function Navbar() {
 
         <nav className="hidden md:flex items-center gap-1">
           {[
-            { label: "About",    id: "about"     },
-            { label: "Work",     id: "portfolio"  },
-            { label: "Services", id: "services"   },
-            { label: "Pricing",  id: "pricing"    },
-            { label: "Promo",    id: "promo"      },
-            { label: "FAQ",      id: "faq"        },
+            { label: "About",    id: "about"    },
+            { label: "Work",     id: "portfolio" },
+            { label: "Services", id: "services"  },
+            { label: "Pricing",  id: "pricing"   },
+            { label: "Promo",    id: "promo"     },
+            { label: "FAQ",      id: "faq"       },
           ].map((item) => (
             <motion.button
               key={item.id}
@@ -91,23 +109,135 @@ export function Navbar() {
             Logos
           </motion.button>
 
-          {/* Theme switcher */}
-          <div className="flex items-center gap-1.5 ml-2 mr-2 pl-2 border-l border-white/10">
-            {(["purple", "light", "dark", "gold", "red"] as const).map((t) => (
-              <button
-                key={t}
-                onClick={() => setTheme(t)}
-                title={`${themeConfig[t].label} theme`}
-                className="w-4 h-4 rounded-full transition-all duration-300"
-                style={{
-                  background: themeConfig[t].bg,
-                  boxShadow: theme === t ? `0 0 8px ${themeConfig[t].bg}` : "none",
-                  transform: theme === t ? "scale(1.25)" : "scale(1)",
-                  opacity: theme === t ? 1 : 0.5,
-                  border: t === "dark" ? "1px solid rgba(255,255,255,0.15)" : "none",
-                }}
-              />
-            ))}
+          {/* View counter */}
+          <div className="ml-1">
+            <ViewCounter />
+          </div>
+
+          {/* Style dropdown */}
+          <div className="relative ml-1" ref={dropRef}>
+            <motion.button
+              onClick={() => setDropOpen((o) => !o)}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm text-white/50 hover:text-white transition-colors hover:bg-white/5"
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
+            >
+              <Palette className="w-3.5 h-3.5" />
+              <span>Style</span>
+              <motion.div
+                animate={{ rotate: dropOpen ? 180 : 0 }}
+                transition={{ duration: 0.25 }}
+              >
+                <ChevronDown className="w-3 h-3 opacity-60" />
+              </motion.div>
+            </motion.button>
+
+            <AnimatePresence>
+              {dropOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -8, scale: 0.96 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                  transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
+                  className="absolute right-0 top-full mt-2 w-56 rounded-2xl overflow-hidden z-[200]"
+                  style={{
+                    background: "rgba(8,6,20,0.92)",
+                    border: "1px solid rgba(255,255,255,0.10)",
+                    backdropFilter: "blur(24px)",
+                    boxShadow: "0 8px 32px rgba(0,0,0,0.6), 0 0 0 0.5px rgba(255,255,255,0.05)",
+                  }}
+                >
+                  {/* Theme section */}
+                  <div className="px-4 pt-4 pb-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-white/25 mb-3">Theme</p>
+                    <div className="grid grid-cols-3 gap-1.5">
+                      {THEME_ORDER.map((t) => {
+                        const cfg = THEME_CONFIG[t];
+                        const active = theme === t;
+                        return (
+                          <motion.button
+                            key={t}
+                            onClick={() => setTheme(t)}
+                            whileHover={{ scale: 1.06 }}
+                            whileTap={{ scale: 0.94 }}
+                            className="flex flex-col items-center gap-1.5 px-1 py-2 rounded-xl transition-all"
+                            style={{
+                              background: active ? "rgba(255,255,255,0.08)" : "transparent",
+                              border: active ? "1px solid rgba(255,255,255,0.14)" : "1px solid transparent",
+                            }}
+                          >
+                            <div
+                              className="w-5 h-5 rounded-full"
+                              style={{
+                                background: cfg.bg,
+                                boxShadow: active ? `0 0 10px ${cfg.dot}` : "none",
+                                border: t === "dark" ? "1px solid rgba(255,255,255,0.2)" : "none",
+                                transform: active ? "scale(1.18)" : "scale(1)",
+                                transition: "all 0.25s ease",
+                              }}
+                            />
+                            <span
+                              className="text-[9px] font-medium tracking-wide"
+                              style={{ color: active ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.35)" }}
+                            >
+                              {cfg.label}
+                            </span>
+                          </motion.button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="mx-4 border-t border-white/6" />
+
+                  {/* Animation section */}
+                  <div className="px-4 py-3">
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-white/25 mb-2">Animation</p>
+                    <div className="flex flex-col gap-1">
+                      {([
+                        { id: "liquid" as const, label: "Liquid Flow",   icon: Droplets, desc: "WebGL domain warp" },
+                        { id: "fire"   as const, label: "Calming Fire",  icon: Flame,    desc: "Rising embers"   },
+                      ] as const).map(({ id, label, icon: Icon, desc }) => {
+                        const active = animation === id;
+                        return (
+                          <motion.button
+                            key={id}
+                            onClick={() => setAnimation(id)}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-left transition-all w-full"
+                            style={{
+                              background: active ? "rgba(255,255,255,0.07)" : "transparent",
+                              border: active ? "1px solid rgba(255,255,255,0.12)" : "1px solid transparent",
+                            }}
+                          >
+                            <Icon
+                              className="w-3.5 h-3.5 flex-shrink-0"
+                              style={{ color: active ? "var(--c-primary)" : "rgba(255,255,255,0.30)" }}
+                            />
+                            <div>
+                              <p
+                                className="text-xs font-medium"
+                                style={{ color: active ? "rgba(255,255,255,0.90)" : "rgba(255,255,255,0.45)" }}
+                              >
+                                {label}
+                              </p>
+                              <p className="text-[9px] text-white/20 leading-none mt-0.5">{desc}</p>
+                            </div>
+                            {active && (
+                              <div
+                                className="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0"
+                                style={{ background: "var(--c-primary)", boxShadow: "0 0 6px var(--c-glow)" }}
+                              />
+                            )}
+                          </motion.button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           <div className="ml-2">

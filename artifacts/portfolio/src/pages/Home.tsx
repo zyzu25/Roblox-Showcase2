@@ -19,7 +19,7 @@ import { ReviewsSection } from "@/components/ReviewsSection";
 import { WhyChooseUs } from "@/components/WhyChooseUs";
 import { Process } from "@/components/Process";
 import { RevisionPolicy } from "@/components/RevisionPolicy";
-import { GlobalBackground } from "@/components/GlobalBackground";
+import { BackgroundSwitcher } from "@/components/BackgroundSwitcher";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { AmbientAudio } from "@/components/AmbientAudio";
 import { LoadingScreen } from "@/components/LoadingScreen";
@@ -30,7 +30,7 @@ export default function Home() {
   return (
     <>
       <LoadingScreen onDone={() => setLoaded(true)} />
-      <GlobalBackground />
+      <BackgroundSwitcher />
       <ScrollProgress />
       <AmbientAudio />
       <main
