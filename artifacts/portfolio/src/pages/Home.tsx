@@ -11,10 +11,22 @@ import { Testimonials } from "@/components/Testimonials";
 import { FAQ } from "@/components/FAQ";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
-import { GlobalBackground } from "@/components/GlobalBackground";
+import { StickyPill } from "@/components/StickyPill";
+import { PriceCalculator } from "@/components/PriceCalculator";
+import { StyleQuiz } from "@/components/StyleQuiz";
+import { PromoSection } from "@/components/PromoSection";
+import { ReviewsSection } from "@/components/ReviewsSection";
+import { WhyChooseUs } from "@/components/WhyChooseUs";
+import { Process } from "@/components/Process";
+import { RevisionPolicy } from "@/components/RevisionPolicy";
+import { BackgroundSwitcher } from "@/components/BackgroundSwitcher";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { AmbientAudio } from "@/components/AmbientAudio";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import { ToolShowcase } from "@/components/ToolShowcase";
+import { IdleAnimation } from "@/components/IdleAnimation";
+import { ReturnGreeting } from "@/components/ReturnGreeting";
+import { StreakDisplay } from "@/components/StreakDisplay";
 
 export default function Home() {
   const [loaded, setLoaded] = useState(false);
@@ -22,7 +34,7 @@ export default function Home() {
   return (
     <>
       <LoadingScreen onDone={() => setLoaded(true)} />
-      <GlobalBackground />
+      <BackgroundSwitcher />
       <ScrollProgress />
       <AmbientAudio />
       <main
@@ -39,14 +51,26 @@ export default function Home() {
         <ClientStrip />
         <About />
         <Portfolio />
+        <WhyChooseUs />
+        <Process />
+        <ToolShowcase />
         <Services />
         <Pricing />
+        <RevisionPolicy />
+        <PromoSection />
         <Testimonials />
+        <ReviewsSection />
         <Policies />
         <FAQ />
         <Contact />
         <Footer />
       </main>
+      <StickyPill />
+      <PriceCalculator />
+      <StyleQuiz />
+      <IdleAnimation />
+      <ReturnGreeting />
+      <StreakDisplay />
     </>
   );
 }

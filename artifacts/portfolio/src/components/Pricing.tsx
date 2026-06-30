@@ -100,9 +100,27 @@ function handleGetStarted(packageValue: string) {
   }, 750);
 }
 
+const compareRows = [
+  { feature: "UI Frames",        starter: "1 to 2",  game: "Up to 4",  full: "5+",       premium: "Full arch." },
+  { feature: "Revisions",        starter: "1",       game: "2",        full: "Multiple", premium: "Staged"     },
+  { feature: "Delivery",         starter: "1-2 days",game: "2-5 days", full: "5-10 days",premium: "1-3 weeks"  },
+  { feature: "Consistent theme", starter: false,     game: true,       full: true,       premium: true         },
+  { feature: "Full UI planning", starter: false,     game: false,      full: true,       premium: true         },
+  { feature: "Priority comms",   starter: false,     game: false,      full: false,      premium: true         },
+  { feature: "Rush delivery",    starter: "+$5",     game: "+$5",      full: "+$5",      premium: "+$5"        },
+];
+
 export function Pricing() {
   return (
-    <section className="py-28 border-t border-white/5 section-glow relative" id="pricing" style={{ zIndex: 2 }}>
+    <section className="py-28 border-t border-white/5 section-glow relative overflow-hidden" id="pricing" style={{ zIndex: 2 }}>
+      {/* Section number */}
+      <div
+        className="absolute top-8 right-8 select-none pointer-events-none font-display font-bold leading-none"
+        style={{ fontSize: "clamp(6rem,15vw,12rem)", color: "rgba(255,255,255,0.025)" }}
+        aria-hidden="true"
+      >
+        04
+      </div>
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="max-w-xl mb-14">
           <motion.p
@@ -279,6 +297,50 @@ export function Pricing() {
             </motion.div>
           ))}
         </div>
+
+        {/* Comparison table */}
+        <motion.div
+          initial={{ opacity: 0, y: 30, filter: "blur(8px)" }}
+          whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          viewport={{ once: true, margin: "-60px" }}
+          transition={{ delay: 0.2, duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
+          className="mt-10 mb-6 overflow-x-auto"
+        >
+          <p className="text-xs font-semibold uppercase tracking-widest gradient-text-blue mb-5">Compare Packages</p>
+          <table className="w-full min-w-[560px] border-collapse text-sm">
+            <thead>
+              <tr>
+                <th className="text-left py-3 pr-4 text-xs text-white/25 font-semibold uppercase tracking-wider w-40">Feature</th>
+                {["Starter", "Game UI", "Full Game", "Premium"].map((h, i) => (
+                  <th key={i} className={`py-3 px-3 text-center text-xs font-bold uppercase tracking-wider ${i === 1 ? "text-white" : "text-white/40"}`}>
+                    {i === 1 && (
+                      <span className="block text-[9px] mb-1 font-semibold" style={{ color: "var(--c-primary)" }}>POPULAR</span>
+                    )}
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {compareRows.map((row, ri) => (
+                <tr key={ri} className="border-t border-white/5">
+                  <td className="py-3 pr-4 text-xs text-white/35 font-medium">{row.feature}</td>
+                  {([row.starter, row.game, row.full, row.premium] as (string | boolean)[]).map((val, ci) => (
+                    <td key={ci} className="py-3 px-3 text-center">
+                      {val === true ? (
+                        <span style={{ color: "var(--c-primary)", filter: "drop-shadow(0 0 4px var(--c-glow))" }}>✓</span>
+                      ) : val === false ? (
+                        <span className="text-white/15">-</span>
+                      ) : (
+                        <span className={`text-xs ${ci === 1 ? "text-white/70 font-semibold" : "text-white/35"}`}>{val}</span>
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}

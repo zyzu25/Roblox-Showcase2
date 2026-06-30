@@ -4,10 +4,14 @@ export function TiltCard({
   children,
   className = "",
   intensity = 15,
+  onClick,
+  "data-testid": dataTestId,
 }: {
   children: ReactNode;
   className?: string;
   intensity?: number;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
+  "data-testid"?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [transform, setTransform] = useState("perspective(1000px) rotateX(0deg) rotateY(0deg)");
@@ -40,6 +44,8 @@ export function TiltCard({
       className={className}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
+      onClick={onClick}
+      data-testid={dataTestId}
       style={{
         transform,
         transition: "transform 0.3s cubic-bezier(0.23, 1, 0.32, 1)",

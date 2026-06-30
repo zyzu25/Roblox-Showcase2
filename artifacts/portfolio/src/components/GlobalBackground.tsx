@@ -135,6 +135,15 @@ const THEMES: Record<string, {
   sat: number; bri: number;
   blobs: string[];
 }> = {
+  white: {
+    bg: "#080808",
+    c1: "#e8e8e8", c2: "#c0c0c0", c3: "#f5f5f5", c4: "#a0a0a0", c5: "#d4d4d4",
+    sat: 1.0, bri: 0.72,
+    blobs: [
+      "rgba(220,220,220,0.50)", "rgba(180,180,180,0.38)", "rgba(240,240,240,0.28)",
+      "rgba(150,150,150,0.22)", "rgba(200,200,200,0.18)",
+    ],
+  },
   purple: {
     bg: "#000000",
     c1: "#8B00FF", c2: "#6600CC", c3: "#AA33FF", c4: "#4400BB", c5: "#CC66FF",
@@ -160,6 +169,24 @@ const THEMES: Record<string, {
     blobs: [
       "rgba(55,52,52,0.85)", "rgba(42,40,40,0.70)", "rgba(65,62,62,0.55)",
       "rgba(35,33,33,0.45)", "rgba(72,68,68,0.38)",
+    ],
+  },
+  gold: {
+    bg: "#080600",
+    c1: "#8B6000", c2: "#C8960A", c3: "#5C3E00", c4: "#E5B830", c5: "#A07010",
+    sat: 2.8, bri: 0.62,
+    blobs: [
+      "rgba(180,120,0,0.70)", "rgba(140,90,0,0.55)", "rgba(210,160,20,0.44)",
+      "rgba(100,65,0,0.36)",  "rgba(230,180,40,0.30)",
+    ],
+  },
+  red: {
+    bg: "#080000",
+    c1: "#8B0000", c2: "#CC1010", c3: "#5C0000", c4: "#E01818", c5: "#A00808",
+    sat: 2.8, bri: 0.58,
+    blobs: [
+      "rgba(160,10,10,0.72)", "rgba(120,8,8,0.56)", "rgba(200,16,16,0.44)",
+      "rgba(85,5,5,0.36)",    "rgba(220,20,20,0.30)",
     ],
   },
 };
@@ -288,7 +315,7 @@ export function GlobalBackground() {
         zIndex: 0,
         pointerEvents: "none",
         overflow: "hidden",
-        background: theme === "dark" ? "#020202" : "#000000",
+        background: theme === "dark" ? "#020202" : theme === "gold" ? "#080600" : theme === "red" ? "#080000" : theme === "white" ? "#080808" : "#000000",
       }}
     >
       {/* CSS animated blobs — always visible, provide color even when WebGL unavailable */}

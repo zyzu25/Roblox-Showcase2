@@ -7,17 +7,17 @@ const faqs = [
   {
     question: "What payment methods do you accept?",
     answer:
-      "I accept Robux (via Game Pass or Gift Card) and USD. USD payments actually get a 20% discount on the total price. Discord Nitro may occasionally be accepted depending on the deal. Group funds are only accepted from trustworthy groups.",
+      "I accept Robux (via Game Pass or Gift Card) and USD. USD payments get a 20% discount on the total price. Discord Nitro may occasionally be accepted depending on the deal. Group funds are only accepted from trustworthy groups.",
   },
   {
     question: "Do I pay upfront?",
     answer:
-      "Yes — a deposit is required before work begins. Large projects require 50% upfront, and small projects require 30% upfront. Full payment details are agreed before any work starts.",
+      "Yes, a deposit is required before work begins. Large projects require 50% upfront, and small projects require 30% upfront. Full payment details are agreed before any work starts.",
   },
   {
     question: "How many revisions do I get?",
     answer:
-      "The number of revisions included depends on your package. Revisions are for adjustments and tweaks — not full redesigns. If you need extra revisions beyond what's included, each additional one is charged at $3.",
+      "The number of revisions included depends on your package. Revisions are for adjustments and tweaks, not full redesigns. If you need extra revisions beyond what's included, each additional one is charged at $3.",
   },
   {
     question: "How long does delivery take?",
@@ -32,27 +32,27 @@ const faqs = [
   {
     question: "Can I get a refund?",
     answer:
-      "Refunds are only available if no work has been delivered yet. Once work has started, no refunds are issued — including for partially completed work. This is why payment and project scope are always agreed upfront.",
+      "Refunds are only available if no work has been delivered yet. Once work has started, no refunds are issued, including for partially completed work. This is why payment and project scope are always agreed upfront.",
   },
   {
     question: "What format will my UI be delivered in?",
     answer:
-      "Deliverables are built for Roblox and handed off in formats compatible with Roblox Studio, including ScreenGui files and any associated assets. Specifics depend on your project — ask before ordering if you have particular requirements.",
+      "Deliverables are built for Roblox and handed off in formats compatible with Roblox Studio, including ScreenGui files and any associated assets. Specifics depend on your project, so ask before ordering if you have particular requirements.",
   },
   {
     question: "Do you use templates?",
     answer:
-      "No. Every project is purpose-built for your game from scratch. You won't receive a reskinned template — all UI systems are designed around your game's identity and requirements.",
+      "No. Every project is purpose-built for your game from scratch. You won't receive a reskinned template. All UI systems are designed around your game's identity and requirements.",
   },
   {
     question: "Do you script / do you do scripting?",
     answer:
-      "No — I'm a UI designer, not a scripter. I design and build the visual side of your UI (layouts, frames, icons, animations in Figma/Roblox Studio), but I don't write Lua scripts to make them functional. You'll need a separate developer to handle scripting.",
+      "No. I'm a UI designer, not a scripter. I design and build the visual side of your UI (layouts, frames, icons, animations in Figma/Roblox Studio), but I don't write Lua scripts to make them functional. You'll need a separate developer to handle scripting.",
   },
   {
     question: "What tools and platforms do you use?",
     answer:
-      "My primary design tool is Figma, where I do the majority of my design work — wireframing, layout, iconography, and asset creation. I also work directly in Roblox Studio to build and implement UI within your game.",
+      "My primary design tool is Figma, where I do the majority of my design work: wireframing, layout, iconography, and asset creation. I also work directly in Roblox Studio to build and implement UI within your game.",
   },
   {
     question: "Can you refuse my order?",
