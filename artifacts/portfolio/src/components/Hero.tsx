@@ -33,23 +33,6 @@ export function Hero() {
             <span className="text-xs text-white/70 font-medium tracking-wide">Open for commissions</span>
           </motion.div>
 
-          {/* Name badge with verification */}
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.05 }}
-            className="inline-flex items-center gap-2 mb-4"
-          >
-            <div
-              className="w-7 h-7 rounded-lg overflow-hidden flex-shrink-0"
-              style={{ boxShadow: "0 0 10px var(--c-glow)" }}
-            >
-              <img src="/images/profile.jpg" alt="MYSTICFUSION7X" className="w-full h-full object-cover" />
-            </div>
-            <span className="text-sm font-semibold text-white/60">MYSTICFUSION7X</span>
-            <VerifiedBadge size={15} />
-          </motion.div>
-
           <h1 className="font-bold leading-[1.04] tracking-tight mb-6" style={{ fontSize: 'clamp(3rem, 8vw, 6.5rem)' }}>
             {headline.map((line, i) => (
               <motion.div
