@@ -30,10 +30,26 @@ const packages: Record<string, { name: string; price: string; desc: string; days
 
 function getResult(answers: number[]): keyof typeof packages {
   const [, screens, , budget] = answers;
-  if (budget === 3) return "premium";
-  if (budget === 2 || screens >= 2) return screens >= 2 ? "full" : "game";
-  if (budget === 1 || screens === 1) return "game";
-  return "starter";
+  // screens: 0="1-2 screens", 1="3-4", 2="5-7", 3="8+"
+  // budget:  0="$5-$15",      1="$15-$50", 2="$50-$100", 3="$100+"
+
+  // What the project actually NEEDS based on screen count
+  const byScreens: Array<keyof typeof packages> = ["starter", "game", "full", "premium"];
+  const neededPkg = byScreens[screens];
+
+  // What the budget can AFFORD (the highest tier they can pay for)
+  const byBudget: Array<keyof typeof packages> = ["starter", "game", "full", "premium"];
+  const affordPkg = byBudget[budget];
+
+  // Rank for comparison
+  const rank: Record<keyof typeof packages, number> = { starter: 0, game: 1, full: 2, premium: 3 };
+
+  // Recommend what they need — but if their budget is below that, show the budget cap instead
+  // Never upsell: don't recommend premium just because they have a big budget
+  if (rank[neededPkg] <= rank[affordPkg]) {
+    return neededPkg;   // budget covers what they need — recommend based on scope
+  }
+  return affordPkg;     // budget is the limiting factor
 }
 
 export function StyleQuiz() {
