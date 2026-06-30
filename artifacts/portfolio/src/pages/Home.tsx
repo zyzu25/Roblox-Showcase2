@@ -14,6 +14,8 @@ import { Footer } from "@/components/Footer";
 import { StickyPill } from "@/components/StickyPill";
 import { AIPriceChat } from "@/components/AIPriceChat";
 import { ReferralSection } from "@/components/ReferralSection";
+import { WhyChooseUs } from "@/components/WhyChooseUs";
+import { Process } from "@/components/Process";
 import { GlobalBackground } from "@/components/GlobalBackground";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { AmbientAudio } from "@/components/AmbientAudio";
@@ -42,6 +44,8 @@ export default function Home() {
         <ClientStrip />
         <About />
         <Portfolio />
+        <WhyChooseUs />
+        <Process />
         <Services />
         <Pricing />
         <ReferralSection />
