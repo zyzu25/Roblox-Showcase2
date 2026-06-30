@@ -284,7 +284,7 @@ export function Contact() {
                     <span className="text-green-400 text-base">✓</span>
                     <div>
                       <p className="text-xs font-semibold text-green-400 leading-none mb-0.5">Referral applied</p>
-                      <p className="text-xs text-white/35">Referred by <span className="text-white/60 font-medium">{referralBy}</span> — code <span className="font-mono text-white/50">{referralCode}</span>. 10% discount will be applied.</p>
+                      <p className="text-xs text-white/35">Referred by <span className="text-white/60 font-medium">{referralBy}</span> · code <span className="font-mono text-white/50">{referralCode}</span>. 10% discount will be applied.</p>
                     </div>
                   </div>
                 ) : (

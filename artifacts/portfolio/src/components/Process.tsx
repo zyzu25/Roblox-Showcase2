@@ -52,7 +52,7 @@ export function Process() {
             <span className="gradient-text">4-step process</span>
           </h2>
           <p className="mt-4 text-white/40 text-base max-w-md">
-            From idea to finished UI — here's exactly what working with me looks like.
+            From idea to finished UI. Here's exactly what working with me looks like.
           </p>
         </motion.div>
 
@@ -115,7 +115,7 @@ export function Process() {
         >
           <div>
             <p className="text-sm font-bold text-white mb-0.5">Ready to start?</p>
-            <p className="text-xs text-white/40">Slots fill up fast — lock in yours today.</p>
+            <p className="text-xs text-white/40">Slots fill up fast. Lock in yours today.</p>
           </div>
           <button
             onClick={() => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" })}
