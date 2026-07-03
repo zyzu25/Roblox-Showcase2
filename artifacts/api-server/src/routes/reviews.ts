@@ -13,17 +13,18 @@ interface Review {
   id: string;
   rating: number;
   comment: string;
+  username: string;
+  gameName: string;
   createdAt: string;
 }
 
-// ── Load from disk on startup ────────────────────────────────────────────────
 function loadReviews(): Review[] {
   try {
     mkdirSync(DATA_DIR, { recursive: true });
     const raw = readFileSync(DATA_FILE, "utf8");
     const parsed = JSON.parse(raw);
     if (Array.isArray(parsed)) return parsed as Review[];
-  } catch { /* first run or corrupt file — start fresh */ }
+  } catch { /* first run or corrupt file */ }
   return [];
 }
 
@@ -38,7 +39,6 @@ function saveReviews(list: Review[]): void {
 
 const reviews: Review[] = loadReviews();
 
-// ── Helpers ──────────────────────────────────────────────────────────────────
 function getStats() {
   const total = reviews.length;
   const average = total > 0
@@ -49,25 +49,29 @@ function getStats() {
   return { total, average, distribution };
 }
 
-// ── GET /api/reviews ─────────────────────────────────────────────────────────
 router.get("/reviews", (_req, res) => {
   res.json({ reviews: [...reviews].reverse().slice(0, 50), ...getStats() });
 });
 
-// ── POST /api/reviews ────────────────────────────────────────────────────────
 router.post("/reviews", (req, res) => {
-  const { rating, comment } = req.body as { rating?: unknown; comment?: unknown };
+  const { rating, comment, username, gameName } = req.body as {
+    rating?: unknown; comment?: unknown; username?: unknown; gameName?: unknown;
+  };
 
   if (typeof rating !== "number" || !Number.isInteger(rating) || rating < 1 || rating > 5) {
     res.status(400).json({ error: "Rating must be an integer between 1 and 5." });
     return;
   }
-  const text = typeof comment === "string" ? comment.trim().slice(0, 300) : "";
+  const text      = typeof comment  === "string" ? comment.trim().slice(0, 300)  : "";
+  const user      = typeof username === "string" ? username.trim().slice(0, 40)  : "";
+  const game      = typeof gameName === "string" ? gameName.trim().slice(0, 60)  : "";
 
   const review: Review = {
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
     rating,
     comment: text,
+    username: user,
+    gameName: game,
     createdAt: new Date().toISOString(),
   };
   reviews.push(review);

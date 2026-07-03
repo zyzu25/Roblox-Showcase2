@@ -9,8 +9,8 @@ const packages = [
     revisions: 1,
     maxRevisions: 3,
     turnaround: "1–2 days",
-    extraCost: "$2",
-    notes: "Each revision is one round of feedback addressed. Additional revisions available at $2 each.",
+    extraCost: "$3",
+    notes: "Each revision is one round of feedback addressed. Additional revisions available at $3 each.",
     color: "#4ade80",
   },
   {
@@ -19,7 +19,7 @@ const packages = [
     revisions: 2,
     maxRevisions: 3,
     turnaround: "2–5 days",
-    extraCost: "$2",
+    extraCost: "$3",
     notes: "Two full revision rounds included. Any feedback is consolidated per round, not per individual comment.",
     color: "var(--c-primary)",
     popular: true,
@@ -30,7 +30,7 @@ const packages = [
     revisions: 3,
     maxRevisions: 3,
     turnaround: "5–10 days",
-    extraCost: "$2",
+    extraCost: "$3",
     notes: "Three revision rounds with detailed feedback sessions. Extra rounds available if needed.",
     color: "#22d3ee",
   },
@@ -53,7 +53,7 @@ const faqItems = [
   },
   {
     q: "What happens after I run out of revisions?",
-    a: "Additional rounds are $2 each. If you need a major structural change (not covered in the original brief), that may be quoted separately.",
+    a: "Additional rounds are $3 each. If you need a major structural change (not covered in the original brief), that may be quoted separately.",
   },
   {
     q: "Can I request changes after the project is marked done?",

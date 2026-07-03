@@ -5,6 +5,8 @@ import referralRouter from "./referral";
 import discordRouter from "./discord";
 import reviewsRouter from "./reviews";
 import promoRouter from "./promo";
+import viewsRouter from "./views";
+import contactRouter from "./contact";
 
 const router: IRouter = Router();
 
@@ -14,5 +16,7 @@ router.use(referralRouter);
 router.use(discordRouter);
 router.use(reviewsRouter);
 router.use(promoRouter);
+router.use(viewsRouter);
+router.use(contactRouter);
 
 export default router;

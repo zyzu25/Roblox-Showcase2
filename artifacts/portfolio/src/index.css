@@ -117,6 +117,138 @@
   --chart-5: 270 100% 55%;
 }
 
+/* ── Calm — aurora blend of all themes, soft & relaxing ── */
+:root[data-theme="calm"] {
+  --theme-hue: 230;
+  --theme-accent: 200;
+  --c-primary: #8fb8d8;
+  --c-primary-2: #b0d0e8;
+  --c-primary-dark: #6a9abf;
+  --c-glow: rgba(143,184,216,0.42);
+  --c-glow-soft: rgba(143,184,216,0.16);
+  --c-text-glow: rgba(143,184,216,0.55);
+  --c-border: rgba(143,184,216,0.24);
+  --c-border-soft: rgba(143,184,216,0.11);
+  --c-glass-bg: rgba(3, 7, 18, 0.60);
+  --c-glass-bright: rgba(6, 12, 28, 0.70);
+  --c-bg: #030509;
+  --c-bg-alt: #060b14;
+  /* orbs: soft purple, teal-blue, warm amber-purple, silver-blue, gold-teal */
+  --c-blob-1: rgba(90, 70, 160, 0.55);
+  --c-blob-2: rgba(60, 130, 170, 0.50);
+  --c-blob-3: rgba(160, 120, 50, 0.25);
+  --c-blob-4: rgba(100, 160, 190, 0.30);
+  --c-blob-5: rgba(120, 80, 200, 0.25);
+  --c-orb-r: 90;  --c-orb-g: 70;  --c-orb-b: 160;
+  --c-orb2-r: 60; --c-orb2-g: 130; --c-orb2-b: 170;
+  --c-orb3-r: 160; --c-orb3-g: 120; --c-orb3-b: 50;
+  --c-orb4-r: 100; --c-orb4-g: 160; --c-orb4-b: 190;
+  --c-orb5-r: 120; --c-orb5-g: 80;  --c-orb5-b: 200;
+  --background: 220 40% 2%;
+  --foreground: 210 10% 97%;
+  --border: 210 35% 18%;
+  --input: 210 30% 12%;
+  --ring: 210 45% 65%;
+  --card: 220 30% 4%;
+  --card-foreground: 210 8% 97%;
+  --card-border: 210 30% 14%;
+  --popover: 220 30% 4%;
+  --popover-foreground: 210 8% 97%;
+  --popover-border: 210 30% 14%;
+  --primary: 210 45% 67%;
+  --primary-foreground: 220 30% 6%;
+  --secondary: 220 20% 10%;
+  --secondary-foreground: 210 8% 97%;
+  --muted: 220 15% 8%;
+  --muted-foreground: 210 10% 50%;
+  --accent: 210 45% 67%;
+  --accent-foreground: 220 30% 6%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --button-outline: rgba(143,184,216,0.12);
+  --badge-outline: rgba(143,184,216,0.06);
+  --elevate-1: rgba(143,184,216,0.04);
+  --elevate-2: rgba(143,184,216,0.08);
+  --sidebar: 220 30% 4%;
+  --sidebar-foreground: 210 8% 97%;
+  --sidebar-border: 210 30% 14%;
+  --sidebar-primary: 210 45% 67%;
+  --sidebar-primary-foreground: 220 30% 6%;
+  --sidebar-accent: 220 15% 8%;
+  --sidebar-accent-foreground: 210 8% 97%;
+  --sidebar-ring: 210 45% 65%;
+  --chart-1: 210 45% 68%;
+  --chart-2: 240 40% 62%;
+  --chart-3: 42 50% 58%;
+  --chart-4: 200 45% 65%;
+  --chart-5: 260 40% 64%;
+}
+
+:root[data-theme="white"] {
+  --theme-hue: 0;
+  --theme-accent: 0;
+  --c-primary: #d4d4d4;
+  --c-primary-2: #f0f0f0;
+  --c-primary-dark: #a8a8a8;
+  --c-glow: rgba(220,220,220,0.40);
+  --c-glow-soft: rgba(220,220,220,0.16);
+  --c-text-glow: rgba(220,220,220,0.55);
+  --c-border: rgba(220,220,220,0.25);
+  --c-border-soft: rgba(220,220,220,0.12);
+  --c-glass-bg: rgba(10, 10, 10, 0.62);
+  --c-glass-bright: rgba(18, 18, 18, 0.72);
+  --c-bg: #080808;
+  --c-bg-alt: #101010;
+  --c-blob-1: rgba(220, 220, 220, 0.60);
+  --c-blob-2: rgba(180, 180, 180, 0.48);
+  --c-blob-3: rgba(240, 240, 240, 0.32);
+  --c-blob-4: rgba(150, 150, 150, 0.26);
+  --c-blob-5: rgba(200, 200, 200, 0.22);
+  --c-orb-r: 220; --c-orb-g: 220; --c-orb-b: 220;
+  --c-orb2-r: 180; --c-orb2-g: 180; --c-orb2-b: 180;
+  --c-orb3-r: 240; --c-orb3-g: 240; --c-orb3-b: 240;
+  --c-orb4-r: 150; --c-orb4-g: 150; --c-orb4-b: 150;
+  --c-orb5-r: 200; --c-orb5-g: 200; --c-orb5-b: 200;
+  --background: 0 0% 2%;
+  --foreground: 0 0% 98%;
+  --border: 0 0% 18%;
+  --input: 0 0% 14%;
+  --ring: 0 0% 80%;
+  --card: 0 0% 5%;
+  --card-foreground: 0 0% 98%;
+  --card-border: 0 0% 14%;
+  --popover: 0 0% 5%;
+  --popover-foreground: 0 0% 98%;
+  --popover-border: 0 0% 14%;
+  --primary: 0 0% 82%;
+  --primary-foreground: 0 0% 5%;
+  --secondary: 0 0% 12%;
+  --secondary-foreground: 0 0% 98%;
+  --muted: 0 0% 9%;
+  --muted-foreground: 0 0% 52%;
+  --accent: 0 0% 82%;
+  --accent-foreground: 0 0% 5%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
+  --button-outline: rgba(220,220,220,0.10);
+  --badge-outline: rgba(220,220,220,0.05);
+  --elevate-1: rgba(220,220,220,0.03);
+  --elevate-2: rgba(220,220,220,0.07);
+  --sidebar: 0 0% 5%;
+  --sidebar-foreground: 0 0% 98%;
+  --sidebar-border: 0 0% 14%;
+  --sidebar-primary: 0 0% 82%;
+  --sidebar-primary-foreground: 0 0% 5%;
+  --sidebar-accent: 0 0% 9%;
+  --sidebar-accent-foreground: 0 0% 98%;
+  --sidebar-ring: 0 0% 80%;
+  --chart-1: 0 0% 82%;
+  --chart-2: 0 0% 72%;
+  --chart-3: 0 0% 78%;
+  --chart-4: 0 0% 65%;
+  --chart-5: 0 0% 88%;
+}
+
 :root[data-theme="light"] {
   --theme-hue: 200;
   --theme-accent: 200;
@@ -504,13 +636,27 @@ button, [role="button"] {
 .btn-ghost,
 .btn-outline {
   border: 1px solid var(--c-border-soft);
-  color: rgba(255,255,255,0.55);
-  background: transparent;
+  color: rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.02);
   transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease,
               box-shadow 0.3s ease, transform 0.2s ease;
   position: relative;
   overflow: hidden;
   cursor: pointer;
+}
+.btn-ghost::before,
+.btn-outline::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.14) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.6s ease;
+  pointer-events: none;
+}
+.btn-ghost:hover::before,
+.btn-outline:hover::before {
+  transform: translateX(120%);
 }
 .btn-ghost:hover,
 .btn-outline:hover {
@@ -523,6 +669,13 @@ button, [role="button"] {
 .btn-ghost:active,
 .btn-outline:active {
   transform: translateY(0) scale(0.97);
+  transition-duration: 0.1s;
+}
+.btn-ghost:focus-visible,
+.btn-outline:focus-visible,
+.btn-primary:focus-visible {
+  outline: 2px solid var(--c-primary);
+  outline-offset: 2px;
 }
 
 /* Nav buttons / text-style interactive elements */
@@ -557,7 +710,8 @@ input[type=range].audio-slider::-webkit-slider-runnable-track {
 /* ── Primary button with glow ── */
 .btn-primary {
   background: linear-gradient(135deg, var(--c-primary), var(--c-primary-dark));
-  box-shadow: 0 0 18px var(--c-glow-soft), 0 0 50px var(--c-glow-soft);
+  border: 1px solid rgba(255,255,255,0.14);
+  box-shadow: 0 0 18px var(--c-glow-soft), 0 0 50px var(--c-glow-soft), inset 0 1px 0 rgba(255,255,255,0.2);
   transition: background 0.35s ease, box-shadow 0.35s ease, transform 0.2s ease, filter 0.35s ease;
   cursor: pointer;
   position: relative;
@@ -567,22 +721,35 @@ input[type=range].audio-slider::-webkit-slider-runnable-track {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 60%);
+  background: linear-gradient(135deg, rgba(255,255,255,0.22) 0%, transparent 60%);
   opacity: 0;
   transition: opacity 0.35s ease;
   pointer-events: none;
 }
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.35) 50%, transparent 70%);
+  transform: translateX(-130%);
+  transition: transform 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+  pointer-events: none;
+}
+.btn-primary:hover::before {
+  transform: translateX(130%);
+}
 .btn-primary:hover {
-  box-shadow: 0 0 36px var(--c-glow), 0 0 80px var(--c-glow-soft), 0 8px 24px rgba(0,0,0,0.35);
-  transform: translateY(-2px) scale(1.015);
+  box-shadow: 0 0 36px var(--c-glow), 0 0 80px var(--c-glow-soft), 0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.3);
+  transform: translateY(-2px) scale(1.02);
   filter: brightness(1.18) saturate(1.15);
 }
 .btn-primary:hover::after {
   opacity: 1;
 }
 .btn-primary:active {
-  transform: translateY(0px) scale(0.98);
-  filter: brightness(0.95);
+  transform: translateY(0px) scale(0.97);
+  filter: brightness(0.92);
+  transition-duration: 0.1s;
 }
 
 /* ── Section glow divider ── */
@@ -644,4 +811,25 @@ body {
 }
 .client-marquee:hover {
   animation-play-state: paused;
+}
+
+/* ── Custom scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.3);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--c-primary, #8b3dff);
+  border-radius: 999px;
+  opacity: 0.7;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--c-primary-2, #a855f7);
+}
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--c-primary, #8b3dff) rgba(0,0,0,0.3);
 }
