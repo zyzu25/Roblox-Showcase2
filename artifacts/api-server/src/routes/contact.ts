@@ -121,7 +121,7 @@ function buildEmailHtml(fields: {
 </html>`;
 }
 
-router.post("/api/contact", async (req: Request, res: Response) => {
+router.post("/contact", async (req: Request, res: Response) => {
   const ip = req.ip ?? "unknown";
   if (!checkRateLimit(ip)) {
     res.status(429).json({ error: "Too many requests. Please try again in a minute." });

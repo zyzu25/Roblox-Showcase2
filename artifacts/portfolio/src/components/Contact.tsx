@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import { Send } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Send, Loader2, CheckCircle2, AlertCircle, RotateCcw } from "lucide-react";
 import { AnimatedLine } from "./AnimatedText";
 import { MagneticButton } from "./MagneticButton";
 import confetti from "canvas-confetti";
@@ -181,20 +181,45 @@ export function Contact() {
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
           >
-            <form
+            <AnimatePresence mode="wait">
+            {status === "sent" ? (
+              <motion.div
+                key="success"
+                initial={{ opacity: 0, scale: 0.94, y: 12 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.94 }}
+                transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+                className="flex flex-col items-center justify-center text-center py-16 px-6 rounded-2xl"
+                style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
+              >
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5"
+                  style={{ background: "rgba(74,222,128,0.12)", border: "1px solid rgba(74,222,128,0.25)" }}>
+                  <CheckCircle2 className="w-7 h-7" style={{ color: "#4ade80" }} />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Request Sent!</h3>
+                <p className="text-sm text-white/45 leading-relaxed mb-6 max-w-xs">
+                  Your commission request landed in my inbox. I'll get back to you shortly on Discord.
+                </p>
+                <button
+                  onClick={() => setStatus("idle")}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white/50 hover:text-white/80 transition-colors"
+                  style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.09)" }}
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  Send another request
+                </button>
+              </motion.div>
+            ) : (
+            <motion.form
+              key="form"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               ref={formRef}
-              action="https://formsubmit.co/dangert913@gmail.com"
-              method="POST"
               className="space-y-4"
               data-testid="contact-form"
               onSubmit={handleSubmit}
             >
-              <input type="hidden" name="_subject" value="New Commission Request - MYSTICFUSION7X Portfolio" />
-              <input type="hidden" name="_captcha" value="false" />
-              <input type="hidden" name="_template" value="table" />
-              <input type="hidden" name="Package" value={selectedPackage} />
-              <input type="hidden" name="Extra Revisions" value={extraRevisions ? "Yes (+$3 each)" : "No"} />
-              <input type="hidden" name="Rush Delivery" value={rushDelivery ? "Yes (priority)" : "No"} />
 
               <div className="grid grid-cols-2 gap-3">
                 <motion.div
@@ -317,17 +342,47 @@ export function Contact() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.8, duration: 0.4 }}
+                className="space-y-3"
               >
+                {status === "error" && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-start gap-3 px-4 py-3 rounded-xl"
+                    style={{ background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.22)" }}
+                  >
+                    <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "#f87171" }} />
+                    <div>
+                      <p className="text-sm font-semibold" style={{ color: "#f87171" }}>Couldn't send your request</p>
+                      <p className="text-xs text-white/40 mt-0.5 leading-relaxed">
+                        Something went wrong on our end. DM me directly on Discord: <span className="text-white/65 font-medium">mysticfusion7x</span>
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
                 <MagneticButton
                   type="submit"
+                  disabled={status === "sending"}
                   className="btn-primary w-full h-12 text-white font-semibold rounded-xl flex items-center justify-center gap-2 text-sm"
                   dataTestid="button-submit"
+                  style={{ opacity: status === "sending" ? 0.7 : 1, cursor: status === "sending" ? "not-allowed" : "pointer" }}
                 >
-                  Send Request
-                  <Send className="w-4 h-4" />
+                  {status === "sending" ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      Send Request
+                      <Send className="w-4 h-4" />
+                    </>
+                  )}
                 </MagneticButton>
               </motion.div>
-            </form>
+            </motion.form>
+            )}
+            </AnimatePresence>
           </motion.div>
 
         </div>

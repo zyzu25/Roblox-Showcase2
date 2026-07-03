@@ -7,6 +7,7 @@ export function MagneticButton({
   dataTestid,
   type = "button",
   style,
+  disabled = false,
 }: {
   children: ReactNode;
   className?: string;
@@ -14,6 +15,7 @@ export function MagneticButton({
   dataTestid?: string;
   type?: "button" | "submit" | "reset";
   style?: React.CSSProperties;
+  disabled?: boolean;
 }) {
   const ref = useRef<HTMLButtonElement>(null);
   const posRef = useRef({ x: 0, y: 0 });
@@ -70,6 +72,7 @@ export function MagneticButton({
     <button
       ref={ref}
       type={type}
+      disabled={disabled}
       onMouseMove={onMove}
       onMouseLeave={onLeave}
       onClick={onClick}
@@ -79,7 +82,7 @@ export function MagneticButton({
         transform: `translate(${pos.x.toFixed(2)}px, ${pos.y.toFixed(2)}px)`,
         transition: "transform 0.15s cubic-bezier(0.23, 1, 0.32, 1)",
         willChange: "transform",
-        cursor: "pointer",
+        cursor: disabled ? "not-allowed" : "pointer",
         ...style,
       }}
     >
