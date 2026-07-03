@@ -9,6 +9,7 @@ export function Contact() {
   const [selectedPackage, setSelectedPackage] = useState("");
   const [extraRevisions, setExtraRevisions] = useState(false);
   const [rushDelivery, setRushDelivery]   = useState(false);
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
@@ -16,19 +17,53 @@ export function Contact() {
     if (pkg) { setSelectedPackage(pkg); sessionStorage.removeItem("selectedPackage"); }
   }, []);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    // Fire confetti, then let the native form submit proceed after a brief delay
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    confetti({
-      particleCount: 120,
-      spread: 80,
-      origin: { y: 0.7 },
-      colors: ["#7c3aed", "#a855f7", "#ffffff", "#c4b5fd", "#6d28d9"],
-      scalar: 0.9,
-    });
-    setTimeout(() => {
-      formRef.current?.submit();
-    }, 700);
+    if (status === "sending") return;
+
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const packageLabels: Record<string, string> = {
+      starter: "Starter UI (R$1k to 4k / $5 to $15)",
+      game: "Game UI Package (R$4k to 12k / $15 to $50)",
+      full: "Full Game UI Package (R$12k to 30k / $50 to $100)",
+      premium: "Premium UI Package (R$30k+ / $100+)",
+      logos: "Logo Design (R$229 to 779 / $2 to $7)",
+    };
+
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.get("Name"),
+          roblox: data.get("Roblox Username"),
+          discord: data.get("Discord"),
+          packageSelected: packageLabels[selectedPackage] ?? selectedPackage,
+          extraRevisions: extraRevisions ? "Yes (+$3 each)" : "No",
+          rushDelivery: rushDelivery ? "Yes (priority)" : "No",
+          details: data.get("Project Details"),
+        }),
+      });
+
+      if (!res.ok) throw new Error("Request failed");
+
+      confetti({
+        particleCount: 120,
+        spread: 80,
+        origin: { y: 0.7 },
+        colors: ["#7c3aed", "#a855f7", "#ffffff", "#c4b5fd", "#6d28d9"],
+        scalar: 0.9,
+      });
+      setStatus("sent");
+      form.reset();
+      setSelectedPackage("");
+      setExtraRevisions(false);
+      setRushDelivery(false);
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (
