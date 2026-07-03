@@ -39,6 +39,7 @@ export function ReturnGreeting() {
       const t = setTimeout(() => setShow(true), 3200);
       return () => clearTimeout(t);
     }
+    return undefined;
   }, []);
 
   return (

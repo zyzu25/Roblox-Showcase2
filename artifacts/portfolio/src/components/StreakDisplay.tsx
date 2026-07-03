@@ -51,6 +51,7 @@ export function StreakDisplay() {
       const t = setTimeout(() => setVisible(true), 4500);
       return () => clearTimeout(t);
     }
+    return undefined;
   }, []);
 
   if (!visible || streak < 2) return null;
