@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Users, Monitor, ChevronDown, UserPlus } from "lucide-react";
 import { MagneticButton } from "./MagneticButton";
+import { CountUp } from "./CountUp";
 
 const headline = [
   { text: "Interfaces That", gradient: false },
@@ -113,9 +114,9 @@ export function Hero() {
             className="flex items-center gap-10"
           >
             {[
-              { value: "50+", label: "UIs Shipped" },
-              { value: "1+",  label: "Year Experience" },
-              { value: "3",   label: "Notable Games" },
+              { end: 60, suffix: "+", label: "UIs Shipped" },
+              { end: 1,  suffix: "+", label: "Year Experience" },
+              { end: 6,  suffix: "",  label: "Notable Games" },
             ].map((stat, i) => (
               <div key={i} className="flex items-center gap-10">
                 {i > 0 && <div className="w-px h-9 bg-white/10" />}
@@ -124,7 +125,7 @@ export function Hero() {
                     className="text-3xl font-bold text-white font-display"
                     style={{ textShadow: '0 0 24px var(--c-glow)' }}
                   >
-                    {stat.value}
+                    <CountUp end={stat.end} suffix={stat.suffix} duration={1600} />
                   </p>
                   <p className="text-xs text-white/35 mt-1">{stat.label}</p>
                 </div>

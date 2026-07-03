@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  X, Calculator, Zap, ExternalLink, Info,
+  X, Coins, Zap, ExternalLink, Info,
   Download, MessageSquare, Send, Loader2, Sparkles,
 } from "lucide-react";
 
@@ -166,7 +166,7 @@ export function PriceCalculator() {
             </motion.span>
           ) : (
             <motion.span key="calc" initial={{ opacity: 0, rotate: 90 }} animate={{ opacity: 1, rotate: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}>
-              <Calculator className="w-5 h-5" style={{ color: "var(--c-primary)" }} />
+              <Coins className="w-5 h-5" style={{ color: "var(--c-primary)" }} />
             </motion.span>
           )}
         </AnimatePresence>
@@ -203,7 +203,7 @@ export function PriceCalculator() {
             <div className="px-4 py-3 border-b border-white/7 flex items-center gap-3">
               <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
                 style={{ background: "var(--c-glow-soft)", border: "1px solid var(--c-border)" }}>
-                <Calculator className="w-3.5 h-3.5" style={{ color: "var(--c-primary)" }} />
+                <Coins className="w-3.5 h-3.5" style={{ color: "var(--c-primary)" }} />
               </div>
               <div className="flex-1">
                 <p className="text-xs font-semibold text-white leading-none">Price Calculator</p>

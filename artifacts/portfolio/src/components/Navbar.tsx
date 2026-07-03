@@ -7,6 +7,7 @@ import { MagneticButton } from "./MagneticButton";
 import { AvailableHours } from "./AvailableHours";
 import { ViewCounter } from "./ViewCounter";
 import { ChevronDown, Palette, Flame, Droplets, Sparkles, Waves, Copy, Check } from "lucide-react";
+import { useDiscordAvatar } from "@/hooks/useDiscordAvatar";
 
 const THEME_CONFIG: Record<Theme, { bg: string; label: string; dot: string }> = {
   purple: { bg: "#4000ff", label: "Purple", dot: "#7c3aff" },
@@ -41,6 +42,7 @@ export function Navbar() {
   const { theme, setTheme }         = useTheme();
   const { animation, setAnimation } = useAnimation();
   const dropRef                     = useRef<HTMLDivElement>(null);
+  const avatar                      = useDiscordAvatar();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const prev = scrollY.getPrevious() ?? 0;
@@ -85,13 +87,19 @@ export function Navbar() {
       animate={{ opacity: 1, y: hidden ? -80 : 0 }}
       transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
       className="fixed top-0 left-0 right-0 z-[99] relative"
-      style={{ background: "rgba(4,4,14,0.82)", backdropFilter: "blur(28px) saturate(1.5)" }}
+      style={{
+        background: "linear-gradient(180deg, var(--c-glass-bright, rgba(10,8,20,0.9)) 0%, rgba(4,4,14,0.86) 100%)",
+        borderBottom: "1px solid var(--c-border-soft)",
+        backdropFilter: "blur(28px) saturate(1.5)",
+        boxShadow: "0 1px 0 var(--c-border-soft), 0 12px 32px -12px rgba(0,0,0,0.6)",
+        transition: "background 0.4s ease, border-color 0.4s ease",
+      }}
       data-testid="navbar"
     >
       {/* Gradient bottom border */}
       <div
         className="absolute bottom-0 left-0 right-0 h-px pointer-events-none"
-        style={{ background: "linear-gradient(90deg, transparent 0%, var(--c-primary) 35%, var(--c-primary-2, #a855f7) 65%, transparent 100%)", opacity: 0.4 }}
+        style={{ background: "linear-gradient(90deg, transparent 0%, var(--c-primary) 35%, var(--c-primary-2, #a855f7) 65%, transparent 100%)", opacity: 0.55, boxShadow: "0 0 8px var(--c-glow-soft)" }}
       />
 
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -105,8 +113,8 @@ export function Navbar() {
           whileTap={{ scale: 0.97 }}
         >
           <div className="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0"
-            style={{ boxShadow: "0 0 18px var(--c-glow)" }}>
-            <img src="/images/profile.jpg" alt="MYSTICFUSION7X" className="w-full h-full object-cover" />
+            style={{ boxShadow: "0 0 18px var(--c-glow)", border: "1px solid var(--c-border-soft)" }}>
+            <img src={avatar} alt="MYSTICFUSION7X" className="w-full h-full object-cover" />
           </div>
           <span
             className="font-display font-bold text-base tracking-tight"
@@ -161,8 +169,8 @@ export function Navbar() {
             title={copied ? "Copied!" : `Copy Discord: ${DISCORD_TAG}`}
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ml-1"
             style={{
-              background: copied ? "rgba(139,61,255,0.18)" : "rgba(255,255,255,0.05)",
-              border: copied ? "1px solid var(--c-border-soft)" : "1px solid rgba(255,255,255,0.08)",
+              background: copied ? "var(--c-glow-soft)" : "rgba(255,255,255,0.05)",
+              border: copied ? "1px solid var(--c-border)" : "1px solid rgba(255,255,255,0.08)",
               color: copied ? "var(--c-primary)" : "rgba(255,255,255,0.45)",
               boxShadow: copied ? "0 0 10px var(--c-glow-soft)" : "none",
               transition: "all 0.3s ease",

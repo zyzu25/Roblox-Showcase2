@@ -13,6 +13,7 @@ import { AmbientAudio } from "@/components/AmbientAudio";
 import { useTheme, type Theme } from "@/components/ThemeContext";
 import { useAnimation } from "@/components/AnimationContext";
 import { ViewCounter } from "@/components/ViewCounter";
+import { useDiscordAvatar } from "@/hooks/useDiscordAvatar";
 
 const WM_SVG = encodeURIComponent(
   `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">` +
@@ -331,7 +332,7 @@ function LogosNavbar({ onContact }: { onContact: () => void }) {
               className="w-7 h-7 rounded-lg overflow-hidden flex-shrink-0"
               style={{ boxShadow: "0 0 10px var(--c-glow)" }}
             >
-              <img src="/images/profile.jpg" alt="MYSTICFUSION7X" className="w-full h-full object-cover" />
+              <img src={useDiscordAvatar()} alt="MYSTICFUSION7X" className="w-full h-full object-cover" />
             </div>
             <span className="font-display font-bold text-sm tracking-tight text-white">Logo Design</span>
           </div>

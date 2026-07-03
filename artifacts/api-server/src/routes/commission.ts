@@ -48,7 +48,7 @@ Logo Packages:
 - Low Quality: $2 / 229 R$ · ~1 hr per logo · 2D emblem. Min 3.
 
 Add-ons:
-- Extra revisions: $2 each (included: 1 for Starter, 2 for Game, multiple for Full/Premium).
+- Extra revisions: $3 each (included: 1 for Starter, 2 for Game, multiple for Full/Premium).
 - Rush delivery: +$5 flat.
 - USD gets a 20% discount vs Robux equivalent.
 
