@@ -1,28 +1,56 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-type Theme = "purple" | "light" | "dark" | "gold" | "red";
+export type Theme = "purple" | "light" | "dark" | "gold" | "red" | "white";
+export type AnimationMode = "liquid" | "fire";
 
-const ThemeCtx = createContext<{
+interface ThemeCtxValue {
   theme: Theme;
   setTheme: (t: Theme) => void;
-}>({ theme: "purple", setTheme: () => {} });
+  animation: AnimationMode;
+  setAnimation: (a: AnimationMode) => void;
+}
+
+const ThemeCtx = createContext<ThemeCtxValue>({
+  theme: "purple",
+  setTheme: () => {},
+  animation: "liquid",
+  setAnimation: () => {},
+});
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(() => {
+  const [theme, setThemeState] = useState<Theme>(() => {
     if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("portfolio-theme");
-      if (stored === "purple" || stored === "light" || stored === "dark" || stored === "gold" || stored === "red") return stored;
+      const s = localStorage.getItem("portfolio-theme");
+      if (s === "purple" || s === "light" || s === "dark" || s === "gold" || s === "red" || s === "white") return s;
     }
     return "purple";
   });
 
+  const [animation, setAnimationState] = useState<AnimationMode>(() => {
+    if (typeof window !== "undefined") {
+      const s = localStorage.getItem("portfolio-animation");
+      if (s === "liquid" || s === "fire") return s;
+    }
+    return "liquid";
+  });
+
+  const setTheme = (t: Theme) => {
+    setThemeState(t);
+    localStorage.setItem("portfolio-theme", t);
+    document.documentElement.setAttribute("data-theme", t);
+  };
+
+  const setAnimation = (a: AnimationMode) => {
+    setAnimationState(a);
+    localStorage.setItem("portfolio-animation", a);
+  };
+
   useEffect(() => {
-    localStorage.setItem("portfolio-theme", theme);
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
   return (
-    <ThemeCtx.Provider value={{ theme, setTheme }}>
+    <ThemeCtx.Provider value={{ theme, setTheme, animation, setAnimation }}>
       {children}
     </ThemeCtx.Provider>
   );
