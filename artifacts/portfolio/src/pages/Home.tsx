@@ -27,6 +27,9 @@ import { ToolShowcase } from "@/components/ToolShowcase";
 import { IdleAnimation } from "@/components/IdleAnimation";
 import { ReturnGreeting } from "@/components/ReturnGreeting";
 import { StreakDisplay } from "@/components/StreakDisplay";
+import { ImportingSection } from "@/components/ImportingSection";
+import { ThemeNudgePopup } from "@/components/ThemeNudgePopup";
+import { SupportSection } from "@/components/SupportSection";
 
 export default function Home() {
   const [loaded, setLoaded] = useState(false);
@@ -50,17 +53,19 @@ export default function Home() {
         <Hero />
         <ClientStrip />
         <About />
+        <SupportSection />
         <Portfolio />
         <WhyChooseUs />
         <Process />
         <ToolShowcase />
         <Services />
         <Pricing />
+        <ImportingSection />
+        <Policies />
         <RevisionPolicy />
         <PromoSection />
         <Testimonials />
         <ReviewsSection />
-        <Policies />
         <FAQ />
         <Contact />
         <Footer />
@@ -71,6 +76,7 @@ export default function Home() {
       <IdleAnimation />
       <ReturnGreeting />
       <StreakDisplay />
+      <ThemeNudgePopup />
     </>
   );
 }

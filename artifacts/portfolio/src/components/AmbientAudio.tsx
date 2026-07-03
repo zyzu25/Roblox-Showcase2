@@ -10,8 +10,8 @@ interface Track {
 }
 
 const TRACKS: Track[] = [
-  { id: "jazz-noir", label: "The Last Sip Comes Slow - Sean Broke",  src: "/jazz-noir.mp3",  youtubeId: null },
   { id: "ambient",   label: "Let Go - Ark Patrol",                   src: "/ambient.mp3",    youtubeId: null },
+  { id: "jazz-noir", label: "The Last Sip Comes Slow - Sean Broke",  src: "/jazz-noir.mp3",  youtubeId: null },
 ];
 
 function defaultTrack(): Track {
@@ -49,10 +49,13 @@ export function AmbientAudio() {
     };
     const onCanPlay = () => { setReady(true); tryPlay(); };
     audio.addEventListener("canplaythrough", onCanPlay, { once: true });
+    // Also try auto-play after a short delay (works when navigating within the app)
+    const autoTimer = setTimeout(() => tryPlay(), 400);
     const onFirstClick = () => { if (!audio.paused) return; tryPlay(); };
     document.addEventListener("pointerdown", onFirstClick, { once: true });
 
     return () => {
+      clearTimeout(autoTimer);
       audio.pause();
       audio.src = "";
       audioRef.current = null;

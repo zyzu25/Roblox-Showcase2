@@ -93,7 +93,7 @@ const FS = `
 
   void main() {
     vec2 uv = gl_FragCoord.xy / u_res;
-    float t = u_time * 0.14;
+    float t = u_time * 0.26;
 
     vec2 warp = domainWarp(uv, t);
     vec2 warpedUV = uv + 0.18 * warp;
