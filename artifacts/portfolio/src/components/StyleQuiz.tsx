@@ -28,12 +28,30 @@ const packages: Record<string, { name: string; price: string; desc: string; days
   premium: { name: "Premium UI", price: "$100+", days: "1-3 weeks", color: "#f59e0b", desc: "High-end, large-scale UI for games that demand a strong visual identity." },
 };
 
-function getResult(answers: number[]): keyof typeof packages {
+type ResultState =
+  | { mismatch: false; pkg: keyof typeof packages }
+  | { mismatch: true; neededPkg: keyof typeof packages; affordPkg: keyof typeof packages; neededPrice: string; gap: number };
+
+function getResult(answers: number[]): ResultState {
   const [, screens, , budget] = answers;
-  if (budget === 3) return "premium";
-  if (budget === 2 || screens >= 2) return screens >= 2 ? "full" : "game";
-  if (budget === 1 || screens === 1) return "game";
-  return "starter";
+  // screens: 0="1-2 screens", 1="3-4", 2="5-7", 3="8+"
+  // budget:  0="$5-$15",      1="$15-$50", 2="$50-$100", 3="$100+"
+
+  const byScreens: Array<keyof typeof packages> = ["starter", "game", "full", "premium"];
+  const neededPkg  = byScreens[screens];
+
+  const byBudget: Array<keyof typeof packages> = ["starter", "game", "full", "premium"];
+  const affordPkg  = byBudget[budget];
+
+  const rank: Record<keyof typeof packages, number> = { starter: 0, game: 1, full: 2, premium: 3 };
+  const gap = rank[neededPkg] - rank[affordPkg];
+
+  if (gap > 0) {
+    // Budget can't cover the scope — show the "math doesn't work" screen
+    const neededPrice = packages[neededPkg].price;
+    return { mismatch: true, neededPkg, affordPkg, neededPrice, gap };
+  }
+  return { mismatch: false, pkg: neededPkg };
 }
 
 export function StyleQuiz() {
@@ -42,7 +60,8 @@ export function StyleQuiz() {
   const [answers, setAnswers] = useState<number[]>([]);
   const [done, setDone] = useState(false);
 
-  const result = done ? packages[getResult(answers)] : null;
+  const resultState = done ? getResult(answers) : null;
+  const result = resultState && !resultState.mismatch ? packages[resultState.pkg] : null;
 
   const reset = () => { setStep(0); setAnswers([]); setDone(false); };
   const close = () => { setOpen(false); setTimeout(reset, 400); };
@@ -176,7 +195,72 @@ export function StyleQuiz() {
                           ))}
                         </div>
                       </motion.div>
+                    ) : resultState?.mismatch ? (
+                      /* ── Budget mismatch screen ── */
+                      <motion.div
+                        key="mismatch"
+                        initial={{ opacity: 0, scale: 0.96 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
+                        className="text-center"
+                      >
+                        <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center"
+                          style={{ background: "rgba(248,113,113,0.10)", border: "1px solid rgba(248,113,113,0.25)" }}>
+                          <span className="text-2xl leading-none select-none">💸</span>
+                        </div>
+
+                        <p className="text-[10px] text-white/35 uppercase tracking-wide mb-1">Heads up</p>
+                        <h3 className="text-lg font-bold text-white mb-2 leading-snug">
+                          The math ain't mathing
+                        </h3>
+                        <p className="text-sm text-white/45 leading-relaxed mb-5 px-1">
+                          That many screens costs more than your budget allows. Here's the gap:
+                        </p>
+
+                        {/* Gap visual */}
+                        <div className="rounded-xl p-4 mb-5 text-left space-y-3"
+                          style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}>
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-white/40">Your scope needs</span>
+                            <span className="text-sm font-bold" style={{ color: "#f87171" }}>
+                              {packages[resultState.neededPkg].name} · {resultState.neededPrice}
+                            </span>
+                          </div>
+                          <div className="h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-white/40">Your budget covers</span>
+                            <span className="text-sm font-bold" style={{ color: "var(--c-primary)" }}>
+                              {packages[resultState.affordPkg].name} · {packages[resultState.affordPkg].price}
+                            </span>
+                          </div>
+                        </div>
+
+                        <p className="text-xs text-white/30 leading-relaxed mb-5 px-1">
+                          Either reduce the number of screens, raise your budget, or DM me — sometimes we can work something out.
+                        </p>
+
+                        <div className="flex flex-col gap-2.5">
+                          <a
+                            href="https://discord.com/users/mysticfusion7x"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-semibold text-white btn-primary"
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                            Let's talk it out
+                          </a>
+                          <button
+                            onClick={reset}
+                            className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-xs font-semibold text-white/40 hover:text-white/70 transition-colors"
+                            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)" }}
+                          >
+                            <RotateCcw className="w-3 h-3" />
+                            Adjust my answers
+                          </button>
+                        </div>
+                      </motion.div>
                     ) : (
+                      /* ── Normal match screen ── */
                       <motion.div
                         key="result"
                         initial={{ opacity: 0, scale: 0.96 }}

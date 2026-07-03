@@ -12,9 +12,9 @@ const IDLE_MESSAGES = [
 ];
 
 export function IdleAnimation() {
-  const [idle, setIdle] = useState(false);
-  const [msgIdx] = useState(() => Math.floor(Math.random() * IDLE_MESSAGES.length));
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [idle, setIdle]     = useState(false);
+  const [msgIdx]            = useState(() => Math.floor(Math.random() * IDLE_MESSAGES.length));
+  const timerRef            = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const resetTimer = () => {
@@ -45,6 +45,17 @@ export function IdleAnimation() {
           className="fixed bottom-8 left-1/2 z-[9000] pointer-events-none"
           style={{ transform: "translateX(-50%)" }}
         >
+          {/* Signature pulse behind the pill */}
+          <motion.div
+            className="absolute inset-0 rounded-full"
+            animate={{
+              opacity: [0, 0.22, 0],
+              scale:   [0.85, 1.35, 0.85],
+            }}
+            transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+            style={{ background: "var(--c-primary)", filter: "blur(10px)" }}
+          />
+
           <motion.div
             animate={{
               boxShadow: [
@@ -54,7 +65,7 @@ export function IdleAnimation() {
               ],
             }}
             transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-            className="px-5 py-2.5 rounded-full text-sm text-white/80 font-medium"
+            className="relative px-5 py-2.5 rounded-full text-sm text-white/80 font-medium"
             style={{
               background: "rgba(0,0,0,0.6)",
               border: "1px solid var(--c-border)",

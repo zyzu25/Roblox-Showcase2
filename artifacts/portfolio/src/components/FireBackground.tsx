@@ -44,7 +44,7 @@ const FS = `
 
   void main() {
     vec2 uv = gl_FragCoord.xy / u_res;
-    float t = u_time * 0.18;
+    float t = u_time * 0.34;
 
     /* upward drift — fire rises */
     vec2 p = uv * vec2(1.8, 2.2);

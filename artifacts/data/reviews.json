@@ -1,20 +1,14 @@
 [
   {
-    "id": "1782790584275-nc7t4",
-    "rating": 5,
-    "comment": "Test persistence check",
-    "createdAt": "2026-06-30T03:36:24.275Z"
-  },
-  {
-    "id": "1782790590474-cwojd",
-    "rating": 5,
-    "comment": "Test persistence check",
-    "createdAt": "2026-06-30T03:36:30.474Z"
-  },
-  {
     "id": "1782792267892-tw2ac",
     "rating": 5,
     "comment": "",
     "createdAt": "2026-06-30T04:04:27.892Z"
+  },
+  {
+    "id": "1782797253512-6lbhn",
+    "rating": 3,
+    "comment": "",
+    "createdAt": "2026-06-30T05:27:33.512Z"
   }
 ]
