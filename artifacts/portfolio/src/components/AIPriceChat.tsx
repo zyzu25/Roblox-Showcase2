@@ -12,6 +12,8 @@ const STARTERS = [
   "How much for a logo?",
   "I want a shop + inventory UI",
   "What's your cheapest option?",
+  "Not sure what I need — help me!",
+  "I need a complete game UI",
 ];
 
 export function AIPriceChat() {
@@ -21,7 +23,7 @@ export function AIPriceChat() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Hey! 👋 Tell me what UI you need for your game and I'll give you a price estimate right away.",
+      content: "Hey! 👋 Tell me what UI you need for your game and I'll give you a price estimate right away. Not sure where to start? Just describe your game and I'll figure it out!",
     },
   ]);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -53,7 +55,7 @@ export function AIPriceChat() {
         } else if (data.error === "invalid_key") {
           reply = "AI service is misconfigured. For pricing, check the Pricing section or reach out on Discord.";
         } else {
-          reply = "Something went wrong. For pricing, check the Pricing section above or DM me on Discord.";
+          reply = "Something went wrong. For pricing, check the Pricing section above or DM me on Discord: mysticfusion7x";
         }
       }
       setMessages([...next, { role: "assistant", content: reply }]);
@@ -94,7 +96,6 @@ export function AIPriceChat() {
           )}
         </AnimatePresence>
 
-        {/* Pulse ring when closed to draw attention */}
         {!open && (
           <motion.span
             className="absolute inset-0 rounded-full pointer-events-none"
@@ -120,7 +121,7 @@ export function AIPriceChat() {
               border: "1px solid rgba(255,255,255,0.09)",
               backdropFilter: "blur(24px)",
               boxShadow: "0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04)",
-              maxHeight: "420px",
+              maxHeight: "440px",
             }}
           >
             {/* Header */}
@@ -131,31 +132,20 @@ export function AIPriceChat() {
               </div>
               <div>
                 <p className="text-xs font-semibold text-white leading-none">Price Estimator</p>
-                <p className="text-[10px] text-white/30 mt-0.5">AI-powered · Instant</p>
+                <p className="text-[10px] text-white/30 mt-0.5">AI-powered · Instant · Free</p>
               </div>
             </div>
 
             {/* Messages */}
             <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3" style={{ minHeight: 0 }}>
               {messages.map((msg, i) => (
-                <div
-                  key={i}
-                  className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
-                >
+                <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
                   <div
                     className="max-w-[85%] px-3 py-2 rounded-xl text-xs leading-relaxed"
                     style={
                       msg.role === "user"
-                        ? {
-                            background: "linear-gradient(135deg, var(--c-primary), var(--c-primary-dark))",
-                            color: "#fff",
-                            borderRadius: "12px 12px 2px 12px",
-                          }
-                        : {
-                            background: "rgba(255,255,255,0.06)",
-                            color: "rgba(255,255,255,0.75)",
-                            borderRadius: "12px 12px 12px 2px",
-                          }
+                        ? { background: "linear-gradient(135deg, var(--c-primary), var(--c-primary-dark))", color: "#fff", borderRadius: "12px 12px 2px 12px" }
+                        : { background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.75)", borderRadius: "12px 12px 12px 2px" }
                     }
                   >
                     {msg.content}
@@ -172,7 +162,7 @@ export function AIPriceChat() {
               <div ref={bottomRef} />
             </div>
 
-            {/* Starter prompts */}
+            {/* Starter prompts — shown on first message */}
             {messages.length === 1 && (
               <div className="px-3 pb-2 flex flex-wrap gap-1.5">
                 {STARTERS.map(s => (
@@ -197,10 +187,7 @@ export function AIPriceChat() {
                   onKeyDown={e => e.key === "Enter" && !e.shiftKey && send(input)}
                   placeholder="Describe your project..."
                   className="flex-1 h-9 px-3 rounded-xl text-xs text-white placeholder:text-white/25 focus:outline-none"
-                  style={{
-                    background: "rgba(255,255,255,0.05)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                  }}
+                  style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
                 />
                 <button
                   onClick={() => send(input)}

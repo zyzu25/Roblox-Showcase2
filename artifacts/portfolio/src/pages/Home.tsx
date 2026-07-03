@@ -14,24 +14,30 @@ import { Footer } from "@/components/Footer";
 import { StickyPill } from "@/components/StickyPill";
 import { PriceCalculator } from "@/components/PriceCalculator";
 import { StyleQuiz } from "@/components/StyleQuiz";
-import { CustomCursor } from "@/components/CustomCursor";
-import { ReferralSection } from "@/components/ReferralSection";
+import { PromoSection } from "@/components/PromoSection";
+import { ReviewsSection } from "@/components/ReviewsSection";
 import { WhyChooseUs } from "@/components/WhyChooseUs";
 import { Process } from "@/components/Process";
 import { RevisionPolicy } from "@/components/RevisionPolicy";
-import { GlobalBackground } from "@/components/GlobalBackground";
+import { BackgroundSwitcher } from "@/components/BackgroundSwitcher";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { AmbientAudio } from "@/components/AmbientAudio";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import { ToolShowcase } from "@/components/ToolShowcase";
+import { IdleAnimation } from "@/components/IdleAnimation";
+import { ReturnGreeting } from "@/components/ReturnGreeting";
+import { StreakDisplay } from "@/components/StreakDisplay";
+import { ImportingSection } from "@/components/ImportingSection";
+import { ThemeNudgePopup } from "@/components/ThemeNudgePopup";
+import { SupportSection } from "@/components/SupportSection";
 
 export default function Home() {
   const [loaded, setLoaded] = useState(false);
 
   return (
     <>
-      <CustomCursor />
       <LoadingScreen onDone={() => setLoaded(true)} />
-      <GlobalBackground />
+      <BackgroundSwitcher />
       <ScrollProgress />
       <AmbientAudio />
       <main
@@ -47,15 +53,19 @@ export default function Home() {
         <Hero />
         <ClientStrip />
         <About />
+        <SupportSection />
         <Portfolio />
         <WhyChooseUs />
         <Process />
+        <ToolShowcase />
         <Services />
         <Pricing />
-        <RevisionPolicy />
-        <ReferralSection />
-        <Testimonials />
+        <ImportingSection />
         <Policies />
+        <RevisionPolicy />
+        <PromoSection />
+        <Testimonials />
+        <ReviewsSection />
         <FAQ />
         <Contact />
         <Footer />
@@ -63,6 +73,10 @@ export default function Home() {
       <StickyPill />
       <PriceCalculator />
       <StyleQuiz />
+      <IdleAnimation />
+      <ReturnGreeting />
+      <StreakDisplay />
+      <ThemeNudgePopup />
     </>
   );
 }

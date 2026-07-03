@@ -1,0 +1,39 @@
+The website views counter is not working well please fix it.
+Improve the top-bar UI make it even better looking.
+Make the main theme dark and make a popup on the right side telling them to try other colors and only show red and white.
+Change the main music to ark patrol.
+Increase the speed of background animation.
+Improve the calculator even more and I don't do animations for UI or scripting I only design the UIs and import them.
+Add section for "Importing UIs" and say that I take 30% of the main comission for importing like if they get $100 comission but don't have time for importing I take 30$ for importing and if it's not a comission I take $7 per frame..
+Remove promocodes and referral program and replace them with something for "Helping me get comissions for 30% of the comission" if I get 100$ they get 30$
+Make the reviews ACTUALLY SAVE and add option for them to add their usernamename and their game name
+Remove referral code from contact page.
+For the calculator make ti so if you add rush it decreases the "Delivered in" also don't say Delivered in say ~ Delivered in.
+Also prioritize the policiies.
+Remove the calm color or fix it cause it's literally purple.
+Remove aurora mix.
+Remove calm storm.
+Remove the Test persistence check"
+
+How should the calculator work?
+Both — interactive form first, then an AI chat for follow-up questions
+Rush delivery — how much does it cut the delivery time?
+I'll tell you exact times per package in the comments
+Custom rush times (if you chose that option)
+It gives them priority over others or if there's no other people then: 
+Starter UI: Reduces 1 day.
+Game UI Package: Reduces by 2 days.
+Full Game UI: Reduces 3 days.
+Premium UI reduces by 1 week.
+Should importing show up in the calculator?
+Yes — also let them price standalone importing ($7/frame) with a frame count input
+Additional comments
+Yes but add it as different section inside the calculator like a different tab.
+Should logos be in the calculator too?
+No — logos are simple enough, no need
+What's the current extra-revision price?
+Change it to 3$ and in the compare packages also change it to 3$
+
+ask me for api for ai too please
+
+Also please make it so when I send someone the link it shows the loading screen with my signature as the embed should be dark theme with my signature in middle with liquid flow animation. THE EMBED IMAGE. [IMPORTANT]

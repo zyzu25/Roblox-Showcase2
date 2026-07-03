@@ -350,7 +350,7 @@ export function Pricing() {
           className="mt-6 glass rounded-2xl p-5 flex flex-wrap items-center gap-6"
         >
           {[
-            { color: 'var(--c-primary)', text: 'Extra revisions:', value: '$2 each' },
+            { color: 'var(--c-primary)', text: 'Extra revisions:', value: '$3 each' },
             { color: 'var(--c-primary)', text: 'Rush delivery:', value: '+$5' },
             { color: 'var(--c-primary)', text: 'Large projects:', value: '50% deposit upfront' },
             { color: 'var(--c-primary)', text: 'Small projects:', value: '30% deposit upfront' },

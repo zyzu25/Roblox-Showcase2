@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
+import { useDiscordAvatar } from "@/hooks/useDiscordAvatar";
 
 export function Footer() {
+  const avatar = useDiscordAvatar();
   const scrollTo = (id: string) => {
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: "smooth" });
@@ -77,7 +79,7 @@ export function Footer() {
                 className="w-9 h-9 rounded-xl overflow-hidden flex-shrink-0"
                 style={{ boxShadow: "0 0 14px var(--c-glow)" }}
               >
-                <img src="/images/profile.jpg" alt="MYSTICFUSION7X" className="w-full h-full object-cover" />
+                <img src={avatar} alt="MYSTICFUSION7X" className="w-full h-full object-cover" />
               </div>
               <span className="font-display font-bold text-base text-white">MYSTICFUSION7X</span>
             </div>
