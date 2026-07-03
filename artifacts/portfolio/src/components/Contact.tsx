@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
-import { Send } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Send, Loader2, CheckCircle2, AlertCircle, RotateCcw } from "lucide-react";
 import { AnimatedLine } from "./AnimatedText";
 import { MagneticButton } from "./MagneticButton";
 import confetti from "canvas-confetti";
@@ -9,32 +9,61 @@ export function Contact() {
   const [selectedPackage, setSelectedPackage] = useState("");
   const [extraRevisions, setExtraRevisions] = useState(false);
   const [rushDelivery, setRushDelivery]   = useState(false);
-  const [referralCode, setReferralCode]   = useState("");
-  const [referralBy, setReferralBy]       = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     const pkg = sessionStorage.getItem("selectedPackage");
     if (pkg) { setSelectedPackage(pkg); sessionStorage.removeItem("selectedPackage"); }
-    const code = sessionStorage.getItem("referralCode");
-    const ref  = sessionStorage.getItem("referralReferrer");
-    if (code) { setReferralCode(code); sessionStorage.removeItem("referralCode"); }
-    if (ref)  { setReferralBy(ref);   sessionStorage.removeItem("referralReferrer"); }
   }, []);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    // Fire confetti, then let the native form submit proceed after a brief delay
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    confetti({
-      particleCount: 120,
-      spread: 80,
-      origin: { y: 0.7 },
-      colors: ["#7c3aed", "#a855f7", "#ffffff", "#c4b5fd", "#6d28d9"],
-      scalar: 0.9,
-    });
-    setTimeout(() => {
-      formRef.current?.submit();
-    }, 700);
+    if (status === "sending") return;
+
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const packageLabels: Record<string, string> = {
+      starter: "Starter UI (R$1k to 4k / $5 to $15)",
+      game: "Game UI Package (R$4k to 12k / $15 to $50)",
+      full: "Full Game UI Package (R$12k to 30k / $50 to $100)",
+      premium: "Premium UI Package (R$30k+ / $100+)",
+      logos: "Logo Design (R$229 to 779 / $2 to $7)",
+    };
+
+    setStatus("sending");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: data.get("Name"),
+          roblox: data.get("Roblox Username"),
+          discord: data.get("Discord"),
+          packageSelected: packageLabels[selectedPackage] ?? selectedPackage,
+          extraRevisions: extraRevisions ? "Yes (+$3 each)" : "No",
+          rushDelivery: rushDelivery ? "Yes (priority)" : "No",
+          details: data.get("Project Details"),
+        }),
+      });
+
+      if (!res.ok) throw new Error("Request failed");
+
+      confetti({
+        particleCount: 120,
+        spread: 80,
+        origin: { y: 0.7 },
+        colors: ["#7c3aed", "#a855f7", "#ffffff", "#c4b5fd", "#6d28d9"],
+        scalar: 0.9,
+      });
+      setStatus("sent");
+      form.reset();
+      setSelectedPackage("");
+      setExtraRevisions(false);
+      setRushDelivery(false);
+    } catch {
+      setStatus("error");
+    }
   };
 
   return (
@@ -152,22 +181,45 @@ export function Contact() {
             viewport={{ once: true, margin: "-80px" }}
             transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
           >
-            <form
+            <AnimatePresence mode="wait">
+            {status === "sent" ? (
+              <motion.div
+                key="success"
+                initial={{ opacity: 0, scale: 0.94, y: 12 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.94 }}
+                transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
+                className="flex flex-col items-center justify-center text-center py-16 px-6 rounded-2xl"
+                style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
+              >
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5"
+                  style={{ background: "rgba(74,222,128,0.12)", border: "1px solid rgba(74,222,128,0.25)" }}>
+                  <CheckCircle2 className="w-7 h-7" style={{ color: "#4ade80" }} />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Request Sent!</h3>
+                <p className="text-sm text-white/45 leading-relaxed mb-6 max-w-xs">
+                  Your commission request landed in my inbox. I'll get back to you shortly on Discord.
+                </p>
+                <button
+                  onClick={() => setStatus("idle")}
+                  className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white/50 hover:text-white/80 transition-colors"
+                  style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.09)" }}
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  Send another request
+                </button>
+              </motion.div>
+            ) : (
+            <motion.form
+              key="form"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               ref={formRef}
-              action="https://formsubmit.co/dangert913@gmail.com"
-              method="POST"
               className="space-y-4"
               data-testid="contact-form"
               onSubmit={handleSubmit}
             >
-              <input type="hidden" name="_subject" value="New Commission Request - MYSTICFUSION7X Portfolio" />
-              <input type="hidden" name="_captcha" value="false" />
-              <input type="hidden" name="_template" value="table" />
-              <input type="hidden" name="Package" value={selectedPackage} />
-              <input type="hidden" name="Extra Revisions" value={extraRevisions ? "Yes (+$2 each)" : "No"} />
-              <input type="hidden" name="Rush Delivery" value={rushDelivery ? "Yes (+$5)" : "No"} />
-              <input type="hidden" name="Referral Code" value={referralCode || "None"} />
-              <input type="hidden" name="Referred By" value={referralBy || "None"} />
 
               <div className="grid grid-cols-2 gap-3">
                 <motion.div
@@ -256,7 +308,7 @@ export function Contact() {
                     onChange={(e) => setExtraRevisions(e.target.checked)}
                     className="w-4 h-4 rounded accent-[var(--c-primary)]"
                   />
-                  <span className="text-sm text-white/50">Extra Revisions <span className="text-white/70 font-semibold">+$2</span></span>
+                  <span className="text-sm text-white/50">Extra Revisions <span className="text-white/70 font-semibold">+$3</span></span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
                   <input
@@ -267,38 +319,6 @@ export function Contact() {
                   />
                   <span className="text-sm text-white/50">Rush Delivery <span className="text-white/70 font-semibold">+$5</span></span>
                 </label>
-              </motion.div>
-
-              {/* Referral code */}
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.68, duration: 0.4 }}
-              >
-                {referralBy ? (
-                  <div
-                    className="flex items-center gap-3 px-4 py-3 rounded-xl"
-                    style={{ background: "rgba(74,222,128,0.07)", border: "1px solid rgba(74,222,128,0.18)" }}
-                  >
-                    <span className="text-green-400 text-base">✓</span>
-                    <div>
-                      <p className="text-xs font-semibold text-green-400 leading-none mb-0.5">Referral applied</p>
-                      <p className="text-xs text-white/35">Referred by <span className="text-white/60 font-medium">{referralBy}</span> · code <span className="font-mono text-white/50">{referralCode}</span>. 10% discount will be applied.</p>
-                    </div>
-                  </div>
-                ) : (
-                  <div>
-                    <label className="block text-xs text-white/30 mb-2 font-medium">Referral code <span className="text-white/20">(optional)</span></label>
-                    <input
-                      value={referralCode}
-                      onChange={e => setReferralCode(e.target.value.toUpperCase())}
-                      placeholder="XXX-XXXXX"
-                      className="w-full h-11 px-4 rounded-xl text-white placeholder:text-white/18 text-sm focus:outline-none transition-all glass hover:border-white/20 focus:border-[var(--c-border)] font-mono tracking-widest"
-                      style={{ borderColor: "var(--c-border-soft)" }}
-                    />
-                  </div>
-                )}
               </motion.div>
 
               <motion.div
@@ -322,17 +342,47 @@ export function Contact() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.8, duration: 0.4 }}
+                className="space-y-3"
               >
+                {status === "error" && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-start gap-3 px-4 py-3 rounded-xl"
+                    style={{ background: "rgba(248,113,113,0.08)", border: "1px solid rgba(248,113,113,0.22)" }}
+                  >
+                    <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: "#f87171" }} />
+                    <div>
+                      <p className="text-sm font-semibold" style={{ color: "#f87171" }}>Couldn't send your request</p>
+                      <p className="text-xs text-white/40 mt-0.5 leading-relaxed">
+                        Something went wrong on our end. DM me directly on Discord: <span className="text-white/65 font-medium">mysticfusion7x</span>
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
                 <MagneticButton
                   type="submit"
+                  disabled={status === "sending"}
                   className="btn-primary w-full h-12 text-white font-semibold rounded-xl flex items-center justify-center gap-2 text-sm"
                   dataTestid="button-submit"
+                  style={{ opacity: status === "sending" ? 0.7 : 1, cursor: status === "sending" ? "not-allowed" : "pointer" }}
                 >
-                  Send Request
-                  <Send className="w-4 h-4" />
+                  {status === "sending" ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      Send Request
+                      <Send className="w-4 h-4" />
+                    </>
+                  )}
                 </MagneticButton>
               </motion.div>
-            </form>
+            </motion.form>
+            )}
+            </AnimatePresence>
           </motion.div>
 
         </div>
