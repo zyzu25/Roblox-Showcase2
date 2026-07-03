@@ -20,7 +20,7 @@ const FS = `
 
   void main(){
     vec2 uv=gl_FragCoord.xy/u_res;
-    float t=u_time*0.09;
+    float t=u_time*0.18;
 
     /* downward flowing water — FBM drift */
     vec2 p=uv*vec2(2.0,3.2);

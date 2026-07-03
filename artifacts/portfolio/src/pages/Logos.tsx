@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, ArrowLeft, Palette, ChevronDown, Droplets, Flame, Waves, Sparkles, ZoomIn, ZoomOut, X, Blend, CloudRain } from "lucide-react";
+import { Check, ArrowLeft, Palette, ChevronDown, Droplets, Flame, Waves, Sparkles, ZoomIn, ZoomOut, X } from "lucide-react";
 import { useLocation } from "wouter";
 import { useRef, useState, useEffect, useCallback } from "react";
 import { GlobalBackground } from "@/components/GlobalBackground";
@@ -13,6 +13,7 @@ import { AmbientAudio } from "@/components/AmbientAudio";
 import { useTheme, type Theme } from "@/components/ThemeContext";
 import { useAnimation } from "@/components/AnimationContext";
 import { ViewCounter } from "@/components/ViewCounter";
+import { useDiscordAvatar } from "@/hooks/useDiscordAvatar";
 
 const WM_SVG = encodeURIComponent(
   `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200">` +
@@ -283,17 +284,14 @@ const THEME_CONFIG: Record<Theme, { bg: string; label: string; dot: string; grad
   dark:   { bg: "#444444", label: "Dark",   dot: "#666666" },
   gold:   { bg: "#d4a017", label: "Gold",   dot: "#d4a017" },
   red:    { bg: "#CC1A1A", label: "Red",    dot: "#CC1A1A" },
-  calm:   { bg: "#8fb8d8", label: "Calm",   dot: "#8fb8d8", gradient: "linear-gradient(135deg,#7c3aff 0%,#8fb8d8 35%,#C8A94A 65%,#8fb8d8 100%)" },
 };
-const THEME_ORDER: Theme[] = ["purple", "white", "light", "dark", "gold", "red", "calm"];
+const THEME_ORDER: Theme[] = ["dark", "purple", "red", "white", "light", "gold"];
 
 const LOGO_ANIMATIONS = [
-  { id: "liquid"    as const, label: "Liquid Flow",  icon: Droplets, desc: "WebGL domain warp"      },
-  { id: "fire"      as const, label: "Calming Fire", icon: Flame,    desc: "Rising embers"          },
-  { id: "sea"       as const, label: "Ocean Waves",  icon: Waves,    desc: "WebGL ocean shader"     },
-  { id: "waterfall" as const, label: "Waterfall",    icon: Sparkles, desc: "Flowing water"          },
-  { id: "mix"       as const, label: "Aurora Mix",   icon: Blend,     desc: "All themes, all motion" },
-  { id: "storm"     as const, label: "Calm Storm",   icon: CloudRain, desc: "Rain & distant thunder" },
+  { id: "liquid"    as const, label: "Liquid Flow",  icon: Droplets, desc: "WebGL domain warp"  },
+  { id: "fire"      as const, label: "Calming Fire", icon: Flame,    desc: "Rising embers"      },
+  { id: "sea"       as const, label: "Ocean Waves",  icon: Waves,    desc: "WebGL ocean shader" },
+  { id: "waterfall" as const, label: "Waterfall",    icon: Sparkles, desc: "Flowing water"      },
 ];
 
 function LogosNavbar({ onContact }: { onContact: () => void }) {
@@ -334,7 +332,7 @@ function LogosNavbar({ onContact }: { onContact: () => void }) {
               className="w-7 h-7 rounded-lg overflow-hidden flex-shrink-0"
               style={{ boxShadow: "0 0 10px var(--c-glow)" }}
             >
-              <img src="/images/profile.jpg" alt="MYSTICFUSION7X" className="w-full h-full object-cover" />
+              <img src={useDiscordAvatar()} alt="MYSTICFUSION7X" className="w-full h-full object-cover" />
             </div>
             <span className="font-display font-bold text-sm tracking-tight text-white">Logo Design</span>
           </div>
@@ -436,12 +434,6 @@ function LogosNavbar({ onContact }: { onContact: () => void }) {
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-1.5 flex-wrap">
                                 <p className="text-xs font-medium" style={{ color: active ? "rgba(255,255,255,0.90)" : "rgba(255,255,255,0.45)" }}>{label}</p>
-                                {id === "mix" && (
-                                  <span className="text-[8px] px-1.5 py-0.5 rounded-full font-semibold leading-none flex-shrink-0"
-                                    style={{ background: "rgba(251,191,36,0.15)", color: "#fbbf24", border: "1px solid rgba(251,191,36,0.25)" }}>
-                                    ⚠ GPU heavy
-                                  </span>
-                                )}
                               </div>
                               <p className="text-[9px] text-white/20 leading-none mt-0.5">{desc}</p>
                             </div>

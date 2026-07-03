@@ -20,7 +20,7 @@ const FS = `
 
   void main(){
     vec2 uv=gl_FragCoord.xy/u_res;
-    float t=u_time*0.055;
+    float t=u_time*0.11;
 
     /* layered sine waves — primary long swells */
     float w1=sin(uv.x*3.2+t*0.90+sin(uv.y*1.1+t*0.35)*0.28)*0.5+0.5;

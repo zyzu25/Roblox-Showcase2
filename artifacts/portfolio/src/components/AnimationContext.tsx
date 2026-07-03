@@ -1,13 +1,13 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-export type AnimationMode = "liquid" | "fire" | "mix" | "sea" | "waterfall" | "storm";
+export type AnimationMode = "liquid" | "fire" | "sea" | "waterfall";
 
 const AnimationCtx = createContext<{
   animation: AnimationMode;
   setAnimation: (a: AnimationMode) => void;
 }>({ animation: "liquid", setAnimation: () => {} });
 
-const VALID: AnimationMode[] = ["liquid", "fire", "mix", "sea", "waterfall", "storm"];
+const VALID: AnimationMode[] = ["liquid", "fire", "sea", "waterfall"];
 
 export function AnimationProvider({ children }: { children: React.ReactNode }) {
   const [animation, setAnimation] = useState<AnimationMode>(() => {

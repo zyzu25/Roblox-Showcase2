@@ -6,31 +6,43 @@ import { useAnimation } from "./AnimationContext";
 import { MagneticButton } from "./MagneticButton";
 import { AvailableHours } from "./AvailableHours";
 import { ViewCounter } from "./ViewCounter";
-import { ChevronDown, Palette, Flame, Droplets, Sparkles, Waves, Copy, Check, Blend, CloudRain } from "lucide-react";
+import { ChevronDown, Palette, Flame, Droplets, Sparkles, Waves, Copy, Check } from "lucide-react";
+import { useDiscordAvatar } from "@/hooks/useDiscordAvatar";
 
-const THEME_CONFIG: Record<Theme, { bg: string; label: string; dot: string; gradient?: string }> = {
-  purple: { bg: "#4000ff", label: "Purple",  dot: "#7c3aff" },
-  white:  { bg: "#d4d4d4", label: "White",   dot: "#e8e8e8" },
-  light:  { bg: "#B2D5E5", label: "Light",   dot: "#B2D5E5" },
-  dark:   { bg: "#444444", label: "Dark",    dot: "#666666" },
-  gold:   { bg: "#d4a017", label: "Gold",    dot: "#d4a017" },
-  red:    { bg: "#CC1A1A", label: "Red",     dot: "#CC1A1A" },
-  calm:   { bg: "#8fb8d8", label: "Calm",    dot: "#8fb8d8", gradient: "linear-gradient(135deg,#7c3aff 0%,#8fb8d8 35%,#C8A94A 65%,#8fb8d8 100%)" },
+const THEME_CONFIG: Record<Theme, { bg: string; label: string; dot: string }> = {
+  purple: { bg: "#4000ff", label: "Purple", dot: "#7c3aff" },
+  dark:   { bg: "#444444", label: "Dark",   dot: "#888888" },
+  red:    { bg: "#CC1A1A", label: "Red",    dot: "#CC1A1A" },
+  white:  { bg: "#d4d4d4", label: "White",  dot: "#e8e8e8" },
+  light:  { bg: "#B2D5E5", label: "Light",  dot: "#B2D5E5" },
+  gold:   { bg: "#d4a017", label: "Gold",   dot: "#d4a017" },
 };
 
-const THEME_ORDER: Theme[] = ["purple", "white", "light", "dark", "gold", "red", "calm"];
+const THEME_ORDER: Theme[] = ["dark", "purple", "red", "white", "light", "gold"];
 
 const DISCORD_TAG = "mysticfusion7x";
 
+const NAV_LINKS = [
+  { label: "About",     id: "about"     },
+  { label: "Work",      id: "portfolio" },
+  { label: "Services",  id: "services"  },
+  { label: "Pricing",   id: "pricing"   },
+  { label: "Importing", id: "importing" },
+  { label: "Partner",   id: "promo"     },
+  { label: "Policies",  id: "policies"  },
+  { label: "FAQ",       id: "faq"       },
+];
+
 export function Navbar() {
-  const [hidden, setHidden]         = useState(false);
-  const [dropOpen, setDropOpen]     = useState(false);
-  const [copied, setCopied]         = useState(false);
+  const [hidden,   setHidden]   = useState(false);
+  const [dropOpen, setDropOpen] = useState(false);
+  const [copied,   setCopied]   = useState(false);
   const { scrollY }                 = useScroll();
   const [, navigate]                = useLocation();
   const { theme, setTheme }         = useTheme();
   const { animation, setAnimation } = useAnimation();
   const dropRef                     = useRef<HTMLDivElement>(null);
+  const avatar                      = useDiscordAvatar();
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const prev = scrollY.getPrevious() ?? 0;
@@ -39,9 +51,7 @@ export function Navbar() {
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (dropRef.current && !dropRef.current.contains(e.target as Node)) {
-        setDropOpen(false);
-      }
+      if (dropRef.current && !dropRef.current.contains(e.target as Node)) setDropOpen(false);
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -54,31 +64,21 @@ export function Navbar() {
   };
 
   const copyDiscord = async () => {
-    try {
-      await navigator.clipboard.writeText(DISCORD_TAG);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
+    try { await navigator.clipboard.writeText(DISCORD_TAG); }
+    catch {
       const ta = document.createElement("textarea");
-      ta.value = DISCORD_TAG;
-      ta.style.position = "fixed";
-      ta.style.opacity = "0";
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand("copy");
-      document.body.removeChild(ta);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      ta.value = DISCORD_TAG; ta.style.cssText = "position:fixed;opacity:0";
+      document.body.appendChild(ta); ta.select(); document.execCommand("copy"); document.body.removeChild(ta);
     }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const ANIMATIONS = [
-    { id: "liquid"    as const, label: "Liquid Flow",  icon: Droplets, desc: "WebGL domain warp"      },
-    { id: "fire"      as const, label: "Calming Fire", icon: Flame,    desc: "Rising embers"          },
-    { id: "sea"       as const, label: "Ocean Waves",  icon: Waves,    desc: "WebGL ocean shader"     },
-    { id: "waterfall" as const, label: "Waterfall",    icon: Sparkles, desc: "Flowing water"          },
-    { id: "mix"       as const, label: "Aurora Mix",   icon: Blend,     desc: "All themes, all motion" },
-    { id: "storm"     as const, label: "Calm Storm",   icon: CloudRain, desc: "Rain & distant thunder" },
+    { id: "liquid"    as const, label: "Liquid Flow",  icon: Droplets, desc: "WebGL domain warp"  },
+    { id: "fire"      as const, label: "Calming Fire", icon: Flame,    desc: "Rising embers"      },
+    { id: "sea"       as const, label: "Ocean Waves",  icon: Waves,    desc: "WebGL ocean shader" },
+    { id: "waterfall" as const, label: "Waterfall",    icon: Sparkles, desc: "Flowing water"      },
   ];
 
   return (
@@ -86,71 +86,91 @@ export function Navbar() {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: hidden ? -80 : 0 }}
       transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-      className="fixed top-0 left-0 right-0 z-[99] border-b border-white/5"
-      style={{ background: "rgba(0,0,5,0.75)", backdropFilter: "blur(24px) saturate(1.2)" }}
+      className="fixed top-0 left-0 right-0 z-[99] relative"
+      style={{
+        background: "linear-gradient(180deg, var(--c-glass-bright, rgba(10,8,20,0.9)) 0%, rgba(4,4,14,0.86) 100%)",
+        borderBottom: "1px solid var(--c-border-soft)",
+        backdropFilter: "blur(28px) saturate(1.5)",
+        boxShadow: "0 1px 0 var(--c-border-soft), 0 12px 32px -12px rgba(0,0,0,0.6)",
+        transition: "background 0.4s ease, border-color 0.4s ease",
+      }}
       data-testid="navbar"
     >
+      {/* Gradient bottom border */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-px pointer-events-none"
+        style={{ background: "linear-gradient(90deg, transparent 0%, var(--c-primary) 35%, var(--c-primary-2, #a855f7) 65%, transparent 100%)", opacity: 0.55, boxShadow: "0 0 8px var(--c-glow-soft)" }}
+      />
+
       <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
 
         {/* Logo */}
         <motion.button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-          className="flex items-center gap-2.5 cursor-pointer"
+          className="flex items-center gap-2.5 cursor-pointer flex-shrink-0"
           data-testid="nav-logo"
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.97 }}
         >
-          <div
-            className="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0"
-            style={{ boxShadow: "0 0 14px var(--c-glow)" }}
-          >
-            <img src="/images/profile.jpg" alt="MYSTICFUSION7X" className="w-full h-full object-cover" />
+          <div className="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0"
+            style={{ boxShadow: "0 0 18px var(--c-glow)", border: "1px solid var(--c-border-soft)" }}>
+            <img src={avatar} alt="MYSTICFUSION7X" className="w-full h-full object-cover" />
           </div>
-          <span className="font-display font-bold text-base tracking-tight text-white">MYSTICFUSION7X</span>
+          <span
+            className="font-display font-bold text-base tracking-tight"
+            style={{ background: "linear-gradient(90deg, #fff 0%, rgba(255,255,255,0.7) 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}
+          >
+            MYSTICFUSION7X
+          </span>
         </motion.button>
 
-        <nav className="hidden md:flex items-center gap-1">
-          {[
-            { label: "About",    id: "about"    },
-            { label: "Work",     id: "portfolio" },
-            { label: "Services", id: "services"  },
-            { label: "Pricing",  id: "pricing"   },
-            { label: "Promo",    id: "promo"     },
-            { label: "FAQ",      id: "faq"       },
-          ].map((item) => (
+        <nav className="hidden md:flex items-center gap-0.5">
+          {NAV_LINKS.map((item) => (
             <motion.button
               key={item.id}
               onClick={() => scrollTo(item.id)}
-              className="px-4 py-2 text-sm text-white/45 hover:text-white transition-colors rounded-lg hover:bg-white/5"
+              className="group relative px-3 py-2 text-[13px] text-white/40 hover:text-white transition-colors rounded-lg"
               data-testid={`nav-link-${item.id}`}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
             >
               {item.label}
+              <span
+                className="absolute bottom-1 left-1/2 -translate-x-1/2 h-px transition-all duration-300"
+                style={{
+                  background: "var(--c-primary)",
+                  width: "0%",
+                  display: "block",
+                }}
+                ref={el => {
+                  // CSS approach — let hover handle it via group
+                }}
+              />
             </motion.button>
           ))}
 
+          {/* Logos nav */}
           <motion.button
             onClick={() => navigate("/logos")}
-            className="px-4 py-2 text-sm font-semibold transition-colors rounded-lg hover:bg-white/5"
+            className="px-3 py-2 text-[13px] font-semibold transition-colors rounded-lg"
             style={{ color: "var(--c-primary)" }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+            whileHover={{ scale: 1.04 }}
+            whileTap={{ scale: 0.96 }}
             data-testid="nav-link-logos"
           >
             Logos
           </motion.button>
 
-          {/* Discord copy button */}
+          {/* Discord copy */}
           <motion.button
             onClick={copyDiscord}
             whileHover={{ scale: 1.06 }}
             whileTap={{ scale: 0.94 }}
             title={copied ? "Copied!" : `Copy Discord: ${DISCORD_TAG}`}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ml-1"
             style={{
-              background: copied ? "rgba(139,61,255,0.18)" : "rgba(255,255,255,0.05)",
-              border: copied ? "1px solid var(--c-border-soft)" : "1px solid rgba(255,255,255,0.08)",
+              background: copied ? "var(--c-glow-soft)" : "rgba(255,255,255,0.05)",
+              border: copied ? "1px solid var(--c-border)" : "1px solid rgba(255,255,255,0.08)",
               color: copied ? "var(--c-primary)" : "rgba(255,255,255,0.45)",
               boxShadow: copied ? "0 0 10px var(--c-glow-soft)" : "none",
               transition: "all 0.3s ease",
@@ -178,17 +198,14 @@ export function Navbar() {
           {/* Style dropdown */}
           <div className="relative ml-1" ref={dropRef}>
             <motion.button
-              onClick={() => setDropOpen((o) => !o)}
-              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm text-white/50 hover:text-white transition-colors hover:bg-white/5"
+              onClick={() => setDropOpen(o => !o)}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-[13px] text-white/45 hover:text-white transition-colors hover:bg-white/5"
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.96 }}
             >
               <Palette className="w-3.5 h-3.5" />
               <span>Style</span>
-              <motion.div
-                animate={{ rotate: dropOpen ? 180 : 0 }}
-                transition={{ duration: 0.25 }}
-              >
+              <motion.div animate={{ rotate: dropOpen ? 180 : 0 }} transition={{ duration: 0.25 }}>
                 <ChevronDown className="w-3 h-3 opacity-60" />
               </motion.div>
             </motion.button>
@@ -200,50 +217,40 @@ export function Navbar() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -8, scale: 0.96 }}
                   transition={{ duration: 0.2, ease: [0.23, 1, 0.32, 1] }}
-                  className="absolute right-0 top-full mt-2 w-64 rounded-2xl overflow-hidden z-[200]"
+                  className="absolute right-0 top-full mt-2 w-60 rounded-2xl overflow-hidden z-[200]"
                   style={{
-                    background: "rgba(8,6,20,0.92)",
+                    background: "rgba(6,4,20,0.94)",
                     border: "1px solid rgba(255,255,255,0.10)",
                     backdropFilter: "blur(24px)",
-                    boxShadow: "0 8px 32px rgba(0,0,0,0.6), 0 0 0 0.5px rgba(255,255,255,0.05)",
+                    boxShadow: "0 8px 32px rgba(0,0,0,0.65), 0 0 0 0.5px rgba(255,255,255,0.05)",
                   }}
                 >
-                  {/* Theme section */}
+                  {/* Theme */}
                   <div className="px-4 pt-4 pb-3">
                     <p className="text-[10px] font-semibold uppercase tracking-widest text-white/25 mb-3">Theme</p>
-                    <div className="grid grid-cols-4 gap-1">
-                      {THEME_ORDER.map((t) => {
+                    <div className="grid grid-cols-3 gap-1.5">
+                      {THEME_ORDER.map(t => {
                         const cfg = THEME_CONFIG[t];
                         const active = theme === t;
                         return (
-                          <motion.button
-                            key={t}
-                            onClick={() => setTheme(t)}
-                            whileHover={{ scale: 1.06 }}
-                            whileTap={{ scale: 0.94 }}
+                          <motion.button key={t} onClick={() => setTheme(t)}
+                            whileHover={{ scale: 1.06 }} whileTap={{ scale: 0.94 }}
                             className="flex flex-col items-center gap-1.5 px-1 py-2 rounded-xl transition-all"
                             style={{
                               background: active ? "rgba(255,255,255,0.08)" : "transparent",
                               border: active ? "1px solid rgba(255,255,255,0.14)" : "1px solid transparent",
                             }}
                           >
-                            <div
-                              className="w-4.5 h-4.5 rounded-full"
-                              style={{
-                                background: cfg.gradient ?? cfg.bg,
-                                boxShadow: active ? `0 0 10px ${cfg.dot}` : "none",
-                                border: t === "dark" ? "1px solid rgba(255,255,255,0.2)" : "none",
-                                transform: active ? "scale(1.2)" : "scale(1)",
-                                transition: "all 0.25s ease",
-                                width: "18px",
-                                height: "18px",
-                                flexShrink: 0,
-                              }}
-                            />
-                            <span
-                              className="text-[8px] font-medium tracking-wide leading-none"
-                              style={{ color: active ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.35)" }}
-                            >
+                            <div style={{
+                              background: cfg.bg,
+                              boxShadow: active ? `0 0 10px ${cfg.dot}` : "none",
+                              border: t === "dark" ? "1px solid rgba(255,255,255,0.2)" : "none",
+                              transform: active ? "scale(1.2)" : "scale(1)",
+                              transition: "all 0.25s ease",
+                              width: 18, height: 18, borderRadius: "50%", flexShrink: 0,
+                            }} />
+                            <span className="text-[8px] font-medium tracking-wide leading-none"
+                              style={{ color: active ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.35)" }}>
                               {cfg.label}
                             </span>
                           </motion.button>
@@ -254,50 +261,33 @@ export function Navbar() {
 
                   <div className="mx-4 border-t border-white/6" />
 
-                  {/* Animation section */}
+                  {/* Animation */}
                   <div className="px-4 py-3">
-                    <p className="text-[10px] font-semibold uppercase tracking-widest text-white/25 mb-2">Animation</p>
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-white/25 mb-2">Background</p>
                     <div className="flex flex-col gap-1">
                       {ANIMATIONS.map(({ id, label, icon: Icon, desc }) => {
                         const active = animation === id;
                         return (
-                          <motion.button
-                            key={id}
-                            onClick={() => setAnimation(id)}
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
+                          <motion.button key={id} onClick={() => setAnimation(id)}
+                            whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
                             className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-left transition-all w-full"
                             style={{
                               background: active ? "rgba(255,255,255,0.07)" : "transparent",
                               border: active ? "1px solid rgba(255,255,255,0.12)" : "1px solid transparent",
                             }}
                           >
-                            <Icon
-                              className="w-3.5 h-3.5 flex-shrink-0"
-                              style={{ color: active ? "var(--c-primary)" : "rgba(255,255,255,0.30)" }}
-                            />
+                            <Icon className="w-3.5 h-3.5 flex-shrink-0"
+                              style={{ color: active ? "var(--c-primary)" : "rgba(255,255,255,0.30)" }} />
                             <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-1.5 flex-wrap">
-                                <p
-                                  className="text-xs font-medium"
-                                  style={{ color: active ? "rgba(255,255,255,0.90)" : "rgba(255,255,255,0.45)" }}
-                                >
-                                  {label}
-                                </p>
-                                {id === "mix" && (
-                                  <span className="text-[8px] px-1.5 py-0.5 rounded-full font-semibold leading-none flex-shrink-0"
-                                    style={{ background: "rgba(251,191,36,0.15)", color: "#fbbf24", border: "1px solid rgba(251,191,36,0.25)" }}>
-                                    ⚠ GPU heavy
-                                  </span>
-                                )}
-                              </div>
+                              <p className="text-xs font-medium"
+                                style={{ color: active ? "rgba(255,255,255,0.90)" : "rgba(255,255,255,0.45)" }}>
+                                {label}
+                              </p>
                               <p className="text-[9px] text-white/20 leading-none mt-0.5">{desc}</p>
                             </div>
                             {active && (
-                              <div
-                                className="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0"
-                                style={{ background: "var(--c-primary)", boxShadow: "0 0 6px var(--c-glow)" }}
-                              />
+                              <div className="ml-auto w-1.5 h-1.5 rounded-full flex-shrink-0"
+                                style={{ background: "var(--c-primary)", boxShadow: "0 0 6px var(--c-glow)" }} />
                             )}
                           </motion.button>
                         );
@@ -309,7 +299,7 @@ export function Navbar() {
             </AnimatePresence>
           </div>
 
-          <div className="ml-2">
+          <div className="ml-1.5">
             <AvailableHours />
           </div>
 
