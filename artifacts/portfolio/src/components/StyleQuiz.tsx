@@ -362,7 +362,7 @@ export function StyleQuiz() {
                               </span>
                             </div>
                           </div>
-                          {resultState.confidence === "rounded" && (
+                          {resultState?.confidence === "rounded" && (
                             <span className="text-[8px] px-1.5 py-0.5 rounded-full text-white/40 flex-shrink-0"
                               style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }}>
                               ~match

@@ -264,8 +264,10 @@ function setupWebGL(
 }
 
 export function LoadingScreen({ onDone }: { onDone: () => void }) {
-  const [theme] = useState<LoadingTheme>(() => THEMES[Math.floor(Math.random() * THEMES.length)]);
-  const [animType] = useState<"liquid" | "fire">(() => Math.random() < 0.5 ? "liquid" : "fire");
+  // The shared link card and the first page load should always be recognizable:
+  // dark background, centered signature, and the liquid flow texture.
+  const [theme] = useState<LoadingTheme>(() => THEMES.find(item => item.name === "dark") ?? THEMES[0]);
+  const [animType] = useState<"liquid" | "fire">("liquid");
   const [phase, setPhase]     = useState<"intro" | "signature" | "name" | "outro">("intro");
   const [visible, setVisible] = useState(true);
   const [progress, setProgress] = useState(0);

@@ -1,48 +1,32 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-export type Theme = "purple" | "light" | "dark" | "gold" | "red" | "white";
-export type AnimationMode = "liquid" | "fire";
+export type Theme = "black" | "white" | "red";
 
 interface ThemeCtxValue {
   theme: Theme;
   setTheme: (t: Theme) => void;
-  animation: AnimationMode;
-  setAnimation: (a: AnimationMode) => void;
 }
 
 const ThemeCtx = createContext<ThemeCtxValue>({
-  theme: "purple",
+  theme: "black",
   setTheme: () => {},
-  animation: "liquid",
-  setAnimation: () => {},
 });
 
+function readTheme(): Theme {
+  if (typeof window !== "undefined") {
+    const stored = localStorage.getItem("portfolio-theme");
+    if (stored === "white" || stored === "red") return stored;
+  }
+  return "black";
+}
+
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    if (typeof window !== "undefined") {
-      const s = localStorage.getItem("portfolio-theme");
-      if (s === "purple" || s === "light" || s === "dark" || s === "gold" || s === "red" || s === "white") return s;
-    }
-    return "purple";
-  });
+  const [theme, setThemeState] = useState<Theme>(readTheme);
 
-  const [animation, setAnimationState] = useState<AnimationMode>(() => {
-    if (typeof window !== "undefined") {
-      const s = localStorage.getItem("portfolio-animation");
-      if (s === "liquid" || s === "fire") return s;
-    }
-    return "liquid";
-  });
-
-  const setTheme = (t: Theme) => {
-    setThemeState(t);
-    localStorage.setItem("portfolio-theme", t);
-    document.documentElement.setAttribute("data-theme", t);
-  };
-
-  const setAnimation = (a: AnimationMode) => {
-    setAnimationState(a);
-    localStorage.setItem("portfolio-animation", a);
+  const setTheme = (next: Theme) => {
+    setThemeState(next);
+    localStorage.setItem("portfolio-theme", next);
+    document.documentElement.setAttribute("data-theme", next);
   };
 
   useEffect(() => {
@@ -50,7 +34,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [theme]);
 
   return (
-    <ThemeCtx.Provider value={{ theme, setTheme, animation, setAnimation }}>
+    <ThemeCtx.Provider value={{ theme, setTheme }}>
       {children}
     </ThemeCtx.Provider>
   );

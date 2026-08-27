@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useTheme } from "./ThemeContext";
+import { useAnimation } from "./AnimationContext";
 
 // ── Shared vertex shader ────────────────────────────────────────────────────
 const VS = `
@@ -150,51 +151,32 @@ function hexToRgb(hex: string): [number, number, number] {
   return [r, g, b];
 }
 
-const THEMES: Record<string, {
+const THEMES: Record<"black" | "white" | "red", {
   bg: string; c1: string; c2: string; c3: string; c4: string; c5: string;
   sat: number; bri: number; blobs: string[];
 }> = {
-  purple: {
-    bg: "#000000",
-    c1: "#8B00FF", c2: "#6600CC", c3: "#AA33FF", c4: "#4400BB", c5: "#CC66FF",
-    sat: 2.5, bri: 0.65,
-    blobs: ["rgba(100,0,255,0.72)","rgba(70,0,200,0.60)","rgba(130,0,255,0.42)","rgba(50,0,180,0.35)","rgba(160,40,255,0.30)"],
-  },
-  light: {
-    bg: "#020202",
-    c1: "#B2D5E5", c2: "#7AB8D4", c3: "#D6ECFA", c4: "#5FA3BE", c5: "#99C8DF",
-    sat: 2.5, bri: 0.65,
-    blobs: ["rgba(130,195,220,0.55)","rgba(100,170,200,0.44)","rgba(160,215,235,0.34)","rgba(80,150,185,0.28)","rgba(190,225,240,0.24)"],
-  },
-  dark: {
-    bg: "#020202",
-    c1: "#2a2828", c2: "#363333", c3: "#1f1d1d", c4: "#3f3c3c", c5: "#2c2a2a",
-    sat: 1.0, bri: 0.65,
-    blobs: ["rgba(55,52,52,0.85)","rgba(42,40,40,0.70)","rgba(65,62,62,0.55)","rgba(35,33,33,0.45)","rgba(72,68,68,0.38)"],
-  },
-  gold: {
-    bg: "#080600",
-    c1: "#8B6000", c2: "#C8960A", c3: "#5C3E00", c4: "#E5B830", c5: "#A07010",
-    sat: 2.8, bri: 0.62,
-    blobs: ["rgba(180,120,0,0.70)","rgba(140,90,0,0.55)","rgba(210,160,20,0.44)","rgba(100,65,0,0.36)","rgba(230,180,40,0.30)"],
+  black: {
+    bg: "#050505",
+    c1: "#4d4d4d", c2: "#252525", c3: "#686868", c4: "#181818", c5: "#858585",
+    sat: 0.2, bri: 0.72,
+    blobs: ["rgba(255,255,255,0.10)","rgba(150,150,150,0.08)","rgba(255,255,255,0.05)","rgba(100,100,100,0.06)","rgba(255,255,255,0.04)"],
   },
   red: {
-    bg: "#080000",
-    c1: "#8B0000", c2: "#CC1010", c3: "#5C0000", c4: "#E01818", c5: "#A00808",
-    sat: 2.8, bri: 0.58,
-    blobs: ["rgba(160,10,10,0.72)","rgba(120,8,8,0.56)","rgba(200,16,16,0.44)","rgba(85,5,5,0.36)","rgba(220,20,20,0.30)"],
+    bg: "#090303",
+    c1: "#a10f16", c2: "#4c070b", c3: "#d1272f", c4: "#270305", c5: "#7d0b12",
+    sat: 1.7, bri: 0.62,
+    blobs: ["rgba(205,26,35,0.30)","rgba(130,10,18,0.24)","rgba(255,40,48,0.16)","rgba(90,5,12,0.20)","rgba(170,15,24,0.13)"],
   },
   white: {
-    bg: "#060606",
-    c1: "#C8C8C8", c2: "#A0A0A0", c3: "#E0E0E0", c4: "#787878", c5: "#D0D0D0",
-    sat: 0.4, bri: 0.85,
-    blobs: ["rgba(200,200,200,0.42)","rgba(160,160,160,0.34)","rgba(220,220,220,0.26)","rgba(130,130,130,0.20)","rgba(240,240,240,0.16)"],
+    bg: "#f4f3f1",
+    c1: "#e1e0de", c2: "#d1d0ce", c3: "#fdfcf9", c4: "#c4c3c1", c5: "#ebeae8",
+    sat: 0.15, bri: 1.0,
+    blobs: ["rgba(40,40,40,0.07)","rgba(120,120,120,0.06)","rgba(255,255,255,0.58)","rgba(70,70,70,0.045)","rgba(230,230,230,0.32)"],
   },
 };
 
 const BG_BASE: Record<string, string> = {
-  purple: "#000000", light: "#020202", dark: "#020202",
-  gold: "#080600", red: "#080000", white: "#060606",
+  black: "#050505", red: "#090303", white: "#f4f3f1",
 };
 
 const BLOB_CONFIG = [
@@ -206,7 +188,8 @@ const BLOB_CONFIG = [
 ];
 
 export function GlobalBackground() {
-  const { theme, animation } = useTheme();
+  const { theme } = useTheme();
+  const { animation } = useAnimation();
   const canvasRef   = useRef<HTMLCanvasElement>(null);
   const glRef       = useRef<WebGLRenderingContext | null>(null);
   const liquidProg  = useRef<WebGLProgram | null>(null);
@@ -287,14 +270,16 @@ export function GlobalBackground() {
 
     const render = () => {
       const glo = glRef.current; if (!glo) return;
-      const isFire = animRef.current === "fire";
+      // Fire was part of the old background picker. Keep the shader branch
+      // harmlessly dormant so existing compiled shader code remains stable.
+      const isFire = false;
       const prog = isFire ? fireProg.current : liquidProg.current;
       const lc   = isFire ? locsFire.current : locsLiquid.current;
       if (!prog) return;
       glo.useProgram(prog);
 
       const t   = (performance.now() - startRef.current) / 1000;
-      const cfg = THEMES[themeRef.current] || THEMES.purple;
+      const cfg = THEMES[themeRef.current] || THEMES.black;
       const setV3 = (loc: WebGLUniformLocation | null, hex: string) => {
         const [r, g, b] = hexToRgb(hex);
         glo.uniform3f(loc, r, g, b);
@@ -322,7 +307,7 @@ export function GlobalBackground() {
     };
   }, []);
 
-  const cfg = THEMES[theme] || THEMES.purple;
+  const cfg = THEMES[theme] || THEMES.black;
 
   return (
     <div style={{

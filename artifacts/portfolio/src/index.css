@@ -833,3 +833,174 @@ body {
   scrollbar-width: thin;
   scrollbar-color: var(--c-primary, #8b3dff) rgba(0,0,0,0.3);
 }
+
+/* ── Focused three-theme system ────────────────────────────────────────────
+   The older palette declarations above are kept for backwards-compatible
+   markup, but these final tokens are the only palettes exposed by the UI. */
+:root[data-theme="black"] {
+  --c-primary: #e7e5e4;
+  --c-primary-2: #ffffff;
+  --c-primary-dark: #a8a29e;
+  --c-glow: rgba(255,255,255,0.20);
+  --c-glow-soft: rgba(255,255,255,0.08);
+  --c-text-glow: rgba(255,255,255,0.32);
+  --c-border: rgba(255,255,255,0.18);
+  --c-border-soft: rgba(255,255,255,0.09);
+  --c-glass-bg: rgba(18,18,18,0.72);
+  --c-glass-bright: rgba(28,28,28,0.82);
+  --c-bg: #070707;
+  --c-bg-alt: #101010;
+  --c-text: #f5f5f4;
+  --c-muted: rgba(245,245,244,0.56);
+  --background: 0 0% 3%;
+  --foreground: 0 0% 96%;
+  --border: 0 0% 15%;
+  --input: 0 0% 12%;
+  --card: 0 0% 6%;
+  --card-foreground: 0 0% 96%;
+  --primary: 0 0% 91%;
+  --primary-foreground: 0 0% 5%;
+}
+
+:root[data-theme="white"] {
+  --c-primary: #a4161a;
+  --c-primary-2: #c9242b;
+  --c-primary-dark: #7d0e12;
+  --c-glow: rgba(164,22,26,0.18);
+  --c-glow-soft: rgba(164,22,26,0.08);
+  --c-text-glow: rgba(164,22,26,0.25);
+  --c-border: rgba(20,20,20,0.16);
+  --c-border-soft: rgba(20,20,20,0.09);
+  --c-glass-bg: rgba(255,255,255,0.70);
+  --c-glass-bright: rgba(255,255,255,0.88);
+  --c-bg: #f6f5f2;
+  --c-bg-alt: #eceae6;
+  --c-text: #151515;
+  --c-muted: rgba(21,21,21,0.60);
+  --background: 40 20% 96%;
+  --foreground: 0 0% 8%;
+  --border: 30 8% 82%;
+  --input: 30 8% 87%;
+  --card: 40 20% 98%;
+  --card-foreground: 0 0% 8%;
+  --primary: 357 76% 36%;
+  --primary-foreground: 0 0% 100%;
+}
+
+:root[data-theme="red"] {
+  --c-primary: #e33a40;
+  --c-primary-2: #ff656b;
+  --c-primary-dark: #a4161a;
+  --c-glow: rgba(227,58,64,0.28);
+  --c-glow-soft: rgba(227,58,64,0.11);
+  --c-text-glow: rgba(227,58,64,0.34);
+  --c-border: rgba(255,112,118,0.22);
+  --c-border-soft: rgba(255,112,118,0.11);
+  --c-glass-bg: rgba(30,7,8,0.72);
+  --c-glass-bright: rgba(49,10,12,0.84);
+  --c-bg: #0d0304;
+  --c-bg-alt: #190607;
+  --c-text: #fff7f6;
+  --c-muted: rgba(255,247,246,0.58);
+  --background: 0 45% 3%;
+  --foreground: 0 20% 97%;
+  --border: 0 45% 16%;
+  --input: 0 35% 12%;
+  --card: 0 40% 5%;
+  --card-foreground: 0 20% 97%;
+  --primary: 357 76% 55%;
+  --primary-foreground: 0 0% 100%;
+}
+
+/* The clean reference-inspired mode: soft, slow light instead of visual noise. */
+.soft-background {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  background: var(--c-bg);
+  transition: background 0.6s ease;
+}
+.soft-background__wash {
+  position: absolute;
+  width: min(56vw, 760px);
+  height: min(56vw, 760px);
+  border-radius: 999px;
+  filter: blur(80px);
+  opacity: 0.48;
+  animation: softDrift 18s ease-in-out infinite alternate;
+}
+.soft-background__wash--one {
+  top: -22%;
+  left: -10%;
+  background: radial-gradient(circle, var(--c-primary) 0%, transparent 68%);
+}
+.soft-background__wash--two {
+  right: -18%;
+  bottom: -28%;
+  opacity: 0.25;
+  animation-delay: -7s;
+  background: radial-gradient(circle, var(--c-primary-2) 0%, transparent 68%);
+}
+.soft-background__grid {
+  position: absolute;
+  inset: 0;
+  opacity: 0.035;
+  background-image: linear-gradient(var(--c-text) 1px, transparent 1px),
+    linear-gradient(90deg, var(--c-text) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: linear-gradient(to bottom, black, transparent 85%);
+}
+.soft-background__grain,
+.soft-background__grain::after {
+  position: absolute;
+  inset: 0;
+}
+.soft-background__grain {
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
+}
+@keyframes softDrift {
+  0% { transform: translate3d(-2%, -1%, 0) scale(0.96); }
+  100% { transform: translate3d(8%, 6%, 0) scale(1.08); }
+}
+
+/* Keep the white mode readable across existing sections that use white utility
+   classes from the original dark design. */
+[data-theme="white"] .text-white,
+[data-theme="white"] [class*="text-white/"] {
+  color: var(--c-text) !important;
+}
+[data-theme="white"] .btn-primary,
+[data-theme="white"] .btn-primary .text-white,
+[data-theme="white"] .btn-primary.text-white {
+  color: #fff !important;
+}
+[data-theme="white"] [class*="border-white"] {
+  border-color: var(--c-border-soft) !important;
+}
+[data-theme="white"] input::placeholder,
+[data-theme="white"] textarea::placeholder {
+  color: rgba(21,21,21,0.38) !important;
+}
+[data-theme="white"] .gradient-text {
+  background: linear-gradient(135deg, #171717 5%, var(--c-primary-2) 52%, var(--c-primary) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.text-theme-strong { color: var(--c-text); }
+.text-theme-muted { color: var(--c-muted); }
+.border-theme { border-color: var(--c-border-soft); }
+.hover\:bg-theme-soft:hover { background: var(--c-glow-soft); }
+
+/* Reduce the visual density of the legacy glass treatment. */
+.glass,
+.glass-bright {
+  box-shadow: 0 16px 50px rgba(0,0,0,0.08);
+  transition: background 0.45s ease, border-color 0.45s ease, box-shadow 0.3s ease;
+}
+[data-theme="white"] .glass,
+[data-theme="white"] .glass-bright {
+  box-shadow: 0 14px 40px rgba(35,30,24,0.06);
+}
