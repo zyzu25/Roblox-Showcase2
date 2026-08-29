@@ -2,3 +2,4 @@
 - [MagneticButton fix](magnetic-button-fix.md) — Renders via rAF loop with 0.12 lerp, velocity threshold to prevent micro-jitters. No more `setState` on every mousemove.
 - [Liquid background](liquid-background.md) — WebGL FBM domain-warp shader with CSS radial-gradient fallback. Body must be transparent or canvas is hidden.
 - [Portfolio build environment](portfolio-build-environment.md) — Manual Vite builds require both PORT and BASE_PATH, matching the artifact workflow variables.
+- [Loading screen branding](loading-screen-branding.md) — Keep the MYSTICFUSION7X signature splash separate from selectable site themes and community branding.

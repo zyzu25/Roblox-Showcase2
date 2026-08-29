@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-export type Theme = "black" | "white" | "red";
+export type Theme = "purple" | "black" | "white" | "red";
 
 interface ThemeCtxValue {
   theme: Theme;
@@ -8,16 +8,16 @@ interface ThemeCtxValue {
 }
 
 const ThemeCtx = createContext<ThemeCtxValue>({
-  theme: "black",
+  theme: "purple",
   setTheme: () => {},
 });
 
 function readTheme(): Theme {
   if (typeof window !== "undefined") {
     const stored = localStorage.getItem("portfolio-theme");
-    if (stored === "white" || stored === "red") return stored;
+    if (stored === "purple" || stored === "white" || stored === "red" || stored === "black") return stored;
   }
-  return "black";
+  return "purple";
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {

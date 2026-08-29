@@ -863,6 +863,41 @@ body {
   --primary-foreground: 0 0% 5%;
 }
 
+:root[data-theme="purple"] {
+  --c-primary: #e000ff;
+  --c-primary-2: #9b5cff;
+  --c-primary-dark: #4b2dff;
+  --c-glow: rgba(210,0,255,0.52);
+  --c-glow-soft: rgba(130,35,255,0.20);
+  --c-text-glow: rgba(224,0,255,0.68);
+  --c-border: rgba(194,78,255,0.34);
+  --c-border-soft: rgba(168,64,255,0.17);
+  --c-glass-bg: rgba(13,3,31,0.72);
+  --c-glass-bright: rgba(25,7,57,0.84);
+  --c-bg: #07000d;
+  --c-bg-alt: #11001f;
+  --c-text: #fbf3ff;
+  --c-muted: rgba(251,243,255,0.58);
+  --c-blob-1: rgba(224,0,255,0.68);
+  --c-blob-2: rgba(68,44,255,0.62);
+  --c-blob-3: rgba(190,20,240,0.28);
+  --c-blob-4: rgba(35,7,130,0.34);
+  --c-blob-5: rgba(114,35,220,0.28);
+  --c-orb-r: 224; --c-orb-g: 0; --c-orb-b: 255;
+  --c-orb2-r: 68; --c-orb2-g: 44; --c-orb2-b: 255;
+  --c-orb3-r: 190; --c-orb3-g: 20; --c-orb3-b: 240;
+  --c-orb4-r: 35; --c-orb4-g: 7; --c-orb4-b: 130;
+  --c-orb5-r: 114; --c-orb5-g: 35; --c-orb5-b: 220;
+  --background: 270 70% 3%;
+  --foreground: 280 30% 97%;
+  --border: 270 55% 16%;
+  --input: 270 45% 12%;
+  --card: 270 45% 5%;
+  --card-foreground: 280 30% 97%;
+  --primary: 292 100% 50%;
+  --primary-foreground: 0 0% 100%;
+}
+
 :root[data-theme="white"] {
   --c-primary: #a4161a;
   --c-primary-2: #c9242b;

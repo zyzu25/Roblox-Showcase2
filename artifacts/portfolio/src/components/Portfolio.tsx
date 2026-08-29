@@ -5,12 +5,11 @@ import { AnimatedText } from "./AnimatedText";
 import { X, ZoomIn } from "lucide-react";
 
 const SCREENSHOTS: Record<string, string[]> = {
-  "Roleplay": [
+  "VARIOUS ROLEPLAY UIs": [
     "/images/roleplay/citation.png",
     "/images/roleplay/incident-report.png",
     "/images/roleplay/surveillance-report.png",
     "/images/roleplay/notifications.png",
-    "/images/roleplay/shop-interface.png",
   ],
   "Fort Benning": [
     "/images/ui/image_1782699714758.png", // Loading Screen
@@ -45,14 +44,16 @@ const SCREENSHOTS: Record<string, string[]> = {
     "/images/ui/image_1782699117451.png", // Inventory (TTX)
     "/images/ui/image_1782699122523.png", // Settings (TTX)
     "/images/ui/TeamSelection_1782699662023.png", // Team Selection (Vanguard)
+    "/images/roleplay/shop-interface.png", // Shop Interface
+    "/images/roleplay/request-feature.png", // Request a Feature
   ],
 };
 
 const projects = [
   {
-    game: "Roleplay",
+    game: "VARIOUS ROLEPLAY UIs",
     category: "Roleplay",
-    screens: ["Citation", "Incident Report", "Surveillance Report", "Notifications", "Shop Interface"],
+    screens: ["Citation", "Incident Report", "Surveillance Report", "Notifications"],
     desc: "",
     tag: "",
   },
@@ -80,9 +81,9 @@ const projects = [
   {
     game: "Various Clients",
     category: "Mixed",
-    screens: ["Anime UI", "Car Shop UI", "Daily Rewards", "Redeem Codes", "Leaderboard", "Quests", "Kill Feed", "Gloves Shop", "Inventory", "Settings", "Team Selection"],
+    screens: ["Anime UI", "Car Shop UI", "Daily Rewards", "Redeem Codes", "Leaderboard", "Quests", "Kill Feed", "Gloves Shop", "Inventory", "Settings", "Team Selection", "Shop Interface", "Request a Feature"],
     desc: "Standalone commissions including anime interfaces, car shop, daily rewards, redeem codes, leaderboards, quests, kill feed, shop UIs, and team selection systems.",
-    tag: "11 Screens",
+    tag: "13 Screens",
   },
 ];
 
@@ -188,7 +189,8 @@ export function Portfolio() {
       }
     };
     const preventAssetAction = (e: Event) => {
-      if ((e.target as HTMLElement | null)?.closest('#portfolio img')) {
+      const target = e.target;
+      if (target instanceof Element && target.closest('#portfolio img')) {
         e.preventDefault();
       }
     };

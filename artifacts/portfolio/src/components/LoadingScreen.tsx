@@ -98,23 +98,6 @@ const THEMES: LoadingTheme[] = [
     webglBg:   [0.010, 0.010, 0.010],
   },
   {
-    name: "novara",
-    bg: "linear-gradient(160deg, #07000d 0%, #11001f 52%, #08052b 100%)",
-    glow: "radial-gradient(ellipse at 50% 55%, rgba(210,0,255,0.28) 0%, rgba(45,25,220,0.12) 42%, transparent 70%)",
-    particleHue: [282, 78],
-    scanColor: "rgba(236,72,255,0.55)",
-    progressFrom: "#e000ff",
-    progressTo: "#536dff",
-    progressGlow: "rgba(218,0,255,0.72)",
-    cornerColor: "rgba(226,76,255,0.30)",
-    taglineColor: "rgba(236,183,255,0.58)",
-    lineColor: "rgba(196,110,255,0.58)",
-    filterStyle: "none",
-    webglCol1: [0.92, 0.06, 0.86],
-    webglCol2: [0.10, 0.04, 0.56],
-    webglBg:   [0.015, 0.002, 0.035],
-  },
-  {
     name: "gold",
     bg: "linear-gradient(160deg, #060400 0%, #100c00 50%, #1a1200 100%)",
     glow: "radial-gradient(ellipse at 50% 55%, rgba(160,100,0,0.24) 0%, transparent 65%)",
@@ -283,7 +266,7 @@ function setupWebGL(
 export function LoadingScreen({ onDone }: { onDone: () => void }) {
   // The shared link card and the first page load should always be recognizable:
   // dark background, centered signature, and the liquid flow texture.
-  const [theme] = useState<LoadingTheme>(() => THEMES.find(item => item.name === "novara") ?? THEMES[0]);
+  const [theme] = useState<LoadingTheme>(() => THEMES.find(item => item.name === "dark") ?? THEMES[0]);
   const [animType] = useState<"liquid" | "fire">("liquid");
   const [phase, setPhase]     = useState<"intro" | "signature" | "name" | "outro">("intro");
   const [visible, setVisible] = useState(true);
@@ -507,7 +490,7 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
             }}
           />
 
-           {/* Novara UGC brand mark */}
+           {/* Signature */}
           <AnimatePresence>
             {(phase === "signature" || phase === "name") && (
               <motion.div
@@ -519,16 +502,13 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
                 style={{ position: "relative", zIndex: 10 }}
               >
                 <img
-                  src="/images/novara-ugc.png"
-                  alt="NOVARA UGC"
+                  src="/signature.png"
+                  alt="MYSTICFUSION7X"
                   style={{
-                    width: "min(300px, 58vw)", height: "auto",
-                    borderRadius: 28,
-                    boxShadow: "0 0 48px rgba(210,0,255,0.28), 0 0 100px rgba(60,40,255,0.18)",
+                    width: "min(480px, 72vw)", height: "auto",
                     filter: theme.filterStyle,
                     userSelect: "none", pointerEvents: "none", display: "block",
                   }}
-                  onContextMenu={(e) => e.preventDefault()}
                   draggable={false}
                 />
                 <div style={{
@@ -556,7 +536,7 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
                   textTransform: "uppercase", color: theme.taglineColor,
                   fontFamily: "var(--font-display, sans-serif)", fontWeight: 600,
                 }}>
-                  NOVARA UGC · Roblox Community
+                  MYSTICFUSION7X · Roblox UI Design
                 </p>
               </motion.div>
             )}
