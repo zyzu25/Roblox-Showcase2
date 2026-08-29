@@ -10,12 +10,13 @@ import { ChevronDown, Palette, Droplets, Copy, Check, Menu, X } from "lucide-rea
 import { useDiscordAvatar } from "@/hooks/useDiscordAvatar";
 
 const THEME_CONFIG: Record<Theme, { bg: string; label: string; dot: string }> = {
+  purple: { bg: "linear-gradient(135deg, #e000ff, #4b2dff)", label: "Purple", dot: "#e000ff" },
   black:  { bg: "#090909", label: "Black",  dot: "#777777" },
   red:    { bg: "#CC1A1A", label: "Red",    dot: "#CC1A1A" },
   white:  { bg: "#d4d4d4", label: "White",  dot: "#e8e8e8" },
 };
 
-const THEME_ORDER: Theme[] = ["black", "white", "red"];
+const THEME_ORDER: Theme[] = ["purple", "black", "white", "red"];
 
 const DISCORD_TAG = "mysticfusion7x";
 
@@ -218,7 +219,7 @@ export function Navbar() {
                   {/* Theme */}
                   <div className="px-4 pt-4 pb-3">
                     <p className="text-[10px] font-semibold uppercase tracking-widest text-white/25 mb-3">Theme</p>
-                    <div className="grid grid-cols-3 gap-1.5">
+                    <div className="grid grid-cols-4 gap-1.5">
                       {THEME_ORDER.map(t => {
                         const cfg = THEME_CONFIG[t];
                         const active = theme === t;

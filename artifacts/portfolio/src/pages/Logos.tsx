@@ -279,11 +279,12 @@ const orderFields = [
 ];
 
 const THEME_CONFIG: Record<Theme, { bg: string; label: string; dot: string; gradient?: string }> = {
+  purple: { bg: "#16052f", label: "Purple", dot: "#e000ff", gradient: "linear-gradient(135deg, #e000ff, #4b2dff)" },
   black:  { bg: "#090909", label: "Black",  dot: "#777777" },
   white:  { bg: "#d4d4d4", label: "White",  dot: "#e8e8e8" },
   red:    { bg: "#CC1A1A", label: "Red",    dot: "#CC1A1A" },
 };
-const THEME_ORDER: Theme[] = ["black", "white", "red"];
+const THEME_ORDER: Theme[] = ["purple", "black", "white", "red"];
 
 const LOGO_ANIMATIONS = [
   { id: "liquid" as const, label: "Liquid Flow", icon: Droplets, desc: "Dark, moving texture" },
