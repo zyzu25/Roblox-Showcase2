@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { BadgeCheck, Users, ExternalLink, Star } from "lucide-react";
+import { BadgeCheck, ExternalLink } from "lucide-react";
 
 export function SupportSection() {
   return (
@@ -41,15 +41,21 @@ export function SupportSection() {
                 className="glass rounded-2xl p-6 flex items-center gap-5 transition-all duration-300 group-hover:border-[rgba(var(--c-primary-rgb,124,58,237),0.35)]"
                 style={{ minWidth: 300 }}
               >
-                {/* Icon */}
+                {/* Novara brand mark */}
                 <div
                   className="w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0"
                   style={{
-                    background: "linear-gradient(135deg, var(--c-primary), var(--c-primary-dark, #5b21b6))",
-                    boxShadow: "0 0 24px var(--c-glow-soft)",
+                    background: "linear-gradient(135deg, #e000ff, #4b2dff)",
+                    boxShadow: "0 0 24px rgba(210,0,255,0.28)",
                   }}
                 >
-                  <Users className="w-7 h-7 text-white" />
+                  <img
+                    src="/images/novara-ugc.png"
+                    alt="NOVARA UGC"
+                    className="w-full h-full rounded-xl object-cover"
+                    draggable={false}
+                    onContextMenu={(e) => e.preventDefault()}
+                  />
                 </div>
 
                 <div className="flex-1 min-w-0">

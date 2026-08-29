@@ -5,6 +5,13 @@ import { AnimatedText } from "./AnimatedText";
 import { X, ZoomIn } from "lucide-react";
 
 const SCREENSHOTS: Record<string, string[]> = {
+  "Roleplay": [
+    "/images/roleplay/citation.png",
+    "/images/roleplay/incident-report.png",
+    "/images/roleplay/surveillance-report.png",
+    "/images/roleplay/notifications.png",
+    "/images/roleplay/shop-interface.png",
+  ],
   "Fort Benning": [
     "/images/ui/image_1782699714758.png", // Loading Screen
     "/images/ui/image_1782699695211.png", // Main Menu
@@ -42,6 +49,13 @@ const SCREENSHOTS: Record<string, string[]> = {
 };
 
 const projects = [
+  {
+    game: "Roleplay",
+    category: "Roleplay",
+    screens: ["Citation", "Incident Report", "Surveillance Report", "Notifications", "Shop Interface"],
+    desc: "",
+    tag: "",
+  },
   {
     game: "Fort Benning",
     category: "Military RP",
@@ -95,7 +109,8 @@ function Lightbox({ src, alt, onClose }: { src: string; alt: string; onClose: ()
           src={src}
           alt={alt}
           className="max-w-full max-h-[85vh] rounded-xl object-contain select-none"
-          style={{ pointerEvents: 'none', userSelect: 'none', WebkitUserSelect: 'none' }}
+          style={{ pointerEvents: 'none', userSelect: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none' }}
+          onContextMenu={(e) => e.preventDefault()}
           draggable={false}
         />
         <button
@@ -133,10 +148,11 @@ function ScreenSlot({
       <img
         src={src}
         alt={alt}
-        className="w-full h-full object-cover bg-black/40"
+        className="w-full h-full object-cover bg-black/40 asset-protected"
         draggable={false}
         onContextMenu={(e) => e.preventDefault()}
-        style={{ userSelect: 'none', WebkitUserSelect: 'none', pointerEvents: 'none' }}
+        onDragStart={(e) => e.preventDefault()}
+        style={{ userSelect: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none', pointerEvents: 'none' }}
       />
       <div
         className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100"
@@ -162,9 +178,30 @@ export function Portfolio() {
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') closeLightbox();
+      const key = e.key.toLowerCase();
+      const modified = e.ctrlKey || e.metaKey;
+      if (
+        (modified && ['s', 'u', 'p'].includes(key)) ||
+        (modified && e.shiftKey && ['i', 'j', 'c'].includes(key))
+      ) {
+        e.preventDefault();
+      }
+    };
+    const preventAssetAction = (e: Event) => {
+      if ((e.target as HTMLElement | null)?.closest('#portfolio img')) {
+        e.preventDefault();
+      }
     };
     window.addEventListener('keydown', handleKey);
-    return () => window.removeEventListener('keydown', handleKey);
+    document.addEventListener('contextmenu', preventAssetAction);
+    document.addEventListener('dragstart', preventAssetAction);
+    document.addEventListener('selectstart', preventAssetAction);
+    return () => {
+      window.removeEventListener('keydown', handleKey);
+      document.removeEventListener('contextmenu', preventAssetAction);
+      document.removeEventListener('dragstart', preventAssetAction);
+      document.removeEventListener('selectstart', preventAssetAction);
+    };
   }, [closeLightbox]);
 
   return (
@@ -210,15 +247,19 @@ export function Portfolio() {
               <div className="p-6 md:p-8">
                 <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
                   <div>
-                    <div className="flex items-center gap-3 mb-1">
+                     <div className="flex items-center gap-3 mb-1">
                       <h3 className="text-xl font-bold text-white">{project.game}</h3>
-                      <span className="text-xs px-2.5 py-0.5 rounded-full font-medium text-white/55 pill-badge">
-                        {project.tag}
-                      </span>
+                       {project.tag && (
+                         <span className="text-xs px-2.5 py-0.5 rounded-full font-medium text-white/55 pill-badge">
+                           {project.tag}
+                         </span>
+                       )}
                     </div>
                     <p className="text-xs text-white/30 uppercase tracking-widest">{project.category}</p>
                   </div>
-                  <p className="text-sm text-white/40 leading-relaxed max-w-md">{project.desc}</p>
+                   {project.desc && (
+                     <p className="text-sm text-white/40 leading-relaxed max-w-md">{project.desc}</p>
+                   )}
                 </div>
 
                 <div
