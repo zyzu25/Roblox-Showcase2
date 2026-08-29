@@ -6,30 +6,23 @@ import { useAnimation } from "./AnimationContext";
 import { MagneticButton } from "./MagneticButton";
 import { AvailableHours } from "./AvailableHours";
 import { ViewCounter } from "./ViewCounter";
-import { ChevronDown, Palette, Flame, Droplets, Sparkles, Waves, Copy, Check } from "lucide-react";
+import { ChevronDown, Palette, Droplets, Copy, Check, Menu, X } from "lucide-react";
 import { useDiscordAvatar } from "@/hooks/useDiscordAvatar";
 
 const THEME_CONFIG: Record<Theme, { bg: string; label: string; dot: string }> = {
-  purple: { bg: "#4000ff", label: "Purple", dot: "#7c3aff" },
-  dark:   { bg: "#444444", label: "Dark",   dot: "#888888" },
+  black:  { bg: "#090909", label: "Black",  dot: "#777777" },
   red:    { bg: "#CC1A1A", label: "Red",    dot: "#CC1A1A" },
   white:  { bg: "#d4d4d4", label: "White",  dot: "#e8e8e8" },
-  light:  { bg: "#B2D5E5", label: "Light",  dot: "#B2D5E5" },
-  gold:   { bg: "#d4a017", label: "Gold",   dot: "#d4a017" },
 };
 
-const THEME_ORDER: Theme[] = ["dark", "purple", "red", "white", "light", "gold"];
+const THEME_ORDER: Theme[] = ["black", "white", "red"];
 
 const DISCORD_TAG = "mysticfusion7x";
 
 const NAV_LINKS = [
-  { label: "About",     id: "about"     },
   { label: "Work",      id: "portfolio" },
-  { label: "Services",  id: "services"  },
   { label: "Pricing",   id: "pricing"   },
-  { label: "Importing", id: "importing" },
-  { label: "Partner",   id: "promo"     },
-  { label: "Policies",  id: "policies"  },
+  { label: "Reviews",   id: "reviews"   },
   { label: "FAQ",       id: "faq"       },
 ];
 
@@ -37,6 +30,7 @@ export function Navbar() {
   const [hidden,   setHidden]   = useState(false);
   const [dropOpen, setDropOpen] = useState(false);
   const [copied,   setCopied]   = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const { scrollY }                 = useScroll();
   const [, navigate]                = useLocation();
   const { theme, setTheme }         = useTheme();
@@ -59,6 +53,7 @@ export function Navbar() {
 
   const scrollTo = (id: string) => {
     setDropOpen(false);
+    setMobileOpen(false);
     const el = document.getElementById(id);
     if (el) el.scrollIntoView({ behavior: "smooth" });
   };
@@ -75,10 +70,8 @@ export function Navbar() {
   };
 
   const ANIMATIONS = [
-    { id: "liquid"    as const, label: "Liquid Flow",  icon: Droplets, desc: "WebGL domain warp"  },
-    { id: "fire"      as const, label: "Calming Fire", icon: Flame,    desc: "Rising embers"      },
-    { id: "sea"       as const, label: "Ocean Waves",  icon: Waves,    desc: "WebGL ocean shader" },
-    { id: "waterfall" as const, label: "Waterfall",    icon: Sparkles, desc: "Flowing water"      },
+    { id: "liquid" as const, label: "Liquid Flow", icon: Droplets, desc: "Dark, moving texture" },
+    { id: "soft"   as const, label: "Soft Light",  icon: Palette,  desc: "Quiet editorial glow" },
   ];
 
   return (
@@ -102,7 +95,7 @@ export function Navbar() {
         style={{ background: "linear-gradient(90deg, transparent 0%, var(--c-primary) 35%, var(--c-primary-2, #a855f7) 65%, transparent 100%)", opacity: 0.55, boxShadow: "0 0 8px var(--c-glow-soft)" }}
       />
 
-      <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 h-16 flex items-center justify-between gap-5">
 
         {/* Logo */}
         <motion.button
@@ -116,15 +109,12 @@ export function Navbar() {
             style={{ boxShadow: "0 0 18px var(--c-glow)", border: "1px solid var(--c-border-soft)" }}>
             <img src={avatar} alt="MYSTICFUSION7X" className="w-full h-full object-cover" />
           </div>
-          <span
-            className="font-display font-bold text-base tracking-tight"
-            style={{ background: "linear-gradient(90deg, #fff 0%, rgba(255,255,255,0.7) 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}
-          >
+          <span className="font-display font-bold text-base tracking-tight text-theme-strong">
             MYSTICFUSION7X
           </span>
         </motion.button>
 
-        <nav className="hidden md:flex items-center gap-0.5">
+        <nav className="hidden lg:flex items-center gap-0.5">
           {NAV_LINKS.map((item) => (
             <motion.button
               key={item.id}
@@ -152,7 +142,7 @@ export function Navbar() {
           {/* Logos nav */}
           <motion.button
             onClick={() => navigate("/logos")}
-            className="px-3 py-2 text-[13px] font-semibold transition-colors rounded-lg"
+            className="px-3 py-2 text-[13px] font-semibold transition-colors rounded-lg text-accent"
             style={{ color: "var(--c-primary)" }}
             whileHover={{ scale: 1.04 }}
             whileTap={{ scale: 0.96 }}
@@ -167,7 +157,7 @@ export function Navbar() {
             whileHover={{ scale: 1.06 }}
             whileTap={{ scale: 0.94 }}
             title={copied ? "Copied!" : `Copy Discord: ${DISCORD_TAG}`}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ml-1"
+            className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all ml-1"
             style={{
               background: copied ? "var(--c-glow-soft)" : "rgba(255,255,255,0.05)",
               border: copied ? "1px solid var(--c-border)" : "1px solid rgba(255,255,255,0.08)",
@@ -191,7 +181,7 @@ export function Navbar() {
           </motion.button>
 
           {/* View counter */}
-          <div className="ml-1">
+          <div className="hidden xl:block ml-1">
             <ViewCounter />
           </div>
 
@@ -244,7 +234,7 @@ export function Navbar() {
                             <div style={{
                               background: cfg.bg,
                               boxShadow: active ? `0 0 10px ${cfg.dot}` : "none",
-                              border: t === "dark" ? "1px solid rgba(255,255,255,0.2)" : "none",
+                              border: t === "black" ? "1px solid rgba(255,255,255,0.2)" : "none",
                               transform: active ? "scale(1.2)" : "scale(1)",
                               transition: "all 0.25s ease",
                               width: 18, height: 18, borderRadius: "50%", flexShrink: 0,
@@ -299,7 +289,7 @@ export function Navbar() {
             </AnimatePresence>
           </div>
 
-          <div className="ml-1.5">
+          <div className="hidden xl:block ml-1.5">
             <AvailableHours />
           </div>
 
@@ -311,7 +301,51 @@ export function Navbar() {
             Commission Me
           </MagneticButton>
         </nav>
+
+        <div className="lg:hidden flex items-center gap-2">
+          <ViewCounter />
+          <button
+            type="button"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
+            onClick={() => setMobileOpen(open => !open)}
+            className="w-10 h-10 rounded-full flex items-center justify-center border border-theme text-theme-muted"
+          >
+            {mobileOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+          </button>
+        </div>
       </div>
+
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            className="lg:hidden overflow-hidden border-t border-theme"
+          >
+            <div className="px-5 py-4 grid grid-cols-2 gap-2">
+              {[...NAV_LINKS, { label: "Logos", id: "logos" }].map(item => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => item.id === "logos" ? (setMobileOpen(false), navigate("/logos")) : scrollTo(item.id)}
+                  className="text-left px-3 py-3 rounded-xl text-sm text-theme-muted hover:text-theme-strong hover:bg-theme-soft transition-colors"
+                >
+                  {item.label}
+                </button>
+              ))}
+              <button
+                type="button"
+                onClick={() => scrollTo("contact")}
+                className="col-span-2 btn-primary rounded-xl py-3 text-sm font-semibold text-white"
+              >
+                Commission Me
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.header>
   );
 }

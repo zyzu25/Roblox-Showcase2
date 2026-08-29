@@ -1,3 +1,4 @@
 - [Theme system](theme-system.md) — CSS-variable-based theme system with purple (default), light, and dark themes. All colors via `var(--c-primary)` etc.
 - [MagneticButton fix](magnetic-button-fix.md) — Renders via rAF loop with 0.12 lerp, velocity threshold to prevent micro-jitters. No more `setState` on every mousemove.
 - [Liquid background](liquid-background.md) — WebGL FBM domain-warp shader with CSS radial-gradient fallback. Body must be transparent or canvas is hidden.
+- [Portfolio build environment](portfolio-build-environment.md) — Manual Vite builds require both PORT and BASE_PATH, matching the artifact workflow variables.

@@ -26,6 +26,7 @@ const RETURN_MESSAGES = [
 export function ReturnGreeting() {
   const [show, setShow] = useState(false);
   const [msg, setMsg]   = useState("");
+  const avatar = useDiscordAvatar();
 
   useEffect(() => {
     const today = new Date().toDateString();
@@ -64,7 +65,7 @@ export function ReturnGreeting() {
           >
             <div className="w-7 h-7 rounded-full overflow-hidden flex-shrink-0 mt-0.5"
               style={{ boxShadow: "0 0 10px var(--c-glow-soft)" }}>
-              <img src={useDiscordAvatar()} alt="MysticFusion7x" className="w-full h-full object-cover" />
+              <img src={avatar} alt="MysticFusion7x" className="w-full h-full object-cover" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-[10px] font-semibold text-white/30 uppercase tracking-wider mb-0.5">MYSTICFUSION7X</p>

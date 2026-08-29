@@ -6,6 +6,7 @@ import { GlobalBackground } from "@/components/GlobalBackground";
 import { FireBackground } from "@/components/FireBackground";
 import { SeaBackground } from "@/components/SeaBackground";
 import { WaterfallBackground } from "@/components/WaterfallBackground";
+import { SoftBackground } from "@/components/SoftBackground";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { TiltCard } from "@/components/TiltCard";
 import { MagneticButton } from "@/components/MagneticButton";
@@ -278,20 +279,15 @@ const orderFields = [
 ];
 
 const THEME_CONFIG: Record<Theme, { bg: string; label: string; dot: string; gradient?: string }> = {
-  purple: { bg: "#4000ff", label: "Purple", dot: "#7c3aff" },
+  black:  { bg: "#090909", label: "Black",  dot: "#777777" },
   white:  { bg: "#d4d4d4", label: "White",  dot: "#e8e8e8" },
-  light:  { bg: "#B2D5E5", label: "Light",  dot: "#B2D5E5" },
-  dark:   { bg: "#444444", label: "Dark",   dot: "#666666" },
-  gold:   { bg: "#d4a017", label: "Gold",   dot: "#d4a017" },
   red:    { bg: "#CC1A1A", label: "Red",    dot: "#CC1A1A" },
 };
-const THEME_ORDER: Theme[] = ["dark", "purple", "red", "white", "light", "gold"];
+const THEME_ORDER: Theme[] = ["black", "white", "red"];
 
 const LOGO_ANIMATIONS = [
-  { id: "liquid"    as const, label: "Liquid Flow",  icon: Droplets, desc: "WebGL domain warp"  },
-  { id: "fire"      as const, label: "Calming Fire", icon: Flame,    desc: "Rising embers"      },
-  { id: "sea"       as const, label: "Ocean Waves",  icon: Waves,    desc: "WebGL ocean shader" },
-  { id: "waterfall" as const, label: "Waterfall",    icon: Sparkles, desc: "Flowing water"      },
+  { id: "liquid" as const, label: "Liquid Flow", icon: Droplets, desc: "Dark, moving texture" },
+  { id: "soft"   as const, label: "Soft Light",  icon: Palette,  desc: "Quiet editorial glow" },
 ];
 
 function LogosNavbar({ onContact }: { onContact: () => void }) {
@@ -394,7 +390,7 @@ function LogosNavbar({ onContact }: { onContact: () => void }) {
                               style={{
                                 background: cfg.gradient ?? cfg.bg,
                                 boxShadow: active ? `0 0 10px ${cfg.dot}` : "none",
-                                border: t === "dark" ? "1px solid rgba(255,255,255,0.2)" : "none",
+                                border: t === "black" ? "1px solid rgba(255,255,255,0.2)" : "none",
                                 transform: active ? "scale(1.2)" : "scale(1)",
                                 transition: "all 0.25s ease",
                                 width: "18px",
@@ -478,9 +474,7 @@ export default function Logos() {
   };
 
   function BgComponent() {
-    if (animation === "fire")      return <FireBackground />;
-    if (animation === "sea")       return <SeaBackground />;
-    if (animation === "waterfall") return <WaterfallBackground />;
+    if (animation === "soft") return <SoftBackground />;
     return <GlobalBackground />;
   }
 

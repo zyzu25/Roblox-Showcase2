@@ -1,25 +1,35 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-export type Theme = "purple" | "light" | "dark" | "gold" | "red" | "white";
+export type Theme = "black" | "white" | "red";
 
-const ThemeCtx = createContext<{
+interface ThemeCtxValue {
   theme: Theme;
   setTheme: (t: Theme) => void;
-}>({ theme: "dark", setTheme: () => {} });
+}
 
-const VALID_THEMES: Theme[] = ["purple", "light", "dark", "gold", "red", "white"];
+const ThemeCtx = createContext<ThemeCtxValue>({
+  theme: "black",
+  setTheme: () => {},
+});
+
+function readTheme(): Theme {
+  if (typeof window !== "undefined") {
+    const stored = localStorage.getItem("portfolio-theme");
+    if (stored === "white" || stored === "red") return stored;
+  }
+  return "black";
+}
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>(() => {
-    if (typeof window !== "undefined") {
-      const stored = localStorage.getItem("portfolio-theme");
-      if (VALID_THEMES.includes(stored as Theme)) return stored as Theme;
-    }
-    return "dark";
-  });
+  const [theme, setThemeState] = useState<Theme>(readTheme);
+
+  const setTheme = (next: Theme) => {
+    setThemeState(next);
+    localStorage.setItem("portfolio-theme", next);
+    document.documentElement.setAttribute("data-theme", next);
+  };
 
   useEffect(() => {
-    localStorage.setItem("portfolio-theme", theme);
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
 
