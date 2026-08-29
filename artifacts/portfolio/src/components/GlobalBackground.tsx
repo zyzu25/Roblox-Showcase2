@@ -185,6 +185,22 @@ const BG_BASE: Record<string, string> = {
   purple: "#0b0120", black: "#050505", red: "#090303", white: "#f4f3f1",
 };
 
+type RGB = [number, number, number];
+type SmoothPalette = { bg: RGB; c1: RGB; c2: RGB; c3: RGB; c4: RGB; c5: RGB; sat: number; bri: number };
+
+function paletteFromConfig(config: (typeof THEMES)[keyof typeof THEMES]): SmoothPalette {
+  return {
+    bg: hexToRgb(config.bg),
+    c1: hexToRgb(config.c1),
+    c2: hexToRgb(config.c2),
+    c3: hexToRgb(config.c3),
+    c4: hexToRgb(config.c4),
+    c5: hexToRgb(config.c5),
+    sat: config.sat,
+    bri: config.bri,
+  };
+}
+
 const BLOB_CONFIG = [
   { kf: "blobDrift1", delay: "0s",   dur: "14s", size: "62%", top: "8%",  left: "52%" },
   { kf: "blobDrift2", delay: "-5s",  dur: "18s", size: "55%", top: "52%", left: "8%"  },
@@ -273,6 +289,7 @@ export function GlobalBackground() {
     resize();
     window.addEventListener("resize", resize);
     window.addEventListener("mousemove", (e) => { mouseRef.current = { x: e.clientX, y: e.clientY }; });
+    const smoothPalette = paletteFromConfig(THEMES[theme] || THEMES.black);
 
     const render = () => {
       const glo = glRef.current; if (!glo) return;
@@ -286,8 +303,22 @@ export function GlobalBackground() {
 
       const t   = (performance.now() - startRef.current) / 1000;
       const cfg = THEMES[themeRef.current] || THEMES.black;
-      const setV3 = (loc: WebGLUniformLocation | null, hex: string) => {
-        const [r, g, b] = hexToRgb(hex);
+      const target = paletteFromConfig(cfg);
+      const blendRgb = (current: RGB, next: RGB) => {
+        current[0] += (next[0] - current[0]) * 0.045;
+        current[1] += (next[1] - current[1]) * 0.045;
+        current[2] += (next[2] - current[2]) * 0.045;
+      };
+      blendRgb(smoothPalette.bg, target.bg);
+      blendRgb(smoothPalette.c1, target.c1);
+      blendRgb(smoothPalette.c2, target.c2);
+      blendRgb(smoothPalette.c3, target.c3);
+      blendRgb(smoothPalette.c4, target.c4);
+      blendRgb(smoothPalette.c5, target.c5);
+      smoothPalette.sat += (target.sat - smoothPalette.sat) * 0.045;
+      smoothPalette.bri += (target.bri - smoothPalette.bri) * 0.045;
+      const setV3 = (loc: WebGLUniformLocation | null, rgb: RGB) => {
+        const [r, g, b] = rgb;
         glo.uniform3f(loc, r, g, b);
       };
       glo.uniform1f(lc.u_time, t);
@@ -296,10 +327,10 @@ export function GlobalBackground() {
         mouseRef.current.x * (canvas.width / window.innerWidth),
         mouseRef.current.y * (canvas.height / window.innerHeight),
       );
-      setV3(lc.u_bg, cfg.bg); setV3(lc.u_col1, cfg.c1); setV3(lc.u_col2, cfg.c2);
-      setV3(lc.u_col3, cfg.c3); setV3(lc.u_col4, cfg.c4); setV3(lc.u_col5, cfg.c5);
-      glo.uniform1f(lc.u_sat, cfg.sat);
-      glo.uniform1f(lc.u_bri, cfg.bri);
+      setV3(lc.u_bg, smoothPalette.bg); setV3(lc.u_col1, smoothPalette.c1); setV3(lc.u_col2, smoothPalette.c2);
+      setV3(lc.u_col3, smoothPalette.c3); setV3(lc.u_col4, smoothPalette.c4); setV3(lc.u_col5, smoothPalette.c5);
+      glo.uniform1f(lc.u_sat, smoothPalette.sat);
+      glo.uniform1f(lc.u_bri, smoothPalette.bri);
       glo.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
       frameRef.current = requestAnimationFrame(render);
     };
@@ -320,6 +351,7 @@ export function GlobalBackground() {
       position: "fixed", top: 0, left: 0, width: "100%", height: "100%",
       zIndex: 0, pointerEvents: "none", overflow: "hidden",
       background: BG_BASE[theme] ?? "#000000",
+      transition: "background 1.2s ease",
     }}>
       {/* CSS blobs — color fallback */}
       {BLOB_CONFIG.map((b, i) => (

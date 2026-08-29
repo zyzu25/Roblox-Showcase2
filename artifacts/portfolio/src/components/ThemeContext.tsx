@@ -1,6 +1,8 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
 export type Theme = "purple" | "black" | "white" | "red";
+const ROTATING_THEMES: Theme[] = ["purple", "black", "red"];
+const THEME_ROTATION_MS = 60_000;
 
 interface ThemeCtxValue {
   theme: Theme;
@@ -32,6 +34,19 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setThemeState(current => {
+        const currentIndex = ROTATING_THEMES.indexOf(current);
+        const next = ROTATING_THEMES[(currentIndex + 1) % ROTATING_THEMES.length];
+        localStorage.setItem("portfolio-theme", next);
+        document.documentElement.setAttribute("data-theme", next);
+        return next;
+      });
+    }, THEME_ROTATION_MS);
+    return () => window.clearInterval(timer);
+  }, []);
 
   return (
     <ThemeCtx.Provider value={{ theme, setTheme }}>

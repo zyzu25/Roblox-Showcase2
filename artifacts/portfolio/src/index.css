@@ -519,6 +519,9 @@
     @apply font-sans antialiased text-foreground;
     background: transparent;
   }
+  html, body, #root {
+    transition: background-color 1.2s ease, color 1.2s ease;
+  }
   h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
 }
 
@@ -899,27 +902,32 @@ body {
 }
 
 :root[data-theme="white"] {
-  --c-primary: #a4161a;
-  --c-primary-2: #c9242b;
-  --c-primary-dark: #7d0e12;
-  --c-glow: rgba(164,22,26,0.18);
-  --c-glow-soft: rgba(164,22,26,0.08);
-  --c-text-glow: rgba(164,22,26,0.25);
-  --c-border: rgba(20,20,20,0.16);
-  --c-border-soft: rgba(20,20,20,0.09);
-  --c-glass-bg: rgba(255,255,255,0.70);
-  --c-glass-bright: rgba(255,255,255,0.88);
-  --c-bg: #f6f5f2;
-  --c-bg-alt: #eceae6;
-  --c-text: #151515;
-  --c-muted: rgba(21,21,21,0.60);
-  --background: 40 20% 96%;
+  --c-primary: #f5f5f2;
+  --c-primary-2: #ffffff;
+  --c-primary-dark: #b7b7b3;
+  --c-glow: rgba(255,255,255,0.38);
+  --c-glow-soft: rgba(255,255,255,0.15);
+  --c-text-glow: rgba(255,255,255,0.55);
+  --c-border: rgba(255,255,255,0.30);
+  --c-border-soft: rgba(255,255,255,0.14);
+  --c-glass-bg: rgba(255,255,255,0.12);
+  --c-glass-bright: rgba(255,255,255,0.22);
+  --c-bg: #ededeb;
+  --c-bg-alt: #d8d8d5;
+  --c-text: #111111;
+  --c-muted: rgba(17,17,17,0.60);
+  --c-blob-1: rgba(255,255,255,0.75);
+  --c-blob-2: rgba(20,20,20,0.22);
+  --c-blob-3: rgba(255,255,255,0.45);
+  --c-blob-4: rgba(0,0,0,0.16);
+  --c-blob-5: rgba(190,190,190,0.34);
+  --background: 0 0% 93%;
   --foreground: 0 0% 8%;
-  --border: 30 8% 82%;
-  --input: 30 8% 87%;
-  --card: 40 20% 98%;
+  --border: 0 0% 76%;
+  --input: 0 0% 82%;
+  --card: 0 0% 96%;
   --card-foreground: 0 0% 8%;
-  --primary: 357 76% 36%;
+  --primary: 0 0% 96%;
   --primary-foreground: 0 0% 100%;
 }
 
