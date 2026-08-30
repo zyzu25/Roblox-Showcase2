@@ -66,7 +66,7 @@ const FS_LIQUID = `
     vec2 warpedUV=uv+0.18*warp;
     vec2 mouseUV=u_mouse/u_res;mouseUV.y=1.0-mouseUV.y;
     float md=length(warpedUV-mouseUV);
-    warpedUV+=(warpedUV-mouseUV)/max(md,0.01)*0.03*smoothstep(0.38,0.0,md);
+    warpedUV+=(warpedUV-mouseUV)/max(md,0.01)*0.055*smoothstep(0.42,0.0,md);
     vec3 col=sampleScene(warpedUV,t);
     float blurR=0.024;
     for(int i=0;i<8;i++){
@@ -86,6 +86,7 @@ const FS_SMOKY = `
   precision mediump float;
   uniform float u_time;
   uniform vec2  u_res;
+  uniform vec2  u_mouse;
   uniform vec3  u_col1;
   uniform vec3  u_col2;
   uniform vec3  u_bg;
@@ -108,12 +109,18 @@ const FS_SMOKY = `
   }
   void main() {
     vec2 uv = gl_FragCoord.xy / u_res;
+    vec2 mouseUV = u_mouse / u_res;
+    mouseUV.y = 1.0 - mouseUV.y;
+    vec2 pointerOffset = (mouseUV - vec2(0.5)) * 0.065;
+    float mouseDistance = length(uv - mouseUV);
+    vec2 flowUV = uv + pointerOffset;
+    flowUV += (uv - mouseUV) * 0.025 * smoothstep(0.5, 0.0, mouseDistance);
     float t = u_time * 0.12;
-    vec2 q = vec2(fbm(uv*1.2 + vec2(0.0, t*0.85)),
-                  fbm(uv*1.2 + vec2(5.2, t*0.73)));
-    vec2 r = vec2(fbm(uv*2.2 + 1.8*q + vec2(1.7, 9.2) + t*0.17),
-                  fbm(uv*2.2 + 1.8*q + vec2(8.3, 2.8) + t*0.14));
-    float f = fbm(uv*3.0 + 1.6*r + t*0.1);
+    vec2 q = vec2(fbm(flowUV*1.2 + vec2(0.0, t*0.85)),
+                  fbm(flowUV*1.2 + vec2(5.2, t*0.73)));
+    vec2 r = vec2(fbm(flowUV*2.2 + 1.8*q + vec2(1.7, 9.2) + t*0.17),
+                  fbm(flowUV*2.2 + 1.8*q + vec2(8.3, 2.8) + t*0.14));
+    float f = fbm(flowUV*3.0 + 1.6*r + t*0.1);
     vec3 col = mix(u_bg, u_col2, smoothstep(0.20, 0.60, f));
     col      = mix(col, u_col1, smoothstep(0.50, 0.85, f));
     float vign = 1.0 - length((uv - 0.5) * 1.6);
@@ -257,6 +264,7 @@ export function GlobalBackground() {
   const locsFire    = useRef<Record<string, WebGLUniformLocation | null>>({});
   const frameRef    = useRef<number>(0);
   const mouseRef    = useRef({ x: 0, y: 0 });
+  const mouseTargetRef = useRef({ x: 0, y: 0 });
   const startRef    = useRef<number>(performance.now());
   const themeRef    = useRef(theme);
   const animRef     = useRef(animation);
@@ -328,7 +336,12 @@ export function GlobalBackground() {
     };
     resize();
     window.addEventListener("resize", resize);
-    window.addEventListener("mousemove", (e) => { mouseRef.current = { x: e.clientX, y: e.clientY }; });
+    mouseRef.current = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    mouseTargetRef.current = { ...mouseRef.current };
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseTargetRef.current = { x: e.clientX, y: e.clientY };
+    };
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
     const smoothPalette = paletteFromConfig(THEMES[theme] || THEMES.black);
 
     const render = () => {
@@ -359,6 +372,8 @@ export function GlobalBackground() {
         const [r, g, b] = rgb;
         glo.uniform3f(loc, r, g, b);
       };
+      mouseRef.current.x += (mouseTargetRef.current.x - mouseRef.current.x) * 0.075;
+      mouseRef.current.y += (mouseTargetRef.current.y - mouseRef.current.y) * 0.075;
       glo.uniform1f(lc.u_time, t);
       glo.uniform2f(lc.u_res, canvas.width, canvas.height);
       glo.uniform2f(lc.u_mouse,
@@ -377,6 +392,7 @@ export function GlobalBackground() {
     return () => {
       cancelAnimationFrame(frameRef.current);
       window.removeEventListener("resize", resize);
+      window.removeEventListener("mousemove", handleMouseMove);
       if (liquidProg.current) gl.deleteProgram(liquidProg.current);
       if (smokyProg.current)  gl.deleteProgram(smokyProg.current);
       if (fireProg.current)   gl.deleteProgram(fireProg.current);
