@@ -523,7 +523,8 @@ export function LoadingScreen({ onDone }: { onDone: () => void }) {
                   alt="MYSTICFUSION7X"
                   style={{
                     width: "min(480px, 72vw)", height: "auto",
-                    filter: theme.filterStyle,
+                    filter: "invert(1) brightness(1.12) contrast(1.06) drop-shadow(0 0 16px rgba(255,255,255,0.24))",
+                    opacity: 0.96,
                     userSelect: "none", pointerEvents: "none", display: "block",
                   }}
                   draggable={false}
