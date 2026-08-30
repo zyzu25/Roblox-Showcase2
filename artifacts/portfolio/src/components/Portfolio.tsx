@@ -143,17 +143,26 @@ function ScreenSlot({
       viewport={{ once: true }}
       transition={{ delay: index * 0.05, duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
       className={`relative rounded-xl overflow-hidden group ${onClick ? 'cursor-zoom-in' : ''}`}
-      style={{ aspectRatio: '4/3' }}
+      style={{
+        aspectRatio: '16/9',
+        background: 'linear-gradient(145deg, rgba(4,4,12,0.96), rgba(12,7,26,0.92))',
+      }}
       onClick={onClick}
     >
       <img
         src={src}
         alt={alt}
-        className="w-full h-full object-cover bg-black/40 asset-protected"
+        className="w-full h-full object-contain bg-black/40 asset-protected"
         draggable={false}
         onContextMenu={(e) => e.preventDefault()}
         onDragStart={(e) => e.preventDefault()}
-        style={{ userSelect: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none', pointerEvents: 'none' }}
+        style={{
+          userSelect: 'none',
+          WebkitUserSelect: 'none',
+          WebkitTouchCallout: 'none',
+          pointerEvents: 'none',
+          imageRendering: 'auto',
+        }}
       />
       <div
         className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100"
@@ -265,10 +274,7 @@ export function Portfolio() {
                 </div>
 
                 <div
-                  className="grid gap-2"
-                  style={{
-                    gridTemplateColumns: `repeat(${Math.min(project.screens.length, 6)}, 1fr)`,
-                  }}
+                  className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"
                 >
                   {project.screens.map((screen, i) => {
                     const src = SCREENSHOTS[project.game]?.[i] ?? "";
