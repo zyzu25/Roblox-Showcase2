@@ -111,10 +111,11 @@ const FS_SMOKY = `
     vec2 uv = gl_FragCoord.xy / u_res;
     vec2 mouseUV = u_mouse / u_res;
     mouseUV.y = 1.0 - mouseUV.y;
-    vec2 pointerOffset = (mouseUV - vec2(0.5)) * 0.065;
     float mouseDistance = length(uv - mouseUV);
-    vec2 flowUV = uv + pointerOffset;
-    flowUV += (uv - mouseUV) * 0.025 * smoothstep(0.5, 0.0, mouseDistance);
+    float mouseInfluence = smoothstep(0.46, 0.0, mouseDistance);
+    vec2 mousePull = (mouseUV - uv) * 0.085 * mouseInfluence;
+    vec2 flowUV = uv + mousePull;
+    flowUV += vec2(-mousePull.y, mousePull.x) * 0.35;
     float t = u_time * 0.12;
     vec2 q = vec2(fbm(flowUV*1.2 + vec2(0.0, t*0.85)),
                   fbm(flowUV*1.2 + vec2(5.2, t*0.73)));
