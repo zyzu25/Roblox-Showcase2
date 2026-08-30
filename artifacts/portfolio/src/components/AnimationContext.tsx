@@ -1,13 +1,13 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-export type AnimationMode = "liquid";
+export type AnimationMode = "ambient" | "smoky";
 
 const AnimationCtx = createContext<{
   animation: AnimationMode;
   setAnimation: (a: AnimationMode) => void;
-}>({ animation: "liquid", setAnimation: () => {} });
+}>({ animation: "ambient", setAnimation: () => {} });
 
-const VALID: AnimationMode[] = ["liquid"];
+const VALID: AnimationMode[] = ["ambient", "smoky"];
 
 export function AnimationProvider({ children }: { children: React.ReactNode }) {
   const [animation, setAnimation] = useState<AnimationMode>(() => {
@@ -15,7 +15,7 @@ export function AnimationProvider({ children }: { children: React.ReactNode }) {
       const stored = localStorage.getItem("portfolio-animation");
       if (VALID.includes(stored as AnimationMode)) return stored as AnimationMode;
     }
-    return "liquid";
+    return "ambient";
   });
 
   useEffect(() => {

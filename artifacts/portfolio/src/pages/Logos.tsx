@@ -285,7 +285,8 @@ const THEME_CONFIG: Record<Theme, { bg: string; label: string; dot: string; grad
 const THEME_ORDER: Theme[] = ["purple", "black", "red"];
 
 const LOGO_ANIMATIONS = [
-  { id: "liquid" as const, label: "Smoky Flow", icon: Droplets, desc: "The loading screen's moving texture" },
+  { id: "ambient" as const, label: "Ambient Flow", icon: Droplets, desc: "The site's layered color motion" },
+  { id: "smoky"   as const, label: "Smoky Flow",   icon: Palette,  desc: "The loading screen's smoke texture" },
 ];
 
 function LogosNavbar({ onContact }: { onContact: () => void }) {
