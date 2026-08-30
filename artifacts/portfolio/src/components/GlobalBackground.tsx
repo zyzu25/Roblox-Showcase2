@@ -66,7 +66,7 @@ const FS_LIQUID = `
     vec2 warpedUV=uv+0.18*warp;
     vec2 mouseUV=u_mouse/u_res;mouseUV.y=1.0-mouseUV.y;
     float md=length(warpedUV-mouseUV);
-    warpedUV+=(warpedUV-mouseUV)/max(md,0.01)*0.055*smoothstep(0.42,0.0,md);
+    warpedUV+=(mouseUV-warpedUV)/max(md,0.01)*0.018*smoothstep(0.36,0.0,md);
     vec3 col=sampleScene(warpedUV,t);
     float blurR=0.024;
     for(int i=0;i<8;i++){
@@ -112,10 +112,9 @@ const FS_SMOKY = `
     vec2 mouseUV = u_mouse / u_res;
     mouseUV.y = 1.0 - mouseUV.y;
     float mouseDistance = length(uv - mouseUV);
-    float mouseInfluence = smoothstep(0.46, 0.0, mouseDistance);
-    vec2 mousePull = (mouseUV - uv) * 0.085 * mouseInfluence;
+    float mouseInfluence = smoothstep(0.36, 0.0, mouseDistance);
+    vec2 mousePull = (mouseUV - uv) * 0.022 * mouseInfluence;
     vec2 flowUV = uv + mousePull;
-    flowUV += vec2(-mousePull.y, mousePull.x) * 0.35;
     float t = u_time * 0.12;
     vec2 q = vec2(fbm(flowUV*1.2 + vec2(0.0, t*0.85)),
                   fbm(flowUV*1.2 + vec2(5.2, t*0.73)));
