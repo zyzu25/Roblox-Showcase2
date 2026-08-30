@@ -6,8 +6,8 @@ import { useTheme } from "./ThemeContext";
 const STORAGE_KEY = "mfx-theme-nudge-dismissed";
 
 const SUGGESTIONS = [
-  { id: "red"   as const, label: "Red",   dot: "#CC1A1A", desc: "Bold & striking" },
-  { id: "white" as const, label: "White", dot: "#e8e8e8", desc: "Clean & minimal" },
+  { id: "purple" as const, label: "Purple", dot: "#e000ff", desc: "Novara-inspired" },
+  { id: "red"    as const, label: "Red",    dot: "#CC1A1A", desc: "Bold & striking" },
 ];
 
 export function ThemeNudgePopup() {
@@ -79,7 +79,7 @@ export function ThemeNudgePopup() {
                     style={{
                       background: s.dot,
                       boxShadow: active ? `0 0 8px ${s.dot}80` : "none",
-                      border: s.id === "white" ? "1px solid rgba(255,255,255,0.2)" : "none",
+                      border: "none",
                       transform: active ? "scale(1.15)" : "scale(1)",
                       transition: "all 0.2s ease",
                     }}
