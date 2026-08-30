@@ -1,16 +1,14 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   X, Coins, Zap, ExternalLink, Info,
-  Download, MessageSquare, Send, Loader2, Sparkles,
+  Download,
 } from "lucide-react";
 
 // ── Types ───────────────────────────────────────────────────────────────────
-type Tab        = "commission" | "importing" | "ai";
+type Tab        = "commission" | "importing";
 type Complexity = "Basic" | "Standard" | "Detailed";
 type ImportMode = "commission" | "standalone";
-
-interface Message { role: "user" | "assistant"; content: string; }
 
 // ── Rush delivery table ─────────────────────────────────────────────────────
 const RUSH: Record<string, string> = {
@@ -54,14 +52,6 @@ function calcPrice(screens: number, complexity: Complexity, rush: boolean, robux
   return { label, low, high, days, currency: "$" };
 }
 
-// ── AI starters ─────────────────────────────────────────────────────────────
-const AI_STARTERS = [
-  "I need a full HUD + shop UI",
-  "How much for 3 UI screens?",
-  "What's the cheapest option?",
-  "I need a complete game UI",
-];
-
 // ── Main component ──────────────────────────────────────────────────────────
 export function PriceCalculator() {
   const [open, setOpen]           = useState(false);
@@ -79,16 +69,6 @@ export function PriceCalculator() {
   const [commissionPrice,  setCommissionPrice]  = useState("");
   const [frameCount,       setFrameCount]       = useState(3);
 
-  // AI tab
-  const [messages,  setMessages]  = useState<Message[]>([
-    { role: "assistant", content: "Hey! 👋 I design UIs only — no scripting or animations. Tell me what UI frames your game needs and I'll estimate the price." },
-  ]);
-  const [aiInput,   setAiInput]   = useState("");
-  const [aiLoading, setAiLoading] = useState(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, aiLoading]);
-
   // ── Price results ──
   const result = calcPrice(screens, complexity, rush, robux);
 
@@ -102,37 +82,9 @@ export function PriceCalculator() {
     return { price: total.toFixed(2), note: `$7 × ${frameCount} frame${frameCount !== 1 ? "s" : ""}`, currency: "$" };
   };
 
-  // ── AI chat ──
-  const sendAI = async (text: string) => {
-    const trimmed = text.trim();
-    if (!trimmed || aiLoading) return;
-    setAiInput("");
-    const next: Message[] = [...messages, { role: "user", content: trimmed }];
-    setMessages(next);
-    setAiLoading(true);
-    try {
-      const res  = await fetch("/api/commission-chat", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next }),
-      });
-      const data = await res.json();
-      let reply = data.reply;
-      if (!reply) {
-        if (data.error === "quota_exceeded") reply = "AI estimator offline right now. Use the Commission tab for instant estimates, or DM me on Discord: mysticfusion7x";
-        else reply = "Something went wrong. Check the Commission tab above or DM me on Discord.";
-      }
-      setMessages([...next, { role: "assistant", content: reply }]);
-    } catch {
-      setMessages([...next, { role: "assistant", content: "Can't reach server. Use the Commission tab for estimates." }]);
-    } finally {
-      setAiLoading(false);
-    }
-  };
-
   const TABS: { id: Tab; label: string }[] = [
     { id: "commission", label: "Commission" },
     { id: "importing",  label: "Importing"  },
-    { id: "ai",         label: "Ask AI"     },
   ];
 
   const COMPLEXITY_DESC: Record<Complexity, string> = {
@@ -446,64 +398,6 @@ export function PriceCalculator() {
                 </motion.div>
               )}
 
-              {/* ── AI CHAT TAB ── */}
-              {tab === "ai" && (
-                <motion.div key="ai" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                  className="flex flex-col flex-1" style={{ minHeight: 0, maxHeight: 380 }}>
-
-                  {/* Messages */}
-                  <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3" style={{ minHeight: 0 }}>
-                    {messages.map((msg, i) => (
-                      <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                        <div
-                          className="max-w-[85%] px-3 py-2 rounded-xl text-xs leading-relaxed"
-                          style={
-                            msg.role === "user"
-                              ? { background: "linear-gradient(135deg,var(--c-primary),var(--c-primary-dark))", color: "#fff", borderRadius: "12px 12px 2px 12px" }
-                              : { background: "rgba(255,255,255,0.06)", color: "rgba(255,255,255,0.75)", borderRadius: "12px 12px 12px 2px" }
-                          }
-                        >{msg.content}</div>
-                      </div>
-                    ))}
-                    {aiLoading && (
-                      <div className="flex justify-start">
-                        <div className="px-3 py-2 rounded-xl" style={{ background: "rgba(255,255,255,0.06)", borderRadius: "12px 12px 12px 2px" }}>
-                          <Loader2 className="w-3.5 h-3.5 text-white/40 animate-spin" />
-                        </div>
-                      </div>
-                    )}
-                    {messages.length === 1 && (
-                      <div className="flex flex-wrap gap-1.5 pt-1">
-                        {AI_STARTERS.map(s => (
-                          <button key={s} onClick={() => sendAI(s)}
-                            className="text-[10px] px-2.5 py-1 rounded-full border border-white/10 text-white/45 hover:text-white/70 hover:border-white/25 transition-colors"
-                            style={{ background: "rgba(255,255,255,0.04)" }}
-                          >{s}</button>
-                        ))}
-                      </div>
-                    )}
-                    <div ref={bottomRef} />
-                  </div>
-
-                  {/* Input */}
-                  <div className="px-3 pb-3 pt-1 border-t border-white/7">
-                    <div className="flex items-center gap-2">
-                      <input
-                        value={aiInput}
-                        onChange={e => setAiInput(e.target.value)}
-                        onKeyDown={e => e.key === "Enter" && !e.shiftKey && sendAI(aiInput)}
-                        placeholder="Ask about pricing..."
-                        className="flex-1 h-9 px-3 rounded-xl text-xs text-white placeholder:text-white/25 focus:outline-none"
-                        style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
-                      />
-                      <button onClick={() => sendAI(aiInput)} disabled={!aiInput.trim() || aiLoading}
-                        className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 btn-primary disabled:opacity-30">
-                        <Send className="w-3.5 h-3.5 text-white" />
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
             </AnimatePresence>
           </motion.div>
         )}

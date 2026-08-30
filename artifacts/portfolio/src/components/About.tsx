@@ -108,8 +108,8 @@ export function About() {
             <div className="grid grid-cols-3 gap-3">
               {[
                 { value: 1, suffix: "+", label: "Year of experience" },
-                { value: 50, suffix: "+", label: "UI frames shipped" },
-                { value: 3, suffix: "", label: "Notable games" },
+                { value: 70, suffix: "+", label: "UI frames shipped" },
+                { value: 6, suffix: "", label: "Notable games / studios" },
               ].map((stat, i) => (
                 <TiltCard key={i} className="glass rounded-2xl p-4 text-center card-hover" intensity={10}>
                   <p

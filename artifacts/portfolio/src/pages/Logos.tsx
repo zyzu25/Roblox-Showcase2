@@ -6,7 +6,6 @@ import { GlobalBackground } from "@/components/GlobalBackground";
 import { FireBackground } from "@/components/FireBackground";
 import { SeaBackground } from "@/components/SeaBackground";
 import { WaterfallBackground } from "@/components/WaterfallBackground";
-import { SoftBackground } from "@/components/SoftBackground";
 import { ScrollProgress } from "@/components/ScrollProgress";
 import { TiltCard } from "@/components/TiltCard";
 import { MagneticButton } from "@/components/MagneticButton";
@@ -281,14 +280,12 @@ const orderFields = [
 const THEME_CONFIG: Record<Theme, { bg: string; label: string; dot: string; gradient?: string }> = {
   purple: { bg: "#16052f", label: "Purple", dot: "#e000ff", gradient: "linear-gradient(135deg, #e000ff, #4b2dff)" },
   black:  { bg: "#090909", label: "Black",  dot: "#777777" },
-  white:  { bg: "#d4d4d4", label: "White",  dot: "#e8e8e8" },
   red:    { bg: "#CC1A1A", label: "Red",    dot: "#CC1A1A" },
 };
-const THEME_ORDER: Theme[] = ["purple", "black", "white", "red"];
+const THEME_ORDER: Theme[] = ["purple", "black", "red"];
 
 const LOGO_ANIMATIONS = [
-  { id: "liquid" as const, label: "Liquid Flow", icon: Droplets, desc: "Dark, moving texture" },
-  { id: "soft"   as const, label: "Soft Light",  icon: Palette,  desc: "Quiet editorial glow" },
+  { id: "liquid" as const, label: "Smoky Flow", icon: Droplets, desc: "The loading screen's moving texture" },
 ];
 
 function LogosNavbar({ onContact }: { onContact: () => void }) {
@@ -370,7 +367,7 @@ function LogosNavbar({ onContact }: { onContact: () => void }) {
                 >
                   <div className="px-4 pt-4 pb-3">
                     <p className="text-[10px] font-semibold uppercase tracking-widest text-white/25 mb-3">Theme</p>
-                    <div className="grid grid-cols-4 gap-1">
+                    <div className="grid grid-cols-3 gap-1">
                       {THEME_ORDER.map((t) => {
                         const cfg = THEME_CONFIG[t];
                         const active = theme === t;
@@ -461,7 +458,6 @@ function LogosNavbar({ onContact }: { onContact: () => void }) {
 
 export default function Logos() {
   const [, navigate]                = useLocation();
-  const { animation }               = useAnimation();
   const TIER                        = useTierConfig();
   const [lightbox, setLightbox]     = useState<LightboxState | null>(null);
 
@@ -475,7 +471,6 @@ export default function Logos() {
   };
 
   function BgComponent() {
-    if (animation === "soft") return <SoftBackground />;
     return <GlobalBackground />;
   }
 

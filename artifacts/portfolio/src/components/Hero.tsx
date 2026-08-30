@@ -114,9 +114,9 @@ export function Hero() {
             className="flex items-center gap-10"
           >
             {[
-              { end: 60, suffix: "+", label: "UIs Shipped" },
+              { end: 70, suffix: "+", label: "UI Frames Shipped" },
               { end: 1,  suffix: "+", label: "Year Experience" },
-              { end: 6,  suffix: "",  label: "Notable Games" },
+              { end: 6,  suffix: "",  label: "Notable Games / Studios" },
             ].map((stat, i) => (
               <div key={i} className="flex items-center gap-10">
                 {i > 0 && <div className="w-px h-9 bg-white/10" />}

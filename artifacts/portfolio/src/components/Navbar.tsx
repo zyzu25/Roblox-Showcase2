@@ -1,4 +1,4 @@
-import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useState, useRef, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useTheme, type Theme } from "./ThemeContext";
@@ -13,10 +13,9 @@ const THEME_CONFIG: Record<Theme, { bg: string; label: string; dot: string }> = 
   purple: { bg: "linear-gradient(135deg, #e000ff, #4b2dff)", label: "Purple", dot: "#e000ff" },
   black:  { bg: "#090909", label: "Black",  dot: "#777777" },
   red:    { bg: "#CC1A1A", label: "Red",    dot: "#CC1A1A" },
-  white:  { bg: "#d4d4d4", label: "White",  dot: "#e8e8e8" },
 };
 
-const THEME_ORDER: Theme[] = ["purple", "black", "white", "red"];
+const THEME_ORDER: Theme[] = ["purple", "black", "red"];
 
 const DISCORD_TAG = "mysticfusion7x";
 
@@ -28,21 +27,14 @@ const NAV_LINKS = [
 ];
 
 export function Navbar() {
-  const [hidden,   setHidden]   = useState(false);
   const [dropOpen, setDropOpen] = useState(false);
   const [copied,   setCopied]   = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { scrollY }                 = useScroll();
   const [, navigate]                = useLocation();
   const { theme, setTheme }         = useTheme();
   const { animation, setAnimation } = useAnimation();
   const dropRef                     = useRef<HTMLDivElement>(null);
   const avatar                      = useDiscordAvatar();
-
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    const prev = scrollY.getPrevious() ?? 0;
-    setHidden(latest > prev && latest > 150);
-  });
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -71,16 +63,15 @@ export function Navbar() {
   };
 
   const ANIMATIONS = [
-    { id: "liquid" as const, label: "Liquid Flow", icon: Droplets, desc: "Dark, moving texture" },
-    { id: "soft"   as const, label: "Soft Light",  icon: Palette,  desc: "Quiet editorial glow" },
+    { id: "liquid" as const, label: "Smoky Flow", icon: Droplets, desc: "The loading screen's moving texture" },
   ];
 
   return (
     <motion.header
       initial={{ opacity: 0, y: -20 }}
-      animate={{ opacity: 1, y: hidden ? -80 : 0 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-      className="fixed top-0 left-0 right-0 z-[99] relative"
+      className="fixed top-0 left-0 right-0 z-[99]"
       style={{
         background: "linear-gradient(180deg, var(--c-glass-bright, rgba(10,8,20,0.9)) 0%, rgba(4,4,14,0.86) 100%)",
         borderBottom: "1px solid var(--c-border-soft)",
@@ -219,7 +210,7 @@ export function Navbar() {
                   {/* Theme */}
                   <div className="px-4 pt-4 pb-3">
                     <p className="text-[10px] font-semibold uppercase tracking-widest text-white/25 mb-3">Theme</p>
-                    <div className="grid grid-cols-4 gap-1.5">
+                    <div className="grid grid-cols-3 gap-1.5">
                       {THEME_ORDER.map(t => {
                         const cfg = THEME_CONFIG[t];
                         const active = theme === t;

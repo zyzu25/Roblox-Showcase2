@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-export type Theme = "purple" | "black" | "white" | "red";
+export type Theme = "purple" | "black" | "red";
 const ROTATING_THEMES: Theme[] = ["purple", "black", "red"];
 const THEME_ROTATION_MS = 60_000;
 
@@ -17,7 +17,7 @@ const ThemeCtx = createContext<ThemeCtxValue>({
 function readTheme(): Theme {
   if (typeof window !== "undefined") {
     const stored = localStorage.getItem("portfolio-theme");
-    if (stored === "purple" || stored === "white" || stored === "red" || stored === "black") return stored;
+    if (stored === "purple" || stored === "red" || stored === "black") return stored;
   }
   return "purple";
 }

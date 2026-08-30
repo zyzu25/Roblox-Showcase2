@@ -151,7 +151,7 @@ function hexToRgb(hex: string): [number, number, number] {
   return [r, g, b];
 }
 
-const THEMES: Record<"purple" | "black" | "white" | "red", {
+const THEMES: Record<"purple" | "black" | "red", {
   bg: string; c1: string; c2: string; c3: string; c4: string; c5: string;
   sat: number; bri: number; blobs: string[];
 }> = {
@@ -173,16 +173,10 @@ const THEMES: Record<"purple" | "black" | "white" | "red", {
     sat: 1.7, bri: 0.62,
     blobs: ["rgba(205,26,35,0.30)","rgba(130,10,18,0.24)","rgba(255,40,48,0.16)","rgba(90,5,12,0.20)","rgba(170,15,24,0.13)"],
   },
-  white: {
-    bg: "#f4f3f1",
-    c1: "#e1e0de", c2: "#d1d0ce", c3: "#fdfcf9", c4: "#c4c3c1", c5: "#ebeae8",
-    sat: 0.15, bri: 1.0,
-    blobs: ["rgba(40,40,40,0.07)","rgba(120,120,120,0.06)","rgba(255,255,255,0.58)","rgba(70,70,70,0.045)","rgba(230,230,230,0.32)"],
-  },
 };
 
 const BG_BASE: Record<string, string> = {
-  purple: "#0b0120", black: "#050505", red: "#090303", white: "#f4f3f1",
+  purple: "#0b0120", black: "#050505", red: "#090303",
 };
 
 type RGB = [number, number, number];
