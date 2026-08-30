@@ -8,7 +8,7 @@ const VS = `
   void main() { gl_Position = vec4(a_pos, 0.0, 1.0); }
 `;
 
-// ── Liquid (FBM domain-warp) fragment shader ────────────────────────────────
+// ── Ambient Flow (the site's existing layered background) ───────────────────
 const FS_LIQUID = `
   precision highp float;
   uniform float u_time;
@@ -78,6 +78,47 @@ const FS_LIQUID = `
     col/=9.0;
     col=sat_col(col,u_sat);col*=u_bri;
     gl_FragColor=vec4(col,1.0);
+  }
+`;
+
+// ── Smoky Flow (the same warped smoke used by the loading screen) ───────────
+const FS_SMOKY = `
+  precision mediump float;
+  uniform float u_time;
+  uniform vec2  u_res;
+  uniform vec3  u_col1;
+  uniform vec3  u_col2;
+  uniform vec3  u_bg;
+
+  float hash(vec2 p) {
+    p = fract(p * vec2(127.1, 311.7));
+    p += dot(p, p + 45.32);
+    return fract(p.x * p.y);
+  }
+  float noise(vec2 p) {
+    vec2 i = floor(p); vec2 f = fract(p);
+    f = f*f*(3.0-2.0*f);
+    return mix(mix(hash(i), hash(i+vec2(1.0,0.0)), f.x),
+               mix(hash(i+vec2(0.0,1.0)), hash(i+vec2(1.0,1.0)), f.x), f.y);
+  }
+  float fbm(vec2 p) {
+    float v=0.0, a=0.5;
+    for (int i=0;i<5;i++) { v+=a*noise(p); p=p*2.1+vec2(1.78,3.13); a*=0.5; }
+    return v;
+  }
+  void main() {
+    vec2 uv = gl_FragCoord.xy / u_res;
+    float t = u_time * 0.12;
+    vec2 q = vec2(fbm(uv*1.2 + vec2(0.0, t*0.85)),
+                  fbm(uv*1.2 + vec2(5.2, t*0.73)));
+    vec2 r = vec2(fbm(uv*2.2 + 1.8*q + vec2(1.7, 9.2) + t*0.17),
+                  fbm(uv*2.2 + 1.8*q + vec2(8.3, 2.8) + t*0.14));
+    float f = fbm(uv*3.0 + 1.6*r + t*0.1);
+    vec3 col = mix(u_bg, u_col2, smoothstep(0.20, 0.60, f));
+    col      = mix(col, u_col1, smoothstep(0.50, 0.85, f));
+    float vign = 1.0 - length((uv - 0.5) * 1.6);
+    col *= clamp(0.30 + 0.70*vign, 0.0, 1.0);
+    gl_FragColor = vec4(col, 1.0);
   }
 `;
 
@@ -209,8 +250,10 @@ export function GlobalBackground() {
   const canvasRef   = useRef<HTMLCanvasElement>(null);
   const glRef       = useRef<WebGLRenderingContext | null>(null);
   const liquidProg  = useRef<WebGLProgram | null>(null);
+  const smokyProg   = useRef<WebGLProgram | null>(null);
   const fireProg    = useRef<WebGLProgram | null>(null);
   const locsLiquid  = useRef<Record<string, WebGLUniformLocation | null>>({});
+  const locsSmoky   = useRef<Record<string, WebGLUniformLocation | null>>({});
   const locsFire    = useRef<Record<string, WebGLUniformLocation | null>>({});
   const frameRef    = useRef<number>(0);
   const mouseRef    = useRef({ x: 0, y: 0 });
@@ -245,8 +288,9 @@ export function GlobalBackground() {
       return p;
     };
 
-    // Compile both programs upfront — switch is instant at runtime
+    // Compile all programs upfront — switching is instant at runtime
     liquidProg.current = buildProg(FS_LIQUID);
+    smokyProg.current  = buildProg(FS_SMOKY);
     fireProg.current   = buildProg(FS_FIRE);
 
     const uniforms = ["u_time","u_res","u_mouse","u_col1","u_col2","u_col3","u_col4","u_col5","u_bg","u_sat","u_bri"];
@@ -256,6 +300,7 @@ export function GlobalBackground() {
       return m;
     };
     locsLiquid.current = getLocs(liquidProg.current);
+    locsSmoky.current  = getLocs(smokyProg.current);
     locsFire.current   = getLocs(fireProg.current);
 
     // Shared fullscreen quad buffer
@@ -270,6 +315,7 @@ export function GlobalBackground() {
       gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
     };
     bindBuf(liquidProg.current);
+    bindBuf(smokyProg.current);
     bindBuf(fireProg.current);
 
     const resize = () => {
@@ -287,11 +333,9 @@ export function GlobalBackground() {
 
     const render = () => {
       const glo = glRef.current; if (!glo) return;
-      // Fire was part of the old background picker. Keep the shader branch
-      // harmlessly dormant so existing compiled shader code remains stable.
-      const isFire = false;
-      const prog = isFire ? fireProg.current : liquidProg.current;
-      const lc   = isFire ? locsFire.current : locsLiquid.current;
+      const isSmoky = animRef.current === "smoky";
+      const prog = isSmoky ? smokyProg.current : liquidProg.current;
+      const lc   = isSmoky ? locsSmoky.current : locsLiquid.current;
       if (!prog) return;
       glo.useProgram(prog);
 
@@ -334,6 +378,7 @@ export function GlobalBackground() {
       cancelAnimationFrame(frameRef.current);
       window.removeEventListener("resize", resize);
       if (liquidProg.current) gl.deleteProgram(liquidProg.current);
+      if (smokyProg.current)  gl.deleteProgram(smokyProg.current);
       if (fireProg.current)   gl.deleteProgram(fireProg.current);
     };
   }, []);
